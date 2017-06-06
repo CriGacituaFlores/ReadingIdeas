@@ -12,71 +12,79 @@
     <script src="libs/textlayerbuilder.js"></script>
     <script src="libs/angular.min.js"></script>
     <script src="libs/angular-ui-tree.min.js"></script>
+    <script src="libs/angular-timer.min.js"></script>
+    <script src="libs/socket.min.js"></script>
+    <script src="libs/angular-ui-notification.min.js"></script>
     <script src="js/editor-ctrl.min.js"></script>
-    <!--<script src="js/graph-creator.js"></script>-->
+    <script src="/socket.io/socket.io.js"></script>
     <script src="libs/d3.min.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/minimal.css">
     <link rel="stylesheet" href="css/angular-ui-tree.min.css">
-    <link rel="stylesheet" href="css/graph-creator2.css">
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/graph-creator2.css">
 </head>
 <body class="bg-white">
+
 <div class="editor-container" ng-controller="EditorController">
+
+    <div class="row top-bar-mini">
+        <div class="text-center">
+            <span ng-repeat="st in sesStatusses">
+                <span class="label label-primary" ng-class="{'bg-black-alpha': $index==iteration}" ng-bind="st"></span>
+                <span ng-hide="$last">→</span>
+            </span>
+            <span class="pull-right margin-right-24" ng-show="sesSTime != null">
+                <timer start-time="sesSTime">{{hours}}h {{minutes}}m {{seconds}}s</timer>
+            </span>
+        </div>
+    </div>
 
     <div class="row top-bar">
         <div class="col-sm-6 full-height">
             <span class="simple-margin-left">Documentos: </span>
             <span ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title"
                   ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)"></span>
+            <!--<strong class="pull-right margin-top-8" ng-bind="iterationNames[iteration]"></strong>-->
         </div>
         <div class="col-sm-6">
             <a href="seslist" class="btn btn-sm btn-default pull-right">Atrás</a>
-            <button class="btn btn-sm btn-default pull-right" ng-disabled="writingReport || followLeader" ng-click="selectText()">Seleccionar idea</button>
-            <!--
+            <button disabled class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && !followLeader"><i class="fa fa-star"></i> Representante </button>
+            <button class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && followLeader" ng-click="takeControl()">Tomar Control</button>
+            <button class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished}">
+                <i class="fa fa-check"></i> Terminé</button>
             <button class="btn btn-sm btn-default pull-right" ng-disabled="writingReport || followLeader" ng-click="showPdf = !showPdf">Mapa<=>PDF</button>
-            -->
-            <span class="pull-right simple-padding-top w150" ng-show="iteration == 3 && !followLeader"><i class="fa fa-star"></i> Representante </span>
+            <span class="pull-right boxed" ng-bind="teamstr"></span>
         </div>
     </div>
 
     <div class="row">
-        <div class="col-sm-9">
-            <!--
-            <button ng-click="expandAll()">Expand all</button>
-            <button ng-click="collapseAll()">Collapse all</button>
-            -->
-            <button ng-click="showPdf = !showPdf">Mapa<=>PDF</button>
-            <!--
-            <div class="info">
-                {{info}}
+        <div id="left_content" class="col-sm-9">
+            <div id="pdf-container" class="pdf-content" ng-class="{'vis': !showPdf}">
+                <div class="centered">
+                    <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered" ng-show="$index==selectedDocument"></div>
+                </div>
             </div>
-            -->
-            <div id="left_content">
-
-                <div id="argmap" style="width:800px;height:500px" ng-class="{'vis': !showPdf}">
-                    <div id="toolbox">
-                        <input type="file" id="hidden-file-upload">
-                        <input id="upload-input" type="image" title="upload graph" src="images/upload-icon.png" alt="upload graph">
-                        <input type="image" id="download-input" title="download graph" src="images/download-icon.png" alt="download graph">
-                        <input type="image" id="delete-graph" title="delete graph" src="images/trash-icon.png" alt="delete graph">
-                        <input type="image" id="arrow-c" title="change edge" src="images/c-arrow.png" alt="leftRight">
-                        <input type="image" id="arrow-b" title="edge bouth" src="images/b-arrow.png" alt="Bouth">
-                    </div>
+            <div id="argmap" style="width:800px;height:500px" ng-class="{'vis': showPdf}">
+                <div id="toolbox">
+                    <input type="file" id="hidden-file-upload">
+                    <!--
+                    <input id="upload-input" type="image" title="upload graph" src="images/upload-icon.png" alt="upload graph">
+                    <input type="image" id="download-input" title="download graph" src="images/download-icon.png" alt="download graph">
+                    -->
+                    <input type="image" id="delete-graph" title="delete graph" src="images/trash-icon.png" alt="delete graph">
+                    <input type="image" id="arrow-c" title="change edge" src="images/c-arrow.png" alt="leftRight">
+                    <input type="image" id="arrow-b" title="edge bouth" src="images/b-arrow.png" alt="Bouth">
                 </div>
-
-                <div id="pdf-container" class="pdf-content" ng-class="{'vis': showPdf}">
-                    <div class="centered">
-                        <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
-                             ng-show="$index==selectedDocument"></div>
-                    </div>
-                </div>
-
             </div>
         </div>
         <div class="col-sm-3 side-bar">
-            <a class="btn btn-sm btn-default pull-right margin-top-8" ng-click="setSelOrder()" ng-disabled="!checkAllSync()">Fijar orden</a>
+            <h4>Instrucciones:</h4>
+            <div ng-bind="instructions[iteration]"></div>
+            <hr>
+            <div ng-hide="iteration == 0">
+            <a class="btn btn-sm btn-default pull-right margin-top-8" ng-click="setSelOrder()" ng-disabled="!checkAllSync() || followLeader || writingReport">Fijar orden</a>
             <h3>Ideas Fuerza:</h3>
             <div class="row">
                 <div class="btn-group center-block w250" ng-show="tabOptions.length > 1">
@@ -88,33 +96,38 @@
             <div class="text-gray text-center" ng-show="numPages>0">Cargando...</div>
             <div class="y-scrollable" ui-tree data-max-depth="1">
                 <ul class="full-height" ui-tree-nodes="" ng-model="selections" ng-show="sideTab == 0">
-                    <li class="row idea-item" ng-repeat="sel in selections" ui-tree-node>
-                        <div class="col-xs-1"><span ui-tree-handle>:::</span> <a ng-click="deleteIdea(sel,$index)" class="margin-top-24" ng-if="sel.expanded"><i class="fa fa-trash"></i></a></div>
+                    <li class="row idea-item" ng-repeat="sel in selections" ui-tree-node ng-class="{'bg-warning':reportIdeas[sel.id]}">
+                        <div class="col-xs-1"><span ui-tree-handle ng-if="!followLeader && !writingReport">:::</span> <a ng-click="deleteIdea(sel,$index)" class="margin-top-24" ng-if="sel.expanded && !followLeader && !writingReport"><i class="fa fa-trash"></i></a></div>
                         <div class="col-xs-10">
                         <a ng-click="sel.expanded=!sel.expanded" class="spaced pull-right"><i class="fa fa-plus"></i></a>
                         <strong ng-bind="sel.text" ng-click="goToSerial(sel.text,sel.document)"></strong>
                         <span class="text-gray"> - {{documents[sel.document].title}}</span>
                         <div class="input-group" ng-show="sel.expanded">
-                            <textarea class="form-control" ng-model="sel.comment" ng-change="selTextChange(sel)"></textarea>
-                            <a class="input-group-addon btn btn-default" ng-click="sendIdea(sel)" ng-class="{'bg-lightgreen': sel.status=='saved', 'bg-lightorange': sel.status=='dirty'}">
+                            <textarea class="form-control" ng-model="sel.comment" ng-change="selTextChange(sel)" ng-disabled="writingReport || followLeader"></textarea>
+                            <a class="input-group-addon btn btn-default" ng-click="sendIdea(sel)" ng-class="{'bg-lightgreen': sel.status=='saved', 'bg-lightorange': sel.status=='dirty'}" ng-disabled="writingReport || followLeader">
                                 <i class="fa fa-send"></i>
                             </a>
                         </div>
+                        <a ng-show="sel.expanded && writingReport" ng-click="toggleUseIdea(sel.id)"><i class="fa fa-star"></i> Marcar idea usada en reporte</a>
                         </div>
                     </li>
+                    <button class="form-control btn btn-sm btn-default margin-top-8" ng-disabled="writingReport || followLeader || selections.length >= documents.length * 3" ng-click="selectText()" ng-show="iteration > 0"><i class="fa fa-plus"></i> Nueva Idea</button>
                 </ul>
+            </div>
+            <div>
                 <div ng-show="iteration > 1 && sideTab == 1">
                     <h4>Ideas Individual:</h4>
                     <div ng-repeat="(uid, sels) in ansIter1">
                         <h5 ng-show="uid != myUid">Anónimo {{uid}}: </h5>
                         <h5 ng-hide="uid != myUid">Mi respuesta: </h5>
                         <ul class="list-group">
-                            <li class="list-group-item" ng-repeat="sel in sels" ng-class="{'bg-lightgreen':sel.copied}">
+                            <li class="list-group-item" ng-repeat="sel in sels" ng-class="{'bg-warning':sel.copied || reportIdeas[sel.id]}">
                                 <a ng-click="sel.expanded=!sel.expanded" class="spaced pull-right"><i class="fa fa-plus"></i></a>
                                 <strong ng-bind="sel.content" ng-click="goToSerial(sel.content,docIdx[sel.docid],'.highlight-secondary')"></strong>
                                 <span class="text-gray"> - {{documents[docIdx[sel.docid]].title}}</span>
                                 <div ng-show="sel.expanded" ng-bind="sel.descr"></div>
-                                <a ng-show="sel.expanded" ng-click="copyIdea(sel)"><i class="fa fa-copy"></i> Copiar a Actual</a>
+                                <a ng-show="sel.expanded && !followLeader && !writingReport" ng-click="copyIdea(sel)"><i class="fa fa-copy"></i> Copiar a Actual</a>
+                                <a ng-show="sel.expanded && writingReport" ng-click="toggleUseIdea(sel.id)"><i class="fa fa-star"></i> Marcar idea usada en reporte</a>
                             </li>
                         </ul>
                     </div>
@@ -125,16 +138,18 @@
                         <h5 ng-show="uid != myUid">Anónimo {{uid}}: </h5>
                         <h5 ng-hide="uid != myUid">Mi respuesta: </h5>
                         <ul class="list-group">
-                            <li class="list-group-item" ng-repeat="sel in sels" ng-class="{'bg-lightgreen':sel.copied}">
+                            <li class="list-group-item" ng-repeat="sel in sels" ng-class="{'bg-warning':sel.copied || reportIdeas[sel.id]}">
                                 <a ng-click="sel.expanded=!sel.expanded" class="spaced pull-right"><i class="fa fa-plus"></i></a>
                                 <strong ng-bind="sel.content" ng-click="goToSerial(sel.content,docIdx[sel.docid],'.highlight-secondary')"></strong>
                                 <span class="text-gray"> - {{documents[docIdx[sel.docid]].title}}</span>
                                 <div ng-show="sel.expanded" ng-bind="sel.descr"></div>
-                                <a ng-show="sel.expanded" ng-click="copyIdea(sel)"><i class="fa fa-copy"></i> Copiar a Actual</a>
+                                <a ng-show="sel.expanded && !followLeader && !writingReport" ng-click="copyIdea(sel)"><i class="fa fa-copy"></i> Copiar a Actual</a>
+                                <a ng-show="sel.expanded && writingReport" ng-click="toggleUseIdea(sel.id)"><i class="fa fa-star"></i> Marcar idea usada en reporte</a>
                             </li>
                         </ul>
                     </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
