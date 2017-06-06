@@ -1,15 +1,11 @@
 "use strict";
 
-let app = angular.module("Editor", ['ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
+let app = angular.module("Editor", ['ui.tree']);
 
-app.factory("$socket", ["socketFactory", function (socketFactory) {
-    return socketFactory();
-}]);
-
-app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "Notification", function ($scope, $http, $timeout, $socket, Notification) {
+app.controller("EditorController", ["$scope", "$http", "$timeout", function ($scope, $http, $timeout) {
     let self = $scope;
 
-    self.iteration = 0;
+    self.iteration = 1;
     self.myUid = -1;
     self.documents = [];
     self.selections = [];
@@ -22,12 +18,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.writingReport = false;
     self.followLeader = false;
     self.leader = false;
-    self.teamId = -1;
-    self.reportIdeas = {};
-    self.shared = {};
-
-    self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
-    self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
 
     self.tabOptions = ["Actual"];
 
@@ -35,20 +25,39 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.applier = rangy.createClassApplier("highlight");
     self.secondaryApplier = rangy.createClassApplier("highlight-secondary");
 
+    self.treeOptions = {
+        beforeDrop : function (e) {
+            var sourceValue = e.source.nodeScope.$modelValue.value,
+                destValue = e.dest.nodesScope.node ? e.dest.nodesScope.node.value : undefined,
+                modalInstance;
+
+            /*var sourceValue = e.source.nodeScope.$modelValue.value,
+             destValue = e.dest.nodesScope.node ? e.dest.nodesScope.node.value : undefined,
+             modalInstance;
+
+             // display modal if the node is being dropped into a smaller container
+             if (sourceValue > destValue) {
+             modalInstance = $modal.open({
+             templateUrl: 'drop-modal.html'
+             });
+             // or return the simple boolean result from $modal
+             if (!e.source.nodeScope.$treeScope.usePromise) {
+             return modalInstance.result;
+             } else { // return a promise
+             return modalInstance.result.then(function (allowDrop) {
+             if (!allowDrop) {
+             return $q.reject();
+             }
+             return allowDrop;
+             });
+             }
+             }*/
+            return true;
+        }
+    };
+
     self.init = () => {
         self.getSesInfo();
-        $socket.on("stateChange", (data) => {
-            console.log("SOCKET.IO", data);
-            if(data.ses == self.sesId){
-                window.location.reload();
-            }
-        });
-        $socket.on("updateTeam", (data) => {
-             if(self.teamId == data.tmid){
-                 self.getIdeas();
-                 self.getTeamInfo();
-             }
-        });
     };
 
     self.getSesInfo = () => {
@@ -56,8 +65,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.iteration = data.iteration;
             self.myUid = data.uid;
             self.sesName = data.name;
-            self.sesId = data.id;
-            self.sesSTime = (data.stime != null) ? new Date(data.stime) : null;
             $http({url: "get-documents", method: "post"}).success((data) => {
                 self.documents = data;
                 data.forEach((doc,i) => {
@@ -65,39 +72,16 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 });
                 self.renderAll();
             });
-            $http({url: "data/instructions.json", method: "get"}).success((data) => {
-                self.instructions = data;
-            });
             if (self.iteration == 3){
-                self.getTeamInfo();
+                $http({url: "get-team-leader", method: "post"}).success((data) => {
+                    if(data.leader == self.myUid){
+                        self.leader = true;
+                    }
+                    else{
+                        self.followLeader = true;
+                    }
+                });
             }
-        });
-    };
-
-    self.finishState = () => {
-        self.setSelOrder();
-        let postdata = {status: self.iteration + 2};
-        $http({url: "record-finish", method: "post", data: postdata}).success((data) => {
-            self.hasFinished = true;
-            console.log("FINISH");
-        });
-    };
-
-    self.getTeamInfo = () => {
-        $http({url: "get-team-leader", method: "post"}).success((data) => {
-            self.teamId = data.id;
-            self.originalLeader = data.original_leader;
-            if(data.leader == self.myUid){
-                self.leader = true;
-                self.followLeader = false;
-            }
-            else{
-                self.leader = false;
-                self.followLeader = true;
-            }
-        });
-        $http({url: "get-team", method: "post"}).success((data) => {
-            self.teamstr = data.map(e => e.name).join(", ");
         });
     };
 
@@ -117,12 +101,19 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             expanded: true,
             status: "unsaved"
         };
-        if (textDef.length < 2 || textDef.length > 50){
-            Notification.warning("El texto es muy largo para ser usado como una idea fuerza");
-            return;
-        }
+        if (textDef.length < 2 || textDef.length > 50) return;
         self.highlightSerial(textDef.serial, textDef.document);
         self.selections.push(textDef);
+    };
+
+    self.collapseAll = function () {
+        console.log('[collapseAll]');
+        self.$broadcast('angular-ui-tree:collapse-all');
+    };
+
+    self.expandAll = function () {
+        console.log('[expandAll]');
+        self.$broadcast('angular-ui-tree:expand-all');
     };
 
     self.goToSerial = (text, index, hcls) => {
@@ -145,10 +136,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         catch (err){
             console.log(serial + " no se pudo highlightear!", err);
         }
-    };
-
-    self.unhighlightSerial = (serial, index, applier) => {
-        console.log("TODO");
     };
 
     self.renderAll = () => {
@@ -182,25 +169,23 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             });
         });
         if(self.iteration > 1) {
-            self.tabOptions = ["Reelaboración","Original"];
             $http({url: "get-team-ideas", method: "post", data: {iteration: 1}}).success((data) => {
-                self.ansIter1 = {};
                 data.forEach((ans) => {
                     self.ansIter1[ans.uid] = self.ansIter1[ans.uid] || [];
                     self.ansIter1[ans.uid].push(ans);
                     self.highlightSerial(ans.serial, self.docIdx[ans.docid], self.secondaryApplier);
                 });
+                self.tabOptions.push("Individual");
             });
         }
         if(self.iteration > 2) {
-            self.tabOptions = ["Reelaboración","Original","Reelaboración Anonima"];
             $http({url: "get-team-ideas", method: "post", data: {iteration: 2}}).success((data) => {
-                self.ansIter2 = {};
                 data.forEach((ans) => {
                     self.ansIter2[ans.uid] = self.ansIter2[ans.uid] || [];
                     self.ansIter2[ans.uid].push(ans);
                     self.highlightSerial(ans.serial, self.docIdx[ans.docid], self.secondaryApplier);
                 });
+                self.tabOptions.push("Grupal Anónimo");
             });
         }
         if(self.iteration == 4){
@@ -212,41 +197,31 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     };
 
     self.sendIdea = (sel) => {
-        let postdata = {
+        let postadata = {
             text: sel.text,
             comment: sel.comment,
             serial: sel.serial,
             docid: self.documents[sel.document].id,
-            iteration: self.iteration,
-            uidoriginal: self.originalLeader,
+            iteration: self.iteration
         };
         if (sel.status == "unsaved") {
-            let url = (self.iteration == 3)? "send-team-idea" : "send-idea";
-            $http({url: url, method: "post", data: postdata}).success((data) => {
+            $http({url: "send-idea", method: "post", data: postadata}).success((data) => {
                 if (data.status == "ok") {
                     sel.expanded = false;
                     sel.status = "saved";
                     sel.id = data.id;
                 }
-                self.updateSignal();
             });
         }
         else if (sel.status == "dirty" && sel.id != null) {
-            postdata.id = sel.id;
-            $http({url: "update-idea", method: "post", data: postdata}).success((data) => {
+            postadata.id = sel.id;
+            $http({url: "update-idea", method: "post", data: postadata}).success((data) => {
                 if (data.status == "ok") {
                     sel.expanded = false;
                     sel.status = "saved";
                 }
-                self.updateSignal();
             });
         }
-    };
-
-    self.updateSignal = () => {
-        $http({url: "update-my-team", method:"post"}).success((data) => {
-            console.log("Team updated");
-        });
     };
 
     self.deleteIdea = (sel, index) => {
@@ -255,20 +230,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: "delete-idea", method: "post", data: postadata}).success((data) => {
                 if(data.status == "ok") {
                     self.selections.splice(index, 1);
-                    self.unhighlightSerial(sel.serial, self.docIdx[sel.docid]);
                 }
-                self.updateSignal();
             });
         }
         else{
             self.selections.splice(index, 1);
-            self.unhighlightSerial(sel.serial, self.docIdx[sel.docid]);
         }
     };
 
     self.copyIdea = (sel) => {
         console.log(sel);
-        if(sel == null || (sel.copied != null && sel.copied) || self.selections.length >= 3*self.documents.length) return;
+        if(sel == null || (sel.copied != null && !sel.copied)) return;
         let textDef = {
             text: sel.content,
             length: sel.content.length,
@@ -280,15 +252,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         };
         self.selections.push(textDef);
         sel.copied = true;
-        //sel.expanded = false;
-        //self.setTab(0);
-    };
-
-    self.takeControl = () => {
-        $http({url: "take-team-control", method: "post"}).success((data) => {
-            console.log("Control given");
-            self.updateSignal();
-        });
+        sel.expanded = false;
+        self.setTab(0);
     };
 
     self.selTextChange = (sel) => {
@@ -300,10 +265,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     };
 
     self.setSelOrder = () => {
-        if (!self.checkAllSync()){
-            Notification.warning("Hay ideas que no han sido enviadas.");
-            return;
-        }
+        if (!self.checkAllSync()) return;
         let order = self.selections.map(e => e.id);
         let postdata = {orden: order};
         $http({url: "set-ideas-orden", method: "post", data: postdata}).success((data) => {
@@ -318,6 +280,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     };
 
     let loadPdf = (pdfData, i) => {
+        console.log("[loadPdf]");
         PDFJS.disableWorker = true;
         let pdf = PDFJS.getDocument(pdfData);
         pdf.then((pdf) => renderPdf(pdf, i));
@@ -347,6 +310,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         let canvasOffset = $canvas.offset();
         let $textLayerDiv = jQuery("<div></div>")
             .addClass("textLayer")
+            .attr(id,"textLayer")
             .css("height", viewport.height + "px")
             .css("width", viewport.width + "px");
         /*.offset({
@@ -356,7 +320,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
         $pdfContainer.append($textLayerDiv);
 
-        page.getTextContent({normalizeWhitespace: true}).then((textContent) => {
+        page.getTextContent().then((textContent) => {
             let textLayer = new TextLayerBuilder($textLayerDiv.get(0), 0);
             textLayer.setTextContent(textContent);
             let renderContext = {
@@ -368,56 +332,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.numPages -= 1;
                 if (self.numPages == 0) {
                     self.getIdeas();
-                    $(".textLayer").html(function() {
-                        return this.innerHTML.replace(/\t/g, ' ');
-                    });
                 }
             });
         });
     };
-
-
-    self.toggleUseIdea = (ideaId) => {
-        if(self.reportIdeas[ideaId] == null)
-            self.reportIdeas[ideaId] = true;
-        else
-            self.reportIdeas[ideaId] = !self.reportIdeas[ideaId];
-    };
-
-    self.shared.getReportIdeas = () => {
-        let postdata = {repid: self.shared.idReport};
-        $http({url:"get-report-ideas", method:"post", data:postdata}).success((data) => {
-            data.forEach((row) => {
-                self.reportIdeas[row.ideaid] = true;
-            });
-        });
-    };
-
-    self.shared.sendReportIdeas = () => {
-        if(self.shared.idReport != null){
-            let postdata = {repid: self.shared.idReport};
-            $http({url: "clear-report-ideas", method: "post", data: postdata}).success((data) => {
-                if(data.status == "ok"){
-                    for(var iid in self.reportIdeas){
-                        if(self.reportIdeas[iid]){
-                            $http({url: "send-report-idea", method: "post", data: {repid: self.shared.idReport, iid:iid}}).success((data) => {
-                                console.log("Report idea sent");
-                            });
-                        }
-                    }
-                }
-            })
-        }
-        else{
-            $http({url:"get-my-report", method:"post"}).success((data) => {
-                if (data.status == "ok"){
-                    self.shared.idReport = data.id;
-                    self.shared.sendReportIdeas();
-                }
-            });
-        }
-    };
-
     self.init();
 
 }]);
@@ -437,7 +355,6 @@ app.controller("ReportController", ["$scope", "$http", function ($scope, $http) 
         $http({url:"send-report", method:"post", data:postdata}).success((data) => {
             if (data.status == "ok"){
                 self.lastSent = new Date();
-                self.shared.sendReportIdeas();
             }
         });
     };
@@ -446,8 +363,6 @@ app.controller("ReportController", ["$scope", "$http", function ($scope, $http) 
         $http({url:"get-my-report", method:"post"}).success((data) => {
             if (data.status == "ok"){
                 self.content = data.content;
-                self.shared.idReport = data.id;
-                self.shared.getReportIdeas();
             }
         });
     };
