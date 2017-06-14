@@ -18,7 +18,7 @@
                 var scriptTag = $document[0].createElement('script');
                 scriptTag.type = 'text/javascript';
                 scriptTag.async = true;
-                scriptTag.src = 'js/node_modules/d3/d3.js';
+                scriptTag.src = 'js/libs/d3.min.js';
                 scriptTag.onreadystatechange = function () {
                     if (this.readyState == 'complete') onScriptLoad();
                 }
