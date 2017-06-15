@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div id="argmap-comment" ng-show="$ctrl.commentVisible" data-argmap-draggable class="ng-hide argmap-popover" style="position:absolute;top:{{$ctrl.currentComment.y}}px;left:{{$ctrl.currentComment.x + 40}}px;">
+    <div class="argmap-popover-inner">
+        <div class="argmap-popover-title">
+            Comentario IFs {{$ctrl.currentComment.edge.source.id}}-{{$ctrl.currentComment.edge.target.id}}
+            <button type="button" ng-click="$ctrl.commentVisible = !$ctrl.commentVisible" class="close close-popover" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        </div>
+        <div class="argmap-popover-content">
+            <p>
+                <a href="#" onaftersave="onCommentUpdate()" data-editable-text="$ctrl.currentComment.edge.comment">{{$ctrl.currentComment.edge.comment}}</a>
+            </p>
+        </div>
+    </div>
+</div>
