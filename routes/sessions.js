@@ -59,12 +59,12 @@ router.post("/update-session", rpg.execSQL({
 
 router.post("/upload-file", (req, res) => {
     if (req.session.uid != null && req.body.title != null && req.body.title != "" && req.files.pdf != null && req.files.pdf.mimetype == "application/pdf") {
-        console.log(req.body);
         rpg.execSQL({
             dbcon: pass.dbcon,
             sql: "insert into documents(title,path,sesid,uploader) values ($1,$2,$3,$4)",
             sqlParams: [rpg.param("post", "title"), rpg.param("calc", "path"), rpg.param("post", "sesid"), rpg.param("ses", "uid")],
             onStart: (ses, data, calc) => {
+                // calc.path = "uploads" + req.files.pdf.file.split("uploads")[1];
                 calc.path = "uploads" + req.files.pdf.file.split("uploads")[1];
             },
             onEnd: () => {

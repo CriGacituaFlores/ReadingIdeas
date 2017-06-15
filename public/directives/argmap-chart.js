@@ -4,7 +4,13 @@
 (function () {
     'use strict';
 
-    angular.module('argmap.directives')
+    angular.module('argmap.defaults', [])
+        .constant('default_messages', {
+            'blank_comment' : '(Sin comentario)'
+        });
+
+    // setup dependency injection
+    angular.module('argmap.directives', ['argmap.defaults', 'd3'])
         .directive('argmapChart', ['default_messages', 'd3', function(default_messages, d3) {
             return {
                 restrict: 'EA',

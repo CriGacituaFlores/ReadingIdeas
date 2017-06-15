@@ -15,11 +15,14 @@
     <script src="libs/angular-timer.min.js"></script>
     <script src="libs/socket.min.js"></script>
     <script src="libs/angular-ui-notification.min.js"></script>
-    <script src="js/editor-ctrl.min.js"></script>
+    <script src="services/d3.js"></script>
+    <script src="directives/argmap-chart.js"></script>
+    <script src="js/editor-ctrl.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/minimal.css">
+    <link rel="stylesheet" href="css/argmap.css"/>
     <link rel="stylesheet" href="css/angular-ui-tree.min.css">
     <link rel="stylesheet" href="css/main.css"/>
 </head>
@@ -53,6 +56,7 @@
         </div>
         <div class="col-sm-6">
             <a onclick="window.history.back()" class="btn btn-sm btn-default pull-right">Atrás</a>
+            <button ng-show="iteration > 0" class="btn btn-sm btn-default pull-right" ng-click="argmapVisible = !argmapVisible"><i class="fa fa-connectdevelop"></i> {{argmapVisible ? 'Ocultar mapa' : 'Ver mapa'}}</button>
             <button disabled class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && !followLeader"><i class="fa fa-star"></i> Representante </button>
             <button class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && followLeader" ng-click="takeControl()">Tomar Control</button>
             <button class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished}" ng-hide="finished">
@@ -62,10 +66,40 @@
     </div>
 
     <div class="row">
-        <div id="pdf-container" class="pdf-content col-sm-9">
-            <div class="centered">
-                <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
-                ng-show="$index==selectedDocument"></div>
+        <!-- TODO: encapsulate argmap view in template; move controller logic to component controller -->
+        <div id="content-container" class="col-sm-9">
+            <div id="argmap" ng-show="argmapVisible && iteration > 0" style="background:#fff;height:800px">
+                <div class="alerts">
+                    <div uib-alert close="closeHelp()" dismiss-on-timeout="5000" class="alert-info" ng-show="helpVisible && (createEdges || deleteEdges)">
+                        <div ng-show="deleteEdges">
+                            <strong>Toca el arco que deseas eliminar, o vuelve a presionar el botón "Borrar Arco" para cancelar.</strong>
+                        </div>
+                        <div ng-show="createEdges">
+                            <strong>Toca el primer nodo que deseas unir, y luego toca el siguiente. El arco aparecerá inmediatamente.</strong>
+                        </div>
+                    </div>
+                </div>
+                <div argmap-chart id="argmap-chart-container" comment-click-callback="onCommentClicked" node-click-callback="onNodeClicked" edge-click-callback="onEdgeClicked" chart-set-callback="onSetChart" ideas="ideas" edges="edges">
+                    <div id="argmap-comment" ng-show="commentVisible" data-argmap-draggable class="ng-hide argmap-popover" style="position:absolute;top:{{currentComment.y}}px;left:{{currentComment.x + 40}}px;">
+                        <div class="argmap-popover-inner">
+                            <div class="argmap-popover-title">
+                                Comentario IFs {{currentComment.edge.source.id}}-{{currentComment.edge.target.id}}
+                                <button type="button" ng-click="commentVisible = !commentVisible" class="close close-popover" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="argmap-popover-content">
+                                <p>
+                                    <a href="#" onaftersave="onCommentUpdate()" data-editable-text="currentComment.edge.comment">{{currentComment.edge.comment}}</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="pdf-container" ng-show="!argmapVisible" class="pdf-content">
+                <div class="centered">
+                    <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
+                         ng-show="$index==selectedDocument"></div>
+                </div>
             </div>
         </div>
         <div class="col-sm-3 side-bar">
