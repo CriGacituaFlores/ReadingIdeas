@@ -14,23 +14,17 @@
         .component('argmapChart', {
             controller : ArgmapCtrl,
             templateUrl: 'components/views/argmap.basic.ejs.html',
-            transclude: true,
             bindings: {
-                commentClickCallback: '&',
-                edgeClickCallback: '&',
-                nodeClickCallback: '&'
+                refreshCallback: '&',
+                edges: '=',
+                ideas: '='
             }
         });
 
-    function ArgmapCtrl($scope, $element, d3, d3GraphCreator, defaultMessages) {
+    function ArgmapCtrl($scope, $element, $attrs, d3, d3GraphCreator, defaultMessages) {
         let ctrl = this;
 
         ctrl.$onInit = () => {
-            // Argument map initial - hardcoded - ideas
-            ctrl.ideas = [{'title': "Idea fuerza 1", 'summary': "Premise", 'id': 1, 'x': 100, 'y': 100},
-                {'title': "Idea fuerza 2", 'summary': "Conclusion", 'id': 2, 'x': 100, 'y': 100 + 200}];
-            ctrl.edges = [{'source' : ctrl.ideas[0], 'target' : ctrl.ideas[1], 'comment' : 'Es muy importante la asociación'}];
-
             ctrl.deleteEdges = false;
             ctrl.createEdges = false;
             ctrl.commentVisible = false;
@@ -66,6 +60,7 @@
                     // Note that this follows the callback calling conventions explained here:
                     // https://weblogs.asp.net/dwahlin/creating-custom-angularjs-directives-part-3-isolate-scope-and-function-parameters
                     ctrl.argmapChart = graph;
+                    ctrl.refreshCallback()(() => { ctrl.argmapChart.updateGraph(); });
                 })
             })
         };

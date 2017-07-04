@@ -13,6 +13,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.myUid = -1;
     self.documents = [];
     self.selections = [];
+    self.associations = [];
     self.selectedDocument = 0;
     self.numPages = 0;
     self.ansIter1 = {};
@@ -90,6 +91,16 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         })(angular);
 
         var modules = new AngularModules();
+    };
+
+    self.subscribeArgmapRefreshHandler = (handler) => {
+        self.refreshArgmapCallback = handler;
+    };
+
+    self.refreshArgmap = () => {
+      if (self.refreshArgmapCallback) {
+          self.refreshArgmapCallback();
+      }
     };
 
     self.getSesInfo = () => {
@@ -212,7 +223,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         let postdata = {iteration: Math.min(3,self.iteration)};
         let url = (postdata.iteration == 3)? "get-team-sync-ideas" : "get-ideas";
         $http({url: url, method: "post", data: postdata}).success((data) => {
-            self.selections = [];
+            //self.selections = [];
+            self.selections.length = 0;
             data.forEach((idea) => {
                 let textDef = {
                     id: idea.id,
@@ -221,11 +233,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     document: arrayIndexOfId(self.documents, idea.docid),
                     comment: idea.descr,
                     expanded: false,
-                    status: "saved"
+                    status: "saved",
+                    x: 100,
+                    y: 100
                 };
                 self.highlightSerial(textDef.serial, textDef.document);
                 self.selections.push(textDef);
             });
+
+            console.log("[editorCtrl] post getIdeas: self.selections.length: " + self.selections.length);
+
+            self.refreshArgmap();
         });
         if(self.iteration > 1) {
             self.tabOptions = ["Reelaboración","Original"];
@@ -273,7 +291,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     sel.expanded = false;
                     sel.status = "saved";
                     sel.id = data.id;
+                    sel.x = 100;
+                    sel.y = 100;
                 }
+
+                // refresh argmap!
+                self.refreshArgmap();
+
                 self.updateSignal();
             });
         }
@@ -284,6 +308,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     sel.expanded = false;
                     sel.status = "saved";
                 }
+
+                // refresh argmap!
+                self.refreshArgmap();
+
                 self.updateSignal();
             });
         }
@@ -304,16 +332,22 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     self.unhighlightSerial(sel.serial, self.docIdx[sel.docid]);
                 }
                 self.updateSignal();
+
+                // refresh argmap!
+                self.refreshArgmap();
             });
         }
         else{
             self.selections.splice(index, 1);
             self.unhighlightSerial(sel.serial, self.docIdx[sel.docid]);
+
+            // refresh argmap!
+            self.refreshArgmap();
         }
     };
 
     self.copyIdea = (sel) => {
-        console.log(sel);
+        console.log('[copyIdea] sel: ' + sel);
         if(sel == null || (sel.copied != null && sel.copied) || self.selections.length >= 3*self.documents.length) return;
         let textDef = {
             text: sel.content,

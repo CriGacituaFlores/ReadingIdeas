@@ -68,7 +68,7 @@
 
     <div class="row">
         <div id="content-container" class="col-sm-9">
-            <argmap-chart ng-show="argmapVisible && iteration > 0"></argmap-chart>
+            <argmap-chart ng-show="argmapVisible && iteration > 0" refresh-callback="subscribeArgmapRefreshHandler" ideas="selections" edges="associations"></argmap-chart>
             <div id="pdf-container" ng-show="!argmapVisible" class="pdf-content">
                 <div class="centered">
                     <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"

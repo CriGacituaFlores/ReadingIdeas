@@ -231,8 +231,8 @@ GraphCreator.prototype.selectElementContents = function (el) {
 };
 
 /* insert svg line breaks: taken from http://stackoverflow.com/questions/13241475/how-do-i-include-newlines-in-labels-in-d3-charts */
-GraphCreator.prototype.insertTitleLinebreaks = function (gEl, title) {
-    var words = title.split(/\s+/g),
+GraphCreator.prototype.insertTitleLinebreaks = function (gEl, text) {
+    var words = text.split(/\s+/g),
         nwords = words.length;
     var el = gEl.append("text")
         .attr("text-anchor", "middle")
@@ -356,7 +356,7 @@ GraphCreator.prototype.changeTextOfNode = function (d3node, d) {
             }
         })
         .on("blur", function (d) {
-            d.title = this.textContent;
+            d.text = this.textContent;
             thisGraph.insertTitleLinebreaks(d3node, d.id.toString());
             d3.select(this.parentElement).remove();
         });
@@ -439,7 +439,7 @@ GraphCreator.prototype.svgMouseUp = function () {
     } else if (state.graphMouseDown && d3.event.shiftKey) {
         // clicked not dragged from svg
         var xycoords = d3.mouse(thisGraph.svgG.node()),
-            d = {id: thisGraph.idct++, title: "Premise", x: xycoords[0], y: xycoords[1]};
+            d = {id: thisGraph.idct++, text: "Premise", x: xycoords[0], y: xycoords[1]};
         thisGraph.nodes.push(d);
         thisGraph.updateGraph();
         // make title of text immediently editable
