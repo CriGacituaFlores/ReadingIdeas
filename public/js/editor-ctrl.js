@@ -275,6 +275,29 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         }
     };
 
+    // TODO: test and debug
+    self.getAssociations = () => {
+        let postdata = {iteration: Math.min(3,self.iteration)};
+
+        // TODO: extend to collaborative work
+        let url = "get-associations";
+        $http({url: url, method: "post", data: postdata}).success((data) => {
+            self.associations.length = 0;
+            data.forEach((assoc) => {
+                let assocDef = {
+                    id: assoc.id,
+                    id_source: assoc.id_source,
+                    id_target: assoc.id_target,
+                    comment: assoc.comment,
+                    status: "saved",
+                };
+                self.associations.push(assocDef);
+            });
+
+            self.refreshArgmap();
+        });
+    };
+
     self.sendIdea = (sel) => {
         let postdata = {
             text: sel.text,
@@ -311,6 +334,37 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
                 // refresh argmap!
                 self.refreshArgmap();
+
+                self.updateSignal();
+            });
+        }
+    };
+
+    // TODO: test and debug
+    self.sendAssociation = (assoc) => {
+        let postdata = {
+            id_source: assoc.source,
+            id_dest: assoc.target,
+            comment: assoc.comment,
+            iteration: self.iteration,
+        };
+        if (assoc.status == "unsaved") {
+            let url = (self.iteration == 3)? "send-team-association" : "send-association";
+            $http({url: url, method: "post", data: postdata}).success((data) => {
+                if (data.status == "ok") {
+                    assoc.status = "saved";
+                    assoc.id = data.id;
+                }
+
+                self.updateSignal();
+            });
+        }
+        else if (assoc.status == "dirty" && assoc.id != null) {
+            postdata.id = assoc.id;
+            $http({url: "update-assoc", method: "post", data: postdata}).success((data) => {
+                if (data.status == "ok") {
+                    sel.status = "saved";
+                }
 
                 self.updateSignal();
             });

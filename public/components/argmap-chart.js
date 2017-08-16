@@ -42,6 +42,8 @@
                         .append("svg:svg")
                         .attr("id", "argmap_graph");
 
+                    // TODO: add an event notifying the creation of a new edge
+                    // TODO: add an event notifying edge update (comment update)
                     let graph = new GraphCreator({
                             commentClick: ctrl.onCommentClicked,
                             edgeClick: ctrl.onEdgeClicked,
