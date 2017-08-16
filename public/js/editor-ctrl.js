@@ -93,6 +93,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         var modules = new AngularModules();
     };
 
+    self.edgeCreateCallback = () => {
+        // TODO: actualizar las asociaciones en el servidor
+    };
+
+    self.edgeDeleteCallback = () => {
+        // TODO: actualizar las asociaciones en el servidor
+        // llamar a sendAssociation
+    };
+
     self.subscribeArgmapRefreshHandler = (handler) => {
         self.refreshArgmapCallback = handler;
     };

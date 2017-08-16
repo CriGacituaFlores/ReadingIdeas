@@ -10,11 +10,14 @@
         });
 
     // create component
+    // Agregamos abajo callbacks para cuando hay creacion y eliminacion de arcos
     angular.module('argmap', ['argmap.defaults', 'd3', 'd3GraphCreator'])
         .component('argmapChart', {
             controller : ArgmapCtrl,
             templateUrl: 'components/views/argmap.basic.ejs.html',
             bindings: {
+                edgeDeleteCallback: '&',
+                edgeCreateCallback: '&',
                 refreshCallback: '&',
                 edges: '=',
                 ideas: '='
@@ -63,6 +66,13 @@
                     // https://weblogs.asp.net/dwahlin/creating-custom-angularjs-directives-part-3-isolate-scope-and-function-parameters
                     ctrl.argmapChart = graph;
                     ctrl.refreshCallback()(() => { ctrl.argmapChart.updateGraph(); });
+
+                    /// Esto llama el edge delete callback configurado en EditorCtrl
+                    /// TODO: poner donde haya eliminacion
+                    ctrl.edgeDeleteCallback()();
+                    /// Esto llama el edge create callback configurado en EditorCtrl
+                    /// TODO: poner donde haya creacion
+                    ctrl.edgeCreateCallback()();
                 })
             })
         };
