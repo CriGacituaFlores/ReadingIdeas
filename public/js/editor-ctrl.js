@@ -14,6 +14,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.documents = [];
     self.selections = [];
     self.associations = [];
+    self.simplifications = [];
     self.selectedDocument = 0;
     self.numPages = 0;
     self.ansIter1 = {};
@@ -49,6 +50,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         $socket.on("updateTeam", (data) => {
              if(self.teamId == data.tmid){
                  self.getIdeas();
+                 self.getAssociations();
                  self.getTeamInfo();
              }
         });
@@ -305,7 +307,29 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
             self.refreshArgmap();
         });
+        if(self.iteration > 1) {
+            // TODO: here extends after asking Sergio
+        }
+        if(self.iteration > 2) {
+            // TODO: here extends after asking Sergio
+        }
+        // ite 4 & 5 not needed here, already in GetIdea()
     };
+
+    self.sendIdeaSimplification = (id) => {
+        let postdata = {
+            original_idea_id: id,
+            iteration: self.iteration,
+            // TODO: map from ABCDE... to a comment
+            comment: simple_index
+        };
+        if(simp.status == "unsaved"){
+            let url = (self.iteration == 3)? "send-team-idea-simplification":"send-idea-simplification";
+            $http({url: url, method: "post", data: postdata}).success((data) => {
+
+            });
+        }
+    }
 
     self.sendIdea = (sel) => {
         let postdata = {
@@ -316,15 +340,16 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             iteration: self.iteration,
             uidoriginal: self.originalLeader,
         };
-        if (sel.status == "unsaved") {
+        if (sel.status == "unsaved"){
             let url = (self.iteration == 3)? "send-team-idea" : "send-idea";
             $http({url: url, method: "post", data: postdata}).success((data) => {
                 if (data.status == "ok") {
                     sel.expanded = false;
                     sel.status = "saved";
                     sel.id = data.id;
-                    sel.x = 100;
-                    sel.y = 100;
+                    sel.x = 100 + Math.floor(Math.random() * 200);
+                    sel.y = 100 + Math.floor(Math.random() * 200);
+                    sendIdeaSimplification(sel.id);
                 }
 
                 // refresh argmap!
@@ -465,6 +490,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         let pdf = PDFJS.getDocument(pdfData);
         pdf.then((pdf) => renderPdf(pdf, i));
     };
+
+    let simple_index = () => {
+        var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for(let i = 0; i < alphabet.length; i++ ) {
+            var c = alphabet.charAt(i);
+            if(!simplifications.includes(c)) {
+                simplifications.push(c);
+                return c;
+            }
+        }
+    }
 
     let renderPdf = (pdf, idx) => {
         for (let i = 1; i <= pdf.numPages; i++) {

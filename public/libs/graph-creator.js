@@ -446,7 +446,7 @@ GraphCreator.prototype.svgMouseUp = function () {
         var d3txt = thisGraph.changeTextOfNode(thisGraph.circles.filter(function (dval) {
                 return dval.id === d.id;
             }), d),
-            txtNode = d3txt.node();
+            txtNode = d3txt.node()+"->";
         thisGraph.selectElementContents(txtNode);
         txtNode.focus();
     } else if (state.shiftNodeDrag) {

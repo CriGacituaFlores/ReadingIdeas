@@ -180,6 +180,14 @@ router.post("/send-association", rpg.singleSQL({
     sqlParams: [rpg.param("post", "id_source"), rpg.param("post", "id_target"), rpg.param("post", "comment"), rpg.param("ses", "ses"), rpg.param("ses", "uid"), rpg.param("post", "iteration")]
 }));
 
+router.post("/send-idea-simplification", rpg.singleSQL({
+    dbcon: pass.dbcon,
+    sql: "insert into idea_simplification(original_idea_id, iteration, comment) values ($1,$2,$3) returning comment",
+    sesReqData: ["uid", "ses"],
+    postReqData: ["id_source", "iteration", "comment"],
+    sqlParams: [rpg.param("post", "id_source"),  rpg.param("post", "iteration"),  rpg.param("post", "comment")]
+}));
+
 router.post("/send-team-idea", rpg.singleSQL({
     dbcon: pass.dbcon,
     sql: "insert into ideas(content,descr,serial,docid,uid,iteration,stime) values ($1,$2,$3,$4,$5,$6,now()) returning id",
@@ -230,11 +238,22 @@ router.post("/get-ideas", rpg.multiSQL({
     sqlParams: [rpg.param("ses", "uid"), rpg.param("ses", "ses"), rpg.param("post", "iteration")]
 }));
 
+// TODO: check rpg.param() to get idea_id
+
+router.post("/get-ideas-id-simplification", rpg.multiSQL({
+    dbcon: pass.dbcon,
+    sql: "select text from idea_simplification as i where " +
+    "i.original_idea_id = $1 and  i.iteration = $2",
+    sesReqData: ["uid", "ses"],
+    postReqData: ["iteration"],
+    sqlParams: [rpg.param("ses", "uid"),  rpg.param("post", "iteration")]
+}));
+
 // TODO: implement get-team-associations
 
 router.post("/get-associations", rpg.multiSQL({
     dbcon: pass.dbcon,
-    sql: "select i.id, i.id_source, i.id_target, i.comment where" +
+    sql: "select i.id, i.id_source, i.id_target, i.comment from idea_association as i where" +
     "i.uid = $1 and i.sesid = $2 and i.iteration = $3 and i.team is NULL order by i.id asc",
     sesReqData: ["uid", "ses"],
     postReqData: ["iteration"],

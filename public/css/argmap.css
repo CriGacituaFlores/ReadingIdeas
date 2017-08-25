@@ -10,14 +10,14 @@ circle.nocomment {
     fill: #FFFFFF !important;
     stroke: #333;
     stroke-width: 2px;
-    r: 12px;
+    r: 10px;
 }
 
 circle.edge-handle {
     fill: #FFFB60;
     stroke: #333;
     stroke-width: 2px;
-    r: 12px;
+    r: 10px;
 }
 
 circle.edge-handle:hover {
@@ -36,7 +36,7 @@ g.conceptG:hover circle{
     fill: #bee5ff;}
 
 g.selected circle{
-    fill: #bee5ff;}
+    fill: #65ff69;}
 g.selected:hover circle{
     fill: #bee5ff;}
 
@@ -52,7 +52,7 @@ path.link:hover{
 }
 
 g.connect-node circle{
-    fill: #BEFFFF;
+    fill: #65ff69;
 }
 
 path.link.hidden{
@@ -135,3 +135,4 @@ textarea{
     top: 4px;
     left: 4px;
     right: 4px;
+}
