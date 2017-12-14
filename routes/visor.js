@@ -188,6 +188,14 @@ router.post("/send-idea-simplification", rpg.singleSQL({
     sqlParams: [rpg.param("post", "id_source"),  rpg.param("post", "iteration"),  rpg.param("post", "comment")]
 }));
 
+router.post("/update-idea-simplification", rpg.execSQL({
+    dbcon: pass.dbcon,
+    sql: "update idea_simplification set comment = $1 where id_source = $2 and iteration =$3",
+    sesReqData: ["uid", "ses"],
+    postReqData: ["comment", "id_source", "iteration"],
+    sqlParams: [rpg.param("post", "comment")]
+}));
+
 router.post("/send-team-idea", rpg.singleSQL({
     dbcon: pass.dbcon,
     sql: "insert into ideas(content,descr,serial,docid,uid,iteration,stime) values ($1,$2,$3,$4,$5,$6,now()) returning id",
@@ -212,7 +220,13 @@ router.post("/update-idea", rpg.execSQL({
     sqlParams: [rpg.param("post", "text"), rpg.param("post", "comment"), rpg.param("post", "serial"), rpg.param("post", "id")]
 }));
 
-// TODO: implement update-assoc?
+router.post("/update-associations", rpg.multiSQL({
+    dbcon: pass.dbcon,
+    sql: "update idea_association set id_source = $1, id_target = $2, comment = $3 where id = $4",
+    sesReqData: ["uid", "ses"],
+    postReqData: ["id_source", "id_target", "comment", "id"],
+    sqlParams: [rpg.param("ses", "uid"), rpg.param("ses", "ses"), rpg.param("post", "iteration")]
+}));
 
 router.post("/update-pauta-idea", rpg.execSQL({
     dbcon: pass.dbcon,
