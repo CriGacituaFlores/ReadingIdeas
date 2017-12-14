@@ -119,6 +119,7 @@
                 </div>
             </div>
             <div ng-show="selectedSes.type == 'L'" ng-controller="DocumentsController">
+            <div ng-show="selectedSes.type == 'L' || selectedSes.type == 'M'" ng-controller="DocumentsController">
                 <h4>Documentos</h4>
                 <div class="list-group">
                     <div class="list-group-item" ng-repeat="doc in documents">

@@ -6,3 +6,4 @@ create table question_text(
 );
 
 alter table questions add column textid integer default null;
+alter table ideas add column orden integer default null;

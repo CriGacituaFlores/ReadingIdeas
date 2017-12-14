@@ -1,6 +1,6 @@
 "use strict";
 
-let app = angular.module("Editor", ['ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
+var app = angular.module("Editor", ['argmap', 'ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
 
 app.factory("$socket", ["socketFactory", function (socketFactory) {
     return socketFactory();
@@ -13,6 +13,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.myUid = -1;
     self.documents = [];
     self.selections = [];
+    self.associations = [];
+    self.simplifications = [];
     self.selectedDocument = 0;
     self.numPages = 0;
     self.ansIter1 = {};
@@ -26,6 +28,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.teamId = -1;
     self.reportIdeas = {};
     self.shared = {};
+    self.argmapVisible = false;
 
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
     self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
@@ -49,9 +52,69 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                  if(!self.leader) {
                      self.getIdeas();
                  }
+                 self.getIdeas();
+                 self.getAssociations();
                  self.getTeamInfo();
              }
         });
+
+        var AngularModules = (function (angular) {
+            function AngularModules() {
+                extendAngularModule();
+                angular.element(document).ready(function () {
+                    getModulesDependencies();
+                });
+            }
+
+            var extendAngularModule = function () {
+                var orig = angular.module;
+                angular.modules = [];
+                angular.module = function () {
+                    var args = Array.prototype.slice.call(arguments);
+                    var modules = [];
+                    if (arguments.length > 1) {
+                        modules.push(arguments[0]);
+                    }
+                    for (var i = 0; i < modules.length; i++) {
+                        angular.modules.push({
+                            'module': modules[i]
+                        });
+                    }
+                    return orig.apply(null, args);
+                };
+            };
+
+            var getModulesDependencies = function () {
+                for (var i = 0; i < angular.modules.length; i++) {
+                    var module = angular.module(angular.modules[i].module);
+                    angular.modules[i].dependencies = module && module.hasOwnProperty('requires') ? module.requires : [];
+                }
+            };
+
+            return AngularModules;
+
+        })(angular);
+
+        var modules = new AngularModules();
+    };
+
+    self.edgeCreateCallback = () => {
+        // TODO: actualizar las asociaciones en el servidor
+    };
+
+    self.edgeDeleteCallback = () => {
+        // TODO: actualizar las asociaciones en el servidor
+        // llamar a sendAssociation
+    };
+
+    self.subscribeArgmapRefreshHandler = (handler) => {
+        self.refreshArgmapCallback = handler;
+    };
+
+    self.refreshArgmap = () => {
+      if (self.refreshArgmapCallback) {
+          self.refreshArgmapCallback();
+      }
     };
 
     self.getSesInfo = () => {
@@ -62,6 +125,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.sesId = data.id;
             self.sesDescr = data.descr;
             self.sesSTime = (data.stime != null) ? new Date(data.stime) : null;
+            self.sesType = data.type;
             $http({url: "get-documents", method: "post"}).success((data) => {
                 self.documents = data;
                 data.forEach((doc,i) => {
@@ -215,7 +279,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         let postdata = {iteration: Math.min(3,self.iteration)};
         let url = (postdata.iteration == 3)? "get-team-sync-ideas" : "get-ideas";
         $http({url: url, method: "post", data: postdata}).success((data) => {
-            self.selections = [];
+            //self.selections = [];
+            self.selections.length = 0;
             data.forEach((idea) => {
                 let textDef = {
                     id: idea.id,
@@ -224,11 +289,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     document: arrayIndexOfId(self.documents, idea.docid),
                     comment: idea.descr,
                     expanded: false,
-                    status: "saved"
+                    status: "saved",
+                    x: 100,
+                    y: 100
                 };
                 self.highlightSerial(textDef.serial, textDef.document);
                 self.selections.push(textDef);
             });
+
+            console.log("[editorCtrl] post getIdeas: self.selections.length: " + self.selections.length);
+
+            self.refreshArgmap();
         });
         if(self.iteration > 1) {
             self.tabOptions = [{name:"Individual", idx:1},{name: "Reelaboración Anónima", idx: 0}];
@@ -260,6 +331,51 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         }
     };
 
+    // TODO: test and debug
+    self.getAssociations = () => {
+        let postdata = {iteration: Math.min(3,self.iteration)};
+
+        // TODO: extend to collaborative work
+        let url = "get-associations";
+        $http({url: url, method: "post", data: postdata}).success((data) => {
+            self.associations.length = 0;
+            data.forEach((assoc) => {
+                let assocDef = {
+                    id: assoc.id,
+                    id_source: assoc.id_source,
+                    id_target: assoc.id_target,
+                    comment: assoc.comment,
+                    status: "saved",
+                };
+                self.associations.push(assocDef);
+            });
+
+            self.refreshArgmap();
+        });
+        if(self.iteration > 1) {
+            // TODO: here extends after asking Sergio
+        }
+        if(self.iteration > 2) {
+            // TODO: here extends after asking Sergio
+        }
+        // ite 4 & 5 not needed here, already in GetIdea()
+    };
+
+    self.sendIdeaSimplification = (id) => {
+        let postdata = {
+            original_idea_id: id,
+            iteration: self.iteration,
+            // TODO: map from ABCDE... to a comment
+            comment: simple_index
+        };
+        if(simp.status == "unsaved"){
+            let url = (self.iteration == 3)? "send-team-idea-simplification":"send-idea-simplification";
+            $http({url: url, method: "post", data: postdata}).success((data) => {
+
+            });
+        }
+    }
+
     self.sendIdea = (sel) => {
         if(self.iteration == 3 && !self.leader) return;
         let postdata = {
@@ -270,16 +386,25 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             iteration: self.iteration,
             uidoriginal: self.originalLeader,
         };
-        if (sel.status == "unsaved") {
+        if (sel.status == "unsaved"){
             let url = (self.iteration == 3)? "send-team-idea" : "send-idea";
             $http({url: url, method: "post", data: postdata}).success((data) => {
                 if (data.status == "ok") {
                     sel.expanded = false;
                     sel.status = "saved";
                     sel.id = data.id;
+                    sel.x = 100 + Math.floor(Math.random() * 200);
+                    sel.y = 100 + Math.floor(Math.random() * 200);
+                    sendIdeaSimplification(sel.id);
                 }
+
                 if(self.iteration == 3)
                     self.updateSignal();
+
+                // refresh argmap!
+                self.refreshArgmap();
+
+                self.updateSignal();
             });
         }
         else if (sel.status == "dirty" && sel.id != null) {
@@ -289,8 +414,47 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     sel.expanded = false;
                     sel.status = "saved";
                 }
+
                 if(self.iteration == 3)
                     self.updateSignal();
+
+
+                // refresh argmap!
+                self.refreshArgmap();
+
+                self.updateSignal();
+            });
+        }
+    };
+
+    // TODO: test and debug
+    self.sendAssociation = (assoc) => {
+        let postdata = {
+            id_source: assoc.source,
+            id_dest: assoc.target,
+            comment: assoc.comment,
+            iteration: self.iteration,
+        };
+        if (assoc.status == "unsaved") {
+            let url = (self.iteration == 3)? "send-team-association" : "send-association";
+            $http({url: url, method: "post", data: postdata}).success((data) => {
+                if (data.status == "ok") {
+                    assoc.status = "saved";
+                    assoc.id = data.id;
+                }
+
+                self.updateSignal();
+            });
+        }
+        else if (assoc.status == "dirty" && assoc.id != null) {
+            postdata.id = assoc.id;
+            $http({url: "update-assoc", method: "post", data: postdata}).success((data) => {
+                if (data.status == "ok") {
+                    sel.status = "saved";
+                }
+
+                self.updateSignal();
+
             });
         }
     };
@@ -311,17 +475,23 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     self.unhighlightSerial(sel.serial, self.docIdx[sel.docid]);
                 }
                 self.updateSignal();
+
+                // refresh argmap!
+                self.refreshArgmap();
             });
         }
         else{
             self.selections.splice(index, 1);
             self.unhighlightSerial(sel.serial, self.docIdx[sel.docid]);
+
+            // refresh argmap!
+            self.refreshArgmap();
         }
         self.uncopyAllIdeas();
     };
 
     self.copyIdea = (sel) => {
-        console.log(sel);
+        console.log('[copyIdea] sel: ' + sel);
         if(sel == null || (sel.copied != null && sel.copied) || self.selections.length >= 3*self.documents.length) return;
         let textDef = {
             text: sel.content,
@@ -394,6 +564,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         let pdf = PDFJS.getDocument(pdfData);
         pdf.then((pdf) => renderPdf(pdf, i));
     };
+
+    let simple_index = () => {
+        var alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for(let i = 0; i < alphabet.length; i++ ) {
+            var c = alphabet.charAt(i);
+            if(!simplifications.includes(c)) {
+                simplifications.push(c);
+                return c;
+            }
+        }
+    }
 
     let renderPdf = (pdf, idx) => {
         for (let i = 1; i <= pdf.numPages; i++) {
@@ -490,6 +671,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         }
     };
 
+    // BEGIN argmap controller functions
+    // TODO: move to component controller
+
+
+    // END argmap controller functions
+    
     self.init();
 
 }]);

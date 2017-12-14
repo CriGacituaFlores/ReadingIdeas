@@ -1,0 +1,138 @@
+.conceptG text{
+    pointer-events: none;
+}
+
+marker{
+    fill: #333;
+}
+
+circle.nocomment {
+    fill: #FFFFFF !important;
+    stroke: #333;
+    stroke-width: 2px;
+    r: 10px;
+}
+
+circle.edge-handle {
+    fill: #FFFB60;
+    stroke: #333;
+    stroke-width: 2px;
+    r: 10px;
+}
+
+circle.edge-handle:hover {
+    fill: #ff6c3c;
+    stroke: #333;
+    stroke-width: 2px;
+}
+
+g.conceptG circle{
+    fill: #e0f1ff;
+    stroke: #333;
+    stroke-width: 2px;
+}
+
+g.conceptG:hover circle{
+    fill: #bee5ff;}
+
+g.selected circle{
+    fill: #65ff69;}
+g.selected:hover circle{
+    fill: #bee5ff;}
+
+path.link {
+    fill: none;
+    stroke: #333;
+    stroke-width: 6px;
+    cursor: default;
+}
+
+path.link:hover{
+    stroke: rgb(0, 0, 0);
+}
+
+g.connect-node circle{
+    fill: #65ff69;
+}
+
+path.link.hidden{
+    stroke-width: 0;
+}
+
+path.link.selected {
+    stroke: rgb(0, 0, 0);
+}
+
+.argmap-nodes {
+    height: 100%;
+    width: 100%;
+}
+
+.argmap-nodes .angular-ui-tree-nodes {
+    height: 100%;
+}
+
+.argmap-nodes .angular-ui-tree-node {
+    height: 100%;
+}
+
+.argmap-nodes .angular-ui-tree-placeholder {
+    background: transparent;
+    border: 0px;
+}
+
+#argmap {
+    height:600px;
+
+}
+
+#argmap-chart-container {
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+}
+
+#argmap_graph {
+    height: 100%;
+    width: 100%;
+}
+
+textarea{
+    text-align: justify;
+    white-space: normal;
+}
+
+.btn-primary {
+    background: #0099cc;
+    color: #ffffff;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open > .dropdown-toggle.btn-primary {
+    background: #33a6cc;
+}
+
+.btn-primary:active, .btn-primary.active {
+    background: #007299;
+    box-shadow: none;
+}
+
+.btn-danger {
+    background: #cc4742;
+    color: #ffffff;
+}
+
+.btn-danger:hover, .btn-danger:focus, .btn-danger:active, .btn-danger.active, .open > .dropdown-toggle.btn-danger {
+    background: #cc654e;
+}
+
+.btn-danger:active, .btn-danger.active {
+    background: #760110;
+    box-shadow: none;
+}
+
+.alerts {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    right: 4px;
+}
