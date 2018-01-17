@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="Rubrica">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>DocCollab</title>
+    <script src="libs/angular.min.js"></script>
+    <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
+    <script src="libs/angular-timer.min.js"></script>
+    <script src="libs/socket.min.js"></script>
+    <script src="js/rubrica-ctrl.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body class="bg-white">
+
+<div ng-controller="RubricaController">
+
+    <div class="row top-bar-mini">
+        <div class="text-center">
+            <span ng-repeat="st in sesStatusses">
+                <span class="label label-primary" ng-class="{'bg-black-alpha': $index==iteration - 3*miters}" ng-bind="st"></span>
+                <span ng-hide="$last">→</span>
+            </span>
+            <span class="pull-right margin-right-24" ng-show="sesSTime != null">
+                <timer start-time="sesSTime">{{hours}}h {{minutes}}m {{seconds}}s</timer>
+            </span>
+        </div>
+    </div>
+
+    <div class="top-bar-mini">
+        <strong class="simple-margin-left">Factor detonante: </strong>
+        <span ng-bind="sesDescr"></span>
+    </div>
+
+    <div class="row top-bar">
+        <div class="col-sm-6 full-height">
+            <span class="simple-margin-left" ng-show="iteration == 6">Reportes: </span>
+            <span ng-repeat="report in reports" class="side-top-btn" ng-class="{'active': $index==selectedIndex}"
+                  ng-click="selectReport($index)" ng-show="iteration == 6">
+                Reporte {{$index + 1}}
+            </span>
+            <!--<strong class="pull-right margin-top-8" ng-bind="iterationNames[iteration]"></strong>-->
+        </div>
+        <div class="col-sm-6">
+            <a onclick="window.history.back()" class="btn btn-sm btn-default pull-right">Atrás</a>
+        </div>
+    </div>
+
+    <div class="pad-content" style="max-height: 100vh">
+    <div class="row bg-white"  ng-if="report != null">
+        <div class="col-sm-4">
+            <div class="report">
+                <h3 ng-show="iteration < 7">Reporte</h3>
+                <h3 ng-show="iteration == 7">Mi Reporte</h3>
+                <p class="text-justify" ng-bind="report.content"></p>
+            </div>
+            <br>
+            <hr>
+        </div>
+        <div class="col-sm-8">
+            <h3>Instrucciones:</h3>
+            <div ng-bind="instructions[iteration]"></div>
+            <hr>
+            <div class="rubrica" ng-show="iteration < 7">
+                <h3>Rúbrica</h3>
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Criterio</th>
+                        <th>No Logrado (1 pto)</th>
+                        <th>En Proceso (2 pto)</th>
+                        <th>Por Lograr (3 pto)</th>
+                        <th>Logrado (4 pto)</th>
+                    </tr>
+                    <tr ng-repeat="criterio in criterios">
+                        <td ng-bind="criterio.name"></td>
+                        <td ng-click="selectCriterio(criterio.id, 1)" ng-class="{active: report.select[criterio.id] == 1, clickable: canAnswer}">
+                            <i class="fa fa-check" ng-show="report.truev[criterio.id] == 1"></i> <span ng-bind="criterio.inicio"></span>
+                        </td>
+                        <td ng-click="selectCriterio(criterio.id, 2)" ng-class="{active: report.select[criterio.id] == 2, clickable: canAnswer}">
+                            <i class="fa fa-check" ng-show="report.truev[criterio.id] == 2"></i> <span ng-bind="criterio.proceso"></span>
+                        </td>
+                        <td ng-click="selectCriterio(criterio.id, 3)" ng-class="{active: report.select[criterio.id] == 3, clickable: canAnswer}">
+                            <i class="fa fa-check" ng-show="report.truev[criterio.id] == 3"></i> <span ng-bind="criterio.competente"></span>
+                        </td>
+                        <td ng-click="selectCriterio(criterio.id, 4)" ng-class="{active: report.select[criterio.id] == 4, clickable: canAnswer}">
+                            <i class="fa fa-check" ng-show="report.truev[criterio.id] == 4"></i> <span ng-bind="criterio.avanzado"></span>
+                        </td>
+                    </tr>
+                </table>
+                <h4>Comentario:</h4>
+                <textarea class="form-control" ng-model="report.comment" ng-disabled="!canAnswer" rows="4"></textarea>
+                <span class="red" ng-show="commentError">Debe agregar un comentario de la evaluación</span>
+                <button class="pull-right btn btn-default" ng-click="sendSelection(report)" ng-disabled="!checkCriteria(report) || !canAnswer"
+                    ng-class="{'btn-success': report.status == 'SENT', 'btn-warning': report.status == 'DIRTY'}">
+                    <i class="fa fa-send"></i> Enviar
+                </button>
+                <div class="row"></div>
+            </div>
+            <div ng-show="iteration == 7">
+                <h3>Respuestas:</h3>
+                <ul class="list-group">
+                    <li class="list-group-item" ng-repeat="ans in answers">
+                        <strong>Respuesta {{$index + 1}}. Puntaje: {{ans.val | number:2}} / 4</strong>
+                        <p ng-bind="ans.com"></p>
+
+                        <table class="table table-bordered font-mini">
+                            <tr>
+                                <th>Criterio</th>
+                                <th>No Logrado (1 pto)</th>
+                                <th>En Proceso (2 pto)</th>
+                                <th>Por Lograr (3 pto)</th>
+                                <th>Logrado (4 pto)</th>
+                            </tr>
+                            <tr ng-repeat="criterio in criterios">
+                                <td ng-bind="criterio.name"></td>
+                                <td ng-class="{active: answersRubrica[ans.uid][criterio.id] == 1}" ng-bind="criterio.inicio"></td>
+                                <td ng-class="{active: answersRubrica[ans.uid][criterio.id] == 2}" ng-bind="criterio.proceso"></td>
+                                <td ng-class="{active: answersRubrica[ans.uid][criterio.id] == 3}" ng-bind="criterio.competente"></td>
+                                <td ng-class="{active: answersRubrica[ans.uid][criterio.id] == 4}" ng-bind="criterio.avanzado"></td>
+                            </tr>
+                        </table>
+
+                    </li>
+                </ul>
+                <strong>Promedio: {{getAvg() | number:2}} / 4</strong>
+                <br>
+                <hr>
+                <br>
+                <a href="semantic" class="btn btn-primary"><i class="fa fa-external-link"></i> Ver Unidades Semánticas</a>
+            </div>
+            <br>
+            <br>
+        </div>
+    </div>
+    </div>
+
+</div>
+
+</body>
+</html>

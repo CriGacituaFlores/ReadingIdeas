@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="SesList">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>DocCollab</title>
+    <script src="libs/angular.min.js"></script>
+    <!--<script src="js/ses-ctrl.js"></script>-->
+    <script src="libs/socket.min.js"></script>
+    <script src="js/ses-ctrl.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/main.css"/>
+</head>
+<body>
+
+<div class="main-container" ng-controller="SesListController">
+
+    <a href="logout" class="pull-right">Salir</a>
+
+    <h3>Lista de Sesiones</h3>
+
+    <div class="list-group">
+        <a class="list-group-item" ng-repeat="ses in sessions"
+           href="to-{{(ses.type=='L')?'visor':((ses.type=='S')?'select':'semantic')}}?sesid={{ses.id}}">
+            <h4 class="list-group-item-heading" ng-bind="ses.name">
+            </h4>
+            <p class="list-group-item-text" ng-bind="ses.descr"></p>
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>
