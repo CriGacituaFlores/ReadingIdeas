@@ -80,6 +80,19 @@ hr{
     background: #fff;
 }
 
+.bg-principal {
+    background: #777;
+    color: #fff;
+}
+
+.padding-btn-new-activity {
+    padding: 10px 30px;
+}
+
+.cl-white {
+    color: #fff;
+}
+
 .bg-black{
     background: #000;
 }
@@ -102,7 +115,7 @@ a:hover{
 
 .side-panel{
     padding: 8px 24px;
-    background: #e2e2e2;
+    background: #6c859b;
     height: calc(100vh - 60px);
     overflow-y: scroll;
 }
@@ -606,4 +619,8 @@ ng-quill-editor.large .ql-editor{
 .row-no-padding > [class*="col-"] {
     padding-left: 0 !important;
     padding-right: 0 !important;
+}
+
+.list-group .active {
+    background: #777;
 }

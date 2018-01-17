@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="//cdn.quilljs.com/1.2.0/quill.snow.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css">
     <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/header.css"/>
     <script src="libs/angular.min.js"></script>
     <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
     <script src="libs/katex.min.js"></script>
@@ -37,7 +38,7 @@
         <h5>Panel de administración</h5>
     </div>
     <div class="col-sm-1">
-        <a class="btn btn-default pull-right margin-right-24" href="logout"><i class="fa fa-close"></i></a>
+        <a class="color-logout pull-right margin-right-24" href="logout"><i class="fa fa-lock"></i> Cerrar sesión</a>
     </div>
 </div>
 
@@ -45,8 +46,14 @@
 
     <div class="col-sm-3" ng-show="openSidebar">
         <div class="side-panel">
-            <button class="btn btn-sm btn-default pull-right" ng-click="openNewSes()">Nueva</button>
-            <h4>Lista de Sesiones:</h4>
+            <div class="text-center col-md-12">
+                <button class="btn btn-sm btn-default bg-principal padding-btn-new-activity" ng-click="openNewSes()">Crear nueva actividad</button>
+            </div>
+            <div class="col-md-12">
+                <h4 class="text-center cl-white">Lista de Sesiones:</h4>
+            </div>
+            
+            
             <input placeholder="Buscar..." class="form-control" ng-model="sesSearch">
             <div class="list-group">
                 <a class="list-group-item" ng-repeat="ses in sessions | filter:sesSearch" ng-click="selectSession(ses,ses.id)"
