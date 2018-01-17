@@ -85,8 +85,21 @@ hr{
     color: #fff;
 }
 
+.letter-color-title {
+    color: #6c859b;
+    font-weight: bold;
+}
+
+.border-line-r {
+    border-right: 1px solid #000;
+}
+
 .padding-btn-new-activity {
     padding: 10px 30px;
+}
+
+.margin-b-container {
+    margin-bottom: 10px;
 }
 
 .cl-white {
