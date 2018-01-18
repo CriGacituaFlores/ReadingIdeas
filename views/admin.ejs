@@ -71,30 +71,36 @@
       <span class="pull-right margin-right-24" ng-show="selectedSes.stime != null">
         <timer start-time="selectedSes.stime">{{hours}}h {{minutes}}m {{seconds}}s</timer>
       </span>
-      <h3>{{selectedSes.name}}</h3>
+      <h3 class="letter-color-title">{{selectedSes.name}}</h3>
+      <h4 class="letter-color-title">Estado actual</h4>
       <div class="center-block font-large">
-        <button class="btn btn-sm btn-default pull-right" ng-click="shared.changeState()">Ir al siguiente</button>
+        <button class="btn btn-sm btn-default pull-right bg-principal" ng-click="shared.changeState()">Ir al siguiente</button>
         <span ng-repeat="st in sesStatusses">
-          <span ng-if="selectedSes.type != 'M'" class="label label-default" ng-class="{'label-warning': $index==selectedSes.status-1}"
-            ng-bind="st"></span>
-          <span ng-if="selectedSes.type == 'M'" class="label label-default" ng-class="{'label-warning': st.i == selectedSes.status-2}"
-            ng-bind="st.name"></span>
-          <span ng-hide="$last">→</span>
+          <span ng-if="selectedSes.type != 'M'" class="label label-default statuses-content" ng-class="{'label-warning': $index==selectedSes.status-1}" ng-bind="st"></span>
+          <span ng-if="selectedSes.type == 'M'" class="label label-default statuses-content" ng-class="{'label-warning': st.i == selectedSes.status-2}" ng-bind="st.name"></span>
+          <!--<span ng-hide="$last">→</span>-->
         </span>
       </div>
       <br>
+
+      <!--
       <div class="btn-group center-block w500">
         <button class="btn btn-default" ng-repeat="x in tabOptions" ng-bind="x" ng-class="{active: $index==selectedTab}" ng-click="setTab($index)">
         </button>
       </div>
+      -->
+
+      <ul class="nav nav-tabs col-md-9">
+        <li class="nav-item" ng-repeat="x in tabOptions" ng-class="{active: $index==selectedTab}" ng-click="setTab($index)">
+          <a class="nav-link active" href="#" ng-bind="x" ng-class="{'bg-principal': $index==selectedTab}"></a>
+        </li>
+      </ul>
 
       <br>
-      <br>
-      <hr>
       <br>
 
       <!-- CONFIGURACION -->
-      <div class="pad-content pad-border" ng-show="selectedTab == 0" ng-controller="SesEditorController">
+      <div class="pad-content pad-border pad-height col-md-9" ng-show="selectedTab == 0" ng-controller="SesEditorController">
         <div>
 
           <div class="col-md-4 border-line-r">
@@ -257,40 +263,49 @@
         <div class="col-md-12">
           <hr class="margin-t-a-b"/>
           <h3 class="letter-color-title">Configuración</h3>
-          <div ng-class="{boxed: selectedTabConfig >= 0}">
+          <div ng-class="{boxed: selectedTabConfig >= 0}" class="nav-tab-without-padding">
+            <!--
             <a class="pull-right btn btn-default" ng-click="setTabConfig(-1)">
               <i class="fa fa-close"></i>
             </a>
+            
             <div class="row">
-              <div class="btn-group center-block w500">
-                <button class="btn btn-default" ng-repeat="x in tabConfig" ng-bind="x" ng-show="x != null" ng-class="{active: $index==selectedTabConfig}"
+              <div class="col-md-12">
+                <button class="btn btn-default col-md-4" ng-repeat="x in tabConfig" ng-bind="x" ng-show="x != null" ng-class="{active: $index==selectedTabConfig}"
                   ng-click="setTabConfig($index)">
                 </button>
               </div>
             </div>
+            -->
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item col-md-4 col-sm-4 nav-tab-without-padding" ng-repeat="x in tabConfig" ng-show="x != null" ng-class="{active: $index==selectedTabConfig}" ng-click="setTabConfig($index)">
+                  <a class="nav-link active" href="#" ng-bind="x" ng-class="{'bg-principal': $index==selectedTabConfig}"></a>
+                </li>
+              </ul>
 
             <!-- USUARIOS -->
             <div class="pad-content" ng-show="selectedTabConfig == 0" ng-controller="NewUsersController">
-              <h4>Agregar Usuarios</h4>
-              <label>Por usuarios específicos</label>
+              <h4 class="letter-color-title">Agregar Alumnos</h4>
+              <label class="letter-color-title">Por usuarios específicos</label>
               <div class="row">
                 <div class="col-xs-6">
                   <multiselect ms-header="Seleccionar Usuarios" multiple="true" options="x.name for x in newUsers" ng-model="newMembs">
                   </multiselect>
                 </div>
                 <div class="col-xs-3">
-                  <button class="btn btn-default form-control" ng-click="newMembs = newUsers">
+                  <button class="btn btn-default form-control bg-principal" ng-click="newMembs = newUsers">
                     <i class="fa fa-check-square-o"></i> Seleccionar todos</button>
                 </div>
                 <div class="col-xs-3">
-                  <button class="btn btn-default form-control" ng-click="addToSession()">
+                  <button class="btn btn-default form-control bg-principal" ng-click="addToSession()">
                     <i class="fa fa-plus"></i> Agregar a sesión</button>
                 </div>
               </div>
               <br>
               <hr>
               <br>
-              <h4>Usuarios</h4>
+              <h4 class="letter-color-title">Participantes seleccionados</h4>
               <table class="table table-bordered">
                 <tr>
                   <th>Usuaio</th>
@@ -302,10 +317,10 @@
                   <td ng-bind="alum.name"></td>
                   <td ng-bind="alum.mail"></td>
                   <td ng-bind="alum.aprendizaje"></td>
-                  <td>
-                    <button class="btn btn-default btn-sm" ng-click="removeUser(alum.id)" ng-disabled="selectedSes.status > 1">
+                  <td class="text-center">
+                    <a class="bg-icon-black" ng-click="removeUser(alum.id)" ng-disabled="selectedSes.status > 1">
                       <i class="fa fa-trash"></i>
-                    </button>
+                    </a>
                   </td>
                 </tr>
               </table>
@@ -324,32 +339,51 @@
 
             <!-- GRUPOS -->
             <div class="pad-content" ng-show="selectedTabConfig == 1" ng-controller="GroupController">
-              <h4>Grupos</h4>
-              <p>Las propuestas de grupo intentan agrupar alumnos con distintos tipos de puntaje</p>
+              <h4 class="letter-color-title">Definir Grupos</h4>
+              <p class="italic-comments">Observación: Las propuestas de grupo intentan agrupar alumnos con distintos tipos de puntaje</p>
               <br>
-              <label>Número de alumnos por grupo: </label>
-              <input class="form-control form-inline-mini" ng-model="groupNum" type="number" ng-disabled="selectedSes.grouped">
-              <select class="form-control form-inline-med" ng-options="x for x in methods" ng-disabled="selectedSes.grouped" ng-model="groupMet"></select>
-              <button class="btn btn-default" ng-click="generateGroups()" ng-disabled="selectedSes.grouped">Generar</button>
+              <h4 class="letter-color-title">Opciones para la generación de grupos</h4>
+              <div class="row">
+                  <div class="col-md-5">
+                      <table class="table table-dark">
+                        <thead>
+                          <tr>
+                            <th class="text-center">Número de alumnos por grupo</th>
+                            <th class="text-center">Características del grupo</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td class="text-center"><input class="form-control form-inline-mini" ng-model="groupNum" type="number" ng-disabled="selectedSes.grouped"></td>
+                            <td class="text-center"><select class="form-control form-inline-med" ng-options="x for x in methods" ng-disabled="selectedSes.grouped" ng-model="groupMet"></select></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <div class="input-group">
+                      <button class="btn btn-default bg-principal" ng-click="generateGroups()" ng-disabled="selectedSes.grouped"><i class="fa fa-random"></i> Generar</button>
+                    </div>
+              </div>
+              
               <span ng-show="selectedSes.grouped"> - Los grupos están fijados</span>
-              <button class="btn btn-default pull-right" ng-click="acceptGroups()" ng-disabled="selectedSes.grouped">Fijar Grupos</button>
-              <br>
-              <hr>
-              <br>
-              <h4>
-                <span ng-show="!self.selectedSes.grouped">Propuesta de </span>Grupos:</h4>
-              <table class="table table-bordered">
-                <tr ng-repeat="group in groups">
-                  <td ng-bind="$index + 1"></td>
-                  <td ng-repeat="alum in group">
-                    <strong ng-bind="users[alum.uid || alum.id].name"></strong>
-                    <span class="label label-success" ng-show="alum.score!=null">
-                      {{(selectedSes.type == "L" || selectedSes.type == "M") ? alum.score * 100 : alum.score | number:0}}
-                    </span>
-                    <span class="label label-info" ng-bind="alum.aprendizaje"></span>
-                  </td>
-                </tr>
-              </table>
+              <h4 class="letter-color-title"><span ng-show="!self.selectedSes.grouped">Grupos propuestos</span></h4>
+              <div class="row">
+                <div class="col-md-6">
+                  <table class="table table-bordered">
+                    <tr ng-repeat="group in groups">
+                      <td ng-bind="$index + 1"></td>
+                      <td ng-repeat="alum in group">
+                        <strong ng-bind="users[alum.uid || alum.id].name"></strong>
+                        <span class="label label-success" ng-show="alum.score!=null">
+                          {{(selectedSes.type == "L" || selectedSes.type == "M") ? alum.score * 100 : alum.score | number:0}}
+                        </span>
+                        <span class="label label-info" ng-bind="alum.aprendizaje"></span>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <button class="btn btn-default" ng-click="acceptGroups()" ng-disabled="selectedSes.grouped">Fijar Grupos</button>
+              </div>
               <hr>
               <!--<h4 ng-if="!selectedSes.grouped" ng-show="false">Editor de Propuesta de Grupos:</h4>
                     <table class="table table-bordered table-hover" ng-if="!selectedSes.grouped">
