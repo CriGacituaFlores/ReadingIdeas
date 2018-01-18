@@ -94,8 +94,8 @@
       <br>
 
       <!-- CONFIGURACION -->
-      <div class="pad-content" ng-show="selectedTab == 0" ng-controller="SesEditorController">
-        <div ng-show="selectedTabConfig == -1">
+      <div class="pad-content pad-border" ng-show="selectedTab == 0" ng-controller="SesEditorController">
+        <div>
 
           <div class="col-md-4 border-line-r">
             <h3 class="letter-color-title">Configuración inicial</h3>
@@ -121,30 +121,41 @@
 
           <div class="col-md-8" ng-show="selectedSes.type == 'L'" ng-controller="DocumentsController">
             <h3 class="letter-color-title">Documentos</h3>
-            <div class="list-group">
-              <div class="list-group-item" ng-repeat="doc in documents">
-                <i class="fa fa-file-text-o"></i>
-                <strong ng-bind="doc.title"></strong>
-                <a href="{{doc.path}}" class="discrete"> - Ver documento original</a>
-                <button class="btn btn-xs btn-default pull-right" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</button>
-              </div>
-            </div>
             <label class="letter-color-s-title">Agregar documento:</label>
             <form id="doc-form" class="row" ng-submit="uploadDocument($event)" enctype="multipart/form-data">
               <div class="col-sm-4 col-md-4">
-                <input type="text" class="form-control border-input-b" name="title" placeholder="Titulo" required ng-disabled="selectedSes.status!=1" maxlength="20">
+                <div class="input-group">
+                  <span class="input-group-addon border-input-b bg-principal" id="basic-addon1"><i class="fa fa-file-text"></i></span>
+                  <input type="text" class="form-control border-input-b" name="title" placeholder="Titulo" required ng-disabled="selectedSes.status!=1" maxlength="20">
+                </div>
               </div>
-              <div class="col-sm-5 col-md-5">
-                <input type="file" class="form-control border-input-b" name="pdf" ng-disabled="selectedSes.status!=1" required>
-                <input type="text" ng-value="selectedSes.id" name="sesid" hidden>
+              <div class="col-sm-6 col-md-6">
+                <div class="input-group">
+                  <span class="input-group-addon border-input-b bg-principal" id="basic-addon1">Elegir archivo</span>
+                  <input type="file" class="form-control border-input-b" name="pdf" ng-disabled="selectedSes.status!=1" required>
+                  <input type="text" ng-value="selectedSes.id" name="sesid" hidden>
+                </div>
               </div>
-              <div class="col-sm-3 col-md-3">
+              <div class="col-sm-2 col-md-2">
                 <button class="form-control btn btn-default bg-principal" ng-disabled="selectedSes.status!=1 || busy">Subir
                   <i ng-show="busy" class="fa fa-spinner fa-pulse"></i>
                 </button>
               </div>
               </span>
             </form>
+            <label class="letter-color-s-title margin-t-a-b">Documentos cargados</label>
+            <div class="list-group margin-t-a-b">
+              <div class="list-group-item border-input-b document-repeat-border" ng-repeat="doc in documents">
+                <div class="input-group">
+                  <i class="fa fa-file-text-o margin-icon-document"></i>
+                  <strong ng-bind="doc.title" class="margin-icon-document"></strong>
+                  <a href="{{doc.path}}" class="discrete"> - Ver documento original</a>
+                  <span class="input-group-addon border-input-b bg-principal" id="basic-addon1">
+                      <a class="bg-principal" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</a>
+                  </span>
+                </div>
+              </div>
+            </div>
             <a href="to-pauta?sesid={{selectedSes.id}}" class="btn btn-primary btn margin-t-a-b" ng-show="selectedSes.type=='L'">
               Pauta de Ideas Fuerza
             </a>
@@ -245,7 +256,7 @@
         </div>
         <div class="col-md-12">
           <hr class="margin-t-a-b"/>
-          <h4>Configuración</h4>
+          <h3 class="letter-color-title">Configuración</h3>
           <div ng-class="{boxed: selectedTabConfig >= 0}">
             <a class="pull-right btn btn-default" ng-click="setTabConfig(-1)">
               <i class="fa fa-close"></i>

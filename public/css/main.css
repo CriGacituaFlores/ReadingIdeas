@@ -85,6 +85,16 @@ hr{
     color: #fff;
 }
 
+.document-repeat-border {
+    padding: 0px 0px;
+    border-radius: 3px;
+}
+
+.margin-icon-document {
+    margin-top: 6px;
+    margin-left: 5px;
+}
+
 .letter-color-title {
     color: #6c859b;
     font-weight: bold;
@@ -180,6 +190,11 @@ a:hover{
     padding-left: 8px;
     overflow-y: scroll;
     max-height: 80vh;
+}
+
+.pad-border {
+    border: 2px solid #000;
+    padding: 10px 0;
 }
 
 .font-large{

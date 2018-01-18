@@ -58,8 +58,11 @@ router.post("/update-session", rpg.execSQL({
 }));
 
 router.post("/upload-file", (req, res) => {
-    if (req.session.uid != null && req.body.title != null && req.body.title != "" && req.files.pdf != null && req.files.pdf.mimetype == "application/pdf" && req.body.sesid != null) {
-        // console.log(req.body);
+    console.log("UID:" + req.session.uid)
+    console.log("TITLE:" + req.body.title)
+    console.log("FILE:" + req.files.pdf.mimetype)
+    console.log("SESSION:" + req.body.sesid)
+    //if (req.session.uid != null && req.body.title != null && req.body.title != "" && req.files.pdf != null && req.files.pdf.mimetype == "application/pdf" && req.body.sesid != null) {
         rpg.execSQL({
             dbcon: pass.dbcon,
             sql: "insert into documents(title,path,sesid,uploader) values ($1,$2,$3,$4)",
@@ -71,8 +74,8 @@ router.post("/upload-file", (req, res) => {
             }
         })(req, res);
         res.end('{"status":"ok"}');
-    }
-    res.end('{"status":"err"}');
+    //}
+    //res.end('{"status":"err"}');
 });
 
 router.post("/documents-session", rpg.multiSQL({

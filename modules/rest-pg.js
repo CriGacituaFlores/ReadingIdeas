@@ -55,7 +55,6 @@ module.exports.paramsOfType = (t, arr) => {
  * <li> onEnd: Function to be executed just before send end result.
  */
 module.exports.execSQL = function (params) {
-
         if (params.sql == null || params.sql == "" || params.dbcon == null || params.dbcon == "")
             return null;
 

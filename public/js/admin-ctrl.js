@@ -43,7 +43,7 @@ adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     });
 }]);
 
-adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale) {
+adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale, Notification) {
     let self = $scope;
 
     self.temp = "";
@@ -118,6 +118,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         let postdata = {docid: docid};
         $http({url: "delete-document", method: "post", data: postdata}).success((data) => {
             self.requestDocuments();
+            Notification.success("Documento eliminado con éxito")
         });
     };
 
@@ -202,7 +203,7 @@ adpp.controller("TabsController", function ($scope, $http) {
         if (self.selectedSes != null && self.selectedSes.status > 1) {
             self.selectedTab = 1;
         }
-        self.selectedTabConfig = -1;
+        self.selectedTabConfig = 0;
         if (self.selectedSes.status == 7) {
             self.shared.gotoRubrica();
         }
@@ -270,7 +271,7 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
     self.uploadDocument = (event) => {
         self.busy = true;
         let fd = new FormData(event.target);
-        $http.post("/upload-file", fd, {
+        $http.post("upload-file", fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         }).success((data) => {
