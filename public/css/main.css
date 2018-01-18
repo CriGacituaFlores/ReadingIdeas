@@ -90,6 +90,18 @@ hr{
     font-weight: bold;
 }
 
+.letter-color-s-title {
+    color: #6c859b;
+}
+
+.margin-t-a-b {
+    margin: 10px 0;
+}
+
+.border-input-b {
+    border: 1px solid #000;
+}
+
 .border-line-r {
     border-right: 1px solid #000;
 }

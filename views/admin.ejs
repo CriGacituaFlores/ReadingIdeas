@@ -99,29 +99,28 @@
 
           <div class="col-md-4 border-line-r">
             <h3 class="letter-color-title">Configuración inicial</h3>
-            <label>Titulo:</label>
-            <input type="text" class="form-control" ng-model="selectedSes.name" ng-disabled="selectedSes.status!=1">
+            <label class="letter-color-s-title">Titulo:</label>
+            <input type="text" class="form-control border-input-b" ng-model="selectedSes.name" ng-disabled="selectedSes.status!=1">
             <br>
             <button class="btn btn-default btn-sm pull-right" ng-class="{'active': splitDescr}" ng-click="toggleSplit()" ng-show="selectedSes.type == 'M'"
               ng-disabled="selectedSes.status!=1">Dividir Factor Detonante</button>
-            <label ng-if="selectedSes.type != 'S'">Factor detonante:</label>
+            <label class="letter-color-s-title" ng-if="selectedSes.type != 'S'">Factor detonante:</label>
             <label ng-if="selectedSes.type == 'S'">Instrucción general:</label>
-            <textarea class="form-control" ng-model="selectedSes.descr" ng-disabled="selectedSes.status!=1" ng-show="!splitDescr"></textarea>
+            <textarea class="form-control border-input-b" ng-model="selectedSes.descr" ng-disabled="selectedSes.status!=1" ng-show="!splitDescr"></textarea>
             <div ng-show="splitDescr">
               <input type="text" class="form-control" ng-disabled="selectedSes.status!=1" ng-model="splDes1" placeholder="Selección de unidades">
               <input type="text" class="form-control" ng-disabled="selectedSes.status!=1" ng-model="splDes2" placeholder="Reporte">
             </div>
-            <button class="btn btn-xs btn-default" ng-click="openDuplicateSes()" ng-disabled="selectedSes.type != 'S' && selectedSes.type != 'M'">Duplicar sesion</button>
+            <button class="btn btn-primary btn margin-t-a-b" ng-click="openDuplicateSes()" ng-disabled="selectedSes.type != 'S' && selectedSes.type != 'M'">Duplicar sesion</button>
             <a class="btn btn-xs btn-default" href="export-session-data-sel?id={{selectedSes.id}}" ng-if="selectedSes.type == 'S' && selectedSes.status == 5">Exportar datos sesion</a>
-            <br>
-            <button class="btn btn-default pull-right" ng-click="updateSession()" ng-disabled="selectedSes.status!=1">
+            <button class="btn btn-default pull-right bg-principal margin-t-a-b" ng-click="updateSession()" ng-disabled="selectedSes.status!=1">
               Guardar cambios
             </button>
           </div>
 
 
           <div class="col-md-8" ng-show="selectedSes.type == 'L'" ng-controller="DocumentsController">
-            <h4>Documentos</h4>
+            <h3 class="letter-color-title">Documentos</h3>
             <div class="list-group">
               <div class="list-group-item" ng-repeat="doc in documents">
                 <i class="fa fa-file-text-o"></i>
@@ -130,26 +129,23 @@
                 <button class="btn btn-xs btn-default pull-right" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</button>
               </div>
             </div>
-            <br>
-            <label>Agregar documento:</label>
+            <label class="letter-color-s-title">Agregar documento:</label>
             <form id="doc-form" class="row" ng-submit="uploadDocument($event)" enctype="multipart/form-data">
-              <div class="col-sm-4">
-                <input type="text" class="form-control" name="title" placeholder="Titulo" required ng-disabled="selectedSes.status!=1" maxlength="20">
+              <div class="col-sm-4 col-md-4">
+                <input type="text" class="form-control border-input-b" name="title" placeholder="Titulo" required ng-disabled="selectedSes.status!=1" maxlength="20">
               </div>
-              <div class="col-sm-7">
-                <input type="file" class="form-control" name="pdf" ng-disabled="selectedSes.status!=1" required>
+              <div class="col-sm-5 col-md-5">
+                <input type="file" class="form-control border-input-b" name="pdf" ng-disabled="selectedSes.status!=1" required>
                 <input type="text" ng-value="selectedSes.id" name="sesid" hidden>
               </div>
-              <div class="col-sm-1">
-                <button class="form-control btn btn-default" ng-disabled="selectedSes.status!=1 || busy">Subir
+              <div class="col-sm-3 col-md-3">
+                <button class="form-control btn btn-default bg-principal" ng-disabled="selectedSes.status!=1 || busy">Subir
                   <i ng-show="busy" class="fa fa-spinner fa-pulse"></i>
                 </button>
               </div>
               </span>
             </form>
-            <br>
-            <hr>
-            <a href="to-pauta?sesid={{selectedSes.id}}" class="btn btn-primary btn" ng-show="selectedSes.type=='L'">
+            <a href="to-pauta?sesid={{selectedSes.id}}" class="btn btn-primary btn margin-t-a-b" ng-show="selectedSes.type=='L'">
               Pauta de Ideas Fuerza
             </a>
           </div>
@@ -248,7 +244,7 @@
 
         </div>
         <div class="col-md-12">
-          <hr/>
+          <hr class="margin-t-a-b"/>
           <h4>Configuración</h4>
           <div ng-class="{boxed: selectedTabConfig >= 0}">
             <a class="pull-right btn btn-default" ng-click="setTabConfig(-1)">

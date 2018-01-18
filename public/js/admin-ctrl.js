@@ -270,7 +270,7 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
     self.uploadDocument = (event) => {
         self.busy = true;
         let fd = new FormData(event.target);
-        $http.post("upload-file", fd, {
+        $http.post("/upload-file", fd, {
             transformRequest: angular.identity,
             headers: {'Content-Type': undefined}
         }).success((data) => {
@@ -281,7 +281,13 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
                     self.busy = false;
                     self.shared.updateDocuments();
                 }, 2000);
+            } else {
+                Notification.error(data.status);
+                event.target.reset();
+                self.busy = false;
             }
+        }).error((error) => {
+            Notification.error(error);
         });
     };
 
@@ -318,6 +324,7 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
         let postdata = {name: self.selectedSes.name, descr: self.selectedSes.descr, id: self.selectedSes.id};
         $http({url: "update-session", method: "post", data: postdata}).success((data) => {
             console.log("Session updated");
+            Notification.success("Configuración inicial actualizada");
         });
     };
 
