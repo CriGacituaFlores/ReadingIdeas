@@ -312,7 +312,6 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     self.LoadTask();
 
     self.Sorting = (index) => {
-        Notification.success('MOVEEE')
         self.IsProcessing = true;
         self.Tasks.splice(index, 1);
         var newData = [];
