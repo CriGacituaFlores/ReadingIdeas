@@ -280,7 +280,7 @@
 
             <ul class="nav nav-tabs">
                 <li class="nav-item col-md-4 col-sm-4 nav-tab-without-padding" ng-repeat="x in tabConfig" ng-show="x != null" ng-class="{active: $index==selectedTabConfig}" ng-click="setTabConfig($index)">
-                  <a class="nav-link active" href="#" ng-bind="x" ng-class="{'bg-principal': $index==selectedTabConfig}"></a>
+                  <a class="nav-link active" href="" ng-bind="x" ng-class="{'bg-principal': $index==selectedTabConfig}"></a>
                 </li>
               </ul>
 
@@ -382,7 +382,16 @@
                     </tr>
                   </table>
                 </div>
-                <button class="btn btn-default" ng-click="acceptGroups()" ng-disabled="selectedSes.grouped">Fijar Grupos</button>
+                <div class="col-md-6" ng-repeat="group in groups">
+                  <div class="" ng-repeat="alum in group">
+                      <strong ng-bind="users[alum.uid || alum.id].name"></strong>
+                      <span class="label label-success" ng-show="alum.score!=null">
+                        {{(selectedSes.type == "L" || selectedSes.type == "M") ? alum.score * 100 : alum.score | number:0}}
+                      </span>
+                      <span class="label label-info" ng-bind="alum.aprendizaje"></span>
+                  </div>
+                </div>
+                <button class="btn btn-default bg-principal" ng-click="acceptGroups()" ng-disabled="selectedSes.grouped">Fijar Grupos</button>
               </div>
               <hr>
               <!--<h4 ng-if="!selectedSes.grouped" ng-show="false">Editor de Propuesta de Grupos:</h4>
