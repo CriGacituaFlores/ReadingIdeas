@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/header.css" />
   <link rel="stylesheet" href="css/simple.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.3/rzslider.css"/>
   <script src="libs/angular.min.js"></script>
   <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
   <script src="libs/katex.min.js"></script>
@@ -27,6 +28,7 @@
   <script src="libs/angular-timer.min.js"></script>
   <script src="libs/angular-ui-notification.min.js"></script>
   <script src="/libs/angular-drag-and-drop-lists.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.3/rzslider.js"></script>
   <script src="js/admin-ctrl.js"></script>
 </head>
 
@@ -186,17 +188,29 @@
             </ul>
 
             <div class="col-md-12 pad-border margin-t-a-b">
-              <div class="col-md-6">
-                <i class="fa fa-align-justify" aria-hidden="true"></i>
+              <div class="row">
+                  <div class="col-md-6">
+                    <i class="fa fa-align-justify" aria-hidden="true"></i>
+                  </div>
+                  <div class="col-md-6">
+                    <i class="fa fa-trash pull-right" aria-hidden="true"></i>
+                  </div>
               </div>
-              <div class="col-md-6">
-                <i class="fa fa-trash pull-right" aria-hidden="true"></i>
-              </div>
-              <div class="col-md-6">
-
-              </div>
-              <div class="col-md-6">
-                Comentario:
+              <div class="row margin-t-a-b">
+                <div class="col-md-6">
+                  <div class="col-md-2">
+                    <button class="btn btn-default">Amargo</button>
+                  </div>
+                  <div class="col-md-8">
+                      <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+                  </div>
+                  <div class="col-md-2">
+                    <button class="btn btn-default">Amargo</button>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  Comentario:
+                </div>
               </div>
             </div>
             

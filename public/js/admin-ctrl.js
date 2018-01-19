@@ -1,6 +1,6 @@
 "use strict";
 
-let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap", "dndLists"]);
+let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap", "dndLists", "rzModule"]);
 
 const DASHBOARD_AUTOREALOD = true;
 const DASHBOARD_AUTOREALOD_TIME = 15;
@@ -299,6 +299,25 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
 
     self.Tasks = [];
     self.IsProcessing = false;
+
+    $scope.slider = {
+        value: 5,
+        options: {
+          showTicksValues: true,
+          stepsArray: [
+            {value: 1, legend: 'Malo'},
+            {value: 2},
+            {value: 3},
+            {value: 4},
+            {value: 5, legend: 'Mediano'},
+            {value: 6},
+            {value: 7, legend: 'Bueno'},
+            {value: 8},
+            {value: 9},
+            {value: 10, legend: 'Excelente!'}
+          ]
+        }
+      };
 
     self.LoadTask = function () {
         self.IsProcessing = true;
