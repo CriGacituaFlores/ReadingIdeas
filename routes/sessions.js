@@ -92,9 +92,19 @@ router.post("/semantic_differential", (req, res) => {
 router.get("/all_semantic_differential", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: "select * from semantic_differential"
+        sql: "select * from semantic_differential where sesid = 27 order by order_sort limit 5"
     })(req,res);
 })
+
+router.post("/save_semantic_order", (req, res) => {
+    //console.log(req.body)
+    for(var i = 0; i < req.body.length; i++){
+        rpg.singleSQL({
+            dbcon: pass.dbcon,
+            sql: `update semantic_differential set order_sort = '${i+1}' where sesid = 27 and id = '${req.body[i].id}'`
+        })(req, res)
+    }
+});
 
 router.post("/documents-session", rpg.multiSQL({
     dbcon: pass.dbcon,

@@ -321,11 +321,9 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
             newData.push(val);
         })
 
-        //$http.post('/home/SaveTaskOrder', newData).then(function(response){
+        $http.post('/save_semantic_order', newData).then(function(response){
 
-        //}).finally(function() {
-            //self.IsProcessing = false;
-        //})
+        });
     }
 
     self.createSemanticDiferential = () => {
