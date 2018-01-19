@@ -297,19 +297,19 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
 adpp.controller("SemanticDifferentialController", function($scope, $http, Notification) {
     let self = $scope;
 
-    self.Tasks = [{ad: 1, content: 'primero'}, {ad: 2, content: 'segundo'}, {ad: 3, content: 'tercero'}, {ad:4, content: 'cuarto' }];
+    self.Tasks = [];
     self.IsProcessing = false;
 
     self.LoadTask = function () {
         self.IsProcessing = true;
-        $http.get('/home/GetTasks').then(function(response) {
+        $http.get('/all_semantic_differential').then(function(response) {
             self.Tasks = response.data;
         }).finally(function () {
             self.IsProcessing = false;
         })
     }
 
-    //self.LoadTask();
+    self.LoadTask();
 
     self.Sorting = (index) => {
         Notification.success('MOVEEE')
@@ -329,10 +329,13 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     }
 
     self.createSemanticDiferential = () => {
-        Notification.success('CLICKED')
-        $http.post('semantic_differential').then((response) => {
-            Notification.success(response.data.creado);
-        });
+        if (self.Tasks.length == 5) {
+            Notification.error('Ya existen el máximo de Diferenciales semánticos (5)')
+        } else {
+            $http.post('semantic_differential').then((response) => {
+                Notification.success(response.data.creado);
+            });
+        }
     }
 
 });

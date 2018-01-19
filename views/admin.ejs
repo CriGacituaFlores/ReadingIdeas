@@ -172,7 +172,6 @@
           <div class="col-md-12" ng-show="selectedSes.type == 'D'" ng-controller="SemanticDifferentialController">
             <hr/>
             <h3 class="letter-color-title">Evaluación del texto</h3>
-            <h2 ng-show="IsProcessing == true">HOLA</h2>
 
             <ul dnd-list="Tasks">
               <li ng-repeat="item in Tasks" 
@@ -182,7 +181,7 @@
                   dnd-effect-allowed="move"
                   dnd-selected="models.selected = item"
                   ng-class="{'selected': models.selected === item}">
-                {{item.content}}
+                {{item.min_name}} con valor: {{item.value}} maximo posible: {{item.max_name}}
               </li>
             </ul>
             

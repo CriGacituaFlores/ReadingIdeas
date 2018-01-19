@@ -79,18 +79,21 @@ router.post("/upload-file", (req, res) => {
 });
 
 router.post("/semantic_differential", (req, res) => {
+    console.log('-----')
+    console.log(rpg.param("post","sesid"))
     rpg.execSQL({
         dbcon: pass.dbcon,
-        sql: "insert into semantic_differential() values()",
-        sqlParams: [rpg.param("post","sesid")],
-        onStart: (ses, data, calc) => {
-
-        },
-        onEnd: () => {
-
-        }
+        sql: "insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',$1,50,now(),now())",
+        sqlParams: [rpg.param("post","sesid")]
     })(req, res);
     res.end('{"creado": "SI"}')
+})
+
+router.get("/all_semantic_differential", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: "select * from semantic_differential"
+    })(req,res);
 })
 
 router.post("/documents-session", rpg.multiSQL({
