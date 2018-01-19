@@ -294,6 +294,14 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
 
 });
 
+adpp.controller("SemanticDifferentialController", function($scope, $http, Notification) {
+    let self = $scope;
+
+    self.createSemanticDiferential = () => {
+        Notification.success('CLICKED')
+    }
+});
+
 adpp.controller("SesEditorController", function ($scope, $http, Notification) {
     let self = $scope;
 

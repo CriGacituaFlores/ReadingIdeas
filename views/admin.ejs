@@ -125,7 +125,7 @@
           </div>
 
 
-          <div class="col-md-8" ng-show="selectedSes.type == 'L'" ng-controller="DocumentsController">
+          <div class="col-md-8" ng-show="selectedSes.type == 'L' || selectedSes.type == 'D'" ng-controller="DocumentsController">
             <h3 class="letter-color-title">Documentos</h3>
             <label class="letter-color-s-title">Agregar documento:</label>
             <form id="doc-form" class="row" ng-submit="uploadDocument($event)" enctype="multipart/form-data">
@@ -165,6 +165,13 @@
             <a href="to-pauta?sesid={{selectedSes.id}}" class="btn btn-primary btn margin-t-a-b" ng-show="selectedSes.type=='L'">
               Pauta de Ideas Fuerza
             </a>
+          </div>
+
+          <div class="col-md-12" ng-show="selectedSes.type == 'D'" ng-controller="SemanticDifferentialController">
+            <hr/>
+            <h3 class="letter-color-title">Evaluación del texto</h3>
+            
+            <button class="btn bg-principal" ng-click="createSemanticDiferential()">Agregar Diferenciales semánticos</button>
           </div>
 
           <div class="col-md-8" ng-show="selectedSes.type == 'M'" ng-controller="SemDocController">
