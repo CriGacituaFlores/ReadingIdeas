@@ -330,6 +330,9 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
 
     self.createSemanticDiferential = () => {
         Notification.success('CLICKED')
+        $http.post('semantic_differential').then((response) => {
+            Notification.success(response.data.creado);
+        });
     }
 
 });

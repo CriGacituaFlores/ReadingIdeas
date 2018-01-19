@@ -78,6 +78,21 @@ router.post("/upload-file", (req, res) => {
     //res.end('{"status":"err"}');
 });
 
+router.post("/semantic_differential", (req, res) => {
+    rpg.execSQL({
+        dbcon: pass.dbcon,
+        sql: "insert into semantic_differential() values()",
+        sqlParams: [rpg.param("post","sesid")],
+        onStart: (ses, data, calc) => {
+
+        },
+        onEnd: () => {
+
+        }
+    })(req, res);
+    res.end('{"creado": "SI"}')
+})
+
 router.post("/documents-session", rpg.multiSQL({
     dbcon: pass.dbcon,
     sql: "select id, title, path from documents where sesid = $1 and active = true",
