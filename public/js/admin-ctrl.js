@@ -1,6 +1,6 @@
 "use strict";
 
-let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap"]);
+let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap", "dndLists"]);
 
 const DASHBOARD_AUTOREALOD = true;
 const DASHBOARD_AUTOREALOD_TIME = 15;
@@ -297,9 +297,41 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
 adpp.controller("SemanticDifferentialController", function($scope, $http, Notification) {
     let self = $scope;
 
+    self.Tasks = [{ad: 1, content: 'primero'}, {ad: 2, content: 'segundo'}, {ad: 3, content: 'tercero'}, {ad:4, content: 'cuarto' }];
+    self.IsProcessing = false;
+
+    self.LoadTask = function () {
+        self.IsProcessing = true;
+        $http.get('/home/GetTasks').then(function(response) {
+            self.Tasks = response.data;
+        }).finally(function () {
+            self.IsProcessing = false;
+        })
+    }
+
+    //self.LoadTask();
+
+    self.Sorting = (index) => {
+        Notification.success('MOVEEE')
+        self.IsProcessing = true;
+        self.Tasks.splice(index, 1);
+        var newData = [];
+        angular.forEach(self.Tasks, function(val, index){
+            val.Order = index + 1;
+            newData.push(val);
+        })
+
+        //$http.post('/home/SaveTaskOrder', newData).then(function(response){
+
+        //}).finally(function() {
+            //self.IsProcessing = false;
+        //})
+    }
+
     self.createSemanticDiferential = () => {
         Notification.success('CLICKED')
     }
+
 });
 
 adpp.controller("SesEditorController", function ($scope, $http, Notification) {

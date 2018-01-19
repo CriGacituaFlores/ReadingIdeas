@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/KaTeX/0.9.0-alpha2/katex.min.css">
   <link rel="stylesheet" href="css/main.css" />
   <link rel="stylesheet" href="css/header.css" />
+  <link rel="stylesheet" href="css/simple.css" />
   <script src="libs/angular.min.js"></script>
   <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
   <script src="libs/katex.min.js"></script>
@@ -25,6 +26,7 @@
   <script type="text/javascript" src="libs/ng-quill.min.js"></script>
   <script src="libs/angular-timer.min.js"></script>
   <script src="libs/angular-ui-notification.min.js"></script>
+  <script src="/libs/angular-drag-and-drop-lists.js"></script>
   <script src="js/admin-ctrl.js"></script>
 </head>
 
@@ -170,6 +172,19 @@
           <div class="col-md-12" ng-show="selectedSes.type == 'D'" ng-controller="SemanticDifferentialController">
             <hr/>
             <h3 class="letter-color-title">Evaluación del texto</h3>
+            <h2 ng-show="IsProcessing == true">HOLA</h2>
+
+            <ul dnd-list="Tasks">
+              <li ng-repeat="item in Tasks" 
+                  dnd-list-id="{{item.ad}}" 
+                  dnd-draggable="item" 
+                  dnd-moved="Sorting($index)"
+                  dnd-effect-allowed="move"
+                  dnd-selected="models.selected = item"
+                  ng-class="{'selected': models.selected === item}">
+                {{item.content}}
+              </li>
+            </ul>
             
             <button class="btn bg-principal" ng-click="createSemanticDiferential()">Agregar Diferenciales semánticos</button>
           </div>
