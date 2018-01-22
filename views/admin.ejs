@@ -187,29 +187,44 @@
               </li>
             </ul>
 
-            <div class="col-md-12 pad-border margin-t-a-b">
-              <div class="row">
-                  <div class="col-md-6">
-                    <i class="fa fa-align-justify" aria-hidden="true"></i>
+            <div dnd-list="Tasks">
+              <div ng-repeat="item in Tasks" 
+                dnd-list-id="{{item.id}}" 
+                dnd-draggable="item" 
+                dnd-moved="Sorting($index)"
+                dnd-effect-allowed="move"
+                dnd-selected="models.selected = item"
+                ng-class="{'selected': models.selected === item}">
+                <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                  <div class="row">
+                      <div class="col-md-6 col-xs-6">
+                        <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                      </div>
+                      <div class="col-md-6 col-xs-6">
+                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential($index+1)" aria-hidden="true"></i>
+                      </div>
                   </div>
-                  <div class="col-md-6">
-                    <i class="fa fa-trash pull-right" aria-hidden="true"></i>
+                  <div class="row margin-t-a-b">
+                    <div class="col-md-6 col-xs-6">
+                      <div class="col-md-2 col-xs-2">
+                        <button class="btn btn-default medium-m-t">Amargo</button>
+                      </div>
+                      <div class="col-md-8 col-xs-8">
+                          <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button class="btn btn-default medium-m-t">Amargo</button>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                      <div class="col-md-12 col-xs-12">
+                          Comentario:
+                      </div>
+                      <div class="col-md-12 col-xs-12">
+                          <textarea class="text-area-input"></textarea>
+                      </div>
+                    </div>
                   </div>
-              </div>
-              <div class="row margin-t-a-b">
-                <div class="col-md-6">
-                  <div class="col-md-2">
-                    <button class="btn btn-default">Amargo</button>
-                  </div>
-                  <div class="col-md-8">
-                      <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
-                  </div>
-                  <div class="col-md-2">
-                    <button class="btn btn-default">Amargo</button>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  Comentario:
                 </div>
               </div>
             </div>

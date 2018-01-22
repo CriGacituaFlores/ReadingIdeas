@@ -26,6 +26,7 @@
     "babel-preset-babili": "^0.1.4",
     "babel-preset-es2015": "^6.22.0",
     "heapdump": "latest",
+    "nodemon": "^1.14.11",
     "supertest": "^2.0.1"
   },
   "main": "app.js",

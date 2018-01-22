@@ -334,6 +334,10 @@ canvas{
     width: 40px;
 }
 
+.cursor-p {
+    cursor: pointer;
+}
+
 .mini {
     border: 1px solid #ccc;
     width: calc(100% - 80px);
@@ -341,6 +345,26 @@ canvas{
     padding: 4px 12px;
     margin-left: -4px;
     border-radius: 0 6px 6px 0;
+}
+
+.text-area-input {
+    width: 100%;
+}
+
+.medium-m-t {
+    margin-top: 20px;
+}
+
+.mini-m-l {
+    margin-left: 10px;
+}
+
+.mini-m-r {
+    margin-right: 10px;
+}
+
+.mini-f-z {
+    font-size: 18px;
 }
 
 .sep-lines{

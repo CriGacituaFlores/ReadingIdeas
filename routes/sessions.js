@@ -78,15 +78,31 @@ router.post("/upload-file", (req, res) => {
     //res.end('{"status":"err"}');
 });
 
-router.post("/semantic_differential", (req, res) => {
-    console.log('-----')
-    console.log(rpg.param("post","sesid"))
+router.post("/remove_semantic_differential", (req, res) => {
+    console.log(req.body)
     rpg.execSQL({
         dbcon: pass.dbcon,
-        sql: "insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',$1,50,now(),now())",
-        sqlParams: [rpg.param("post","sesid")]
+        sql: "delete from semantic_differential where id = $1",
+        sesReqData: ["uid"],
+        postReqData: ["id"],
+        sqlParams: [rpg.param("post", "id")],
+        onStart: (ses,data,calc) => {
+            if (ses.role != "P") {
+                return "select $1"
+            }
+        }
+    })
+});
+
+router.post("/semantic_differential", (req, res) => {
+    console.log('-----')
+    console.log(req)
+    //console.log(rpg.param("post","sesid"))
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: "insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',27,0,now(),now())"
     })(req, res);
-    res.end('{"creado": "SI"}')
+    res.end('{"creado": "Diferencial semántico añadido"}')
 })
 
 router.get("/all_semantic_differential", (req, res) => {

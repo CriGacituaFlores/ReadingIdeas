@@ -344,12 +344,20 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
         });
     }
 
+    self.removeSemanticDiferential = (index) => {
+        console.log(index)
+        $http({url: 'remove_semantic_differential', method: 'POST', data: index}).then((response) => {
+            self.LoadTask();
+        });
+    }
+
     self.createSemanticDiferential = () => {
         if (self.Tasks.length == 5) {
             Notification.error('Ya existen el máximo de Diferenciales semánticos (5)')
         } else {
             $http.post('semantic_differential').then((response) => {
                 Notification.success(response.data.creado);
+                self.LoadTask();
             });
         }
     }
