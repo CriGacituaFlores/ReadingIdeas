@@ -183,7 +183,7 @@
                   dnd-effect-allowed="move"
                   dnd-selected="models.selected = item"
                   ng-class="{'selected': models.selected === item}">
-                {{item.min_name}} con valor: {{item.value}} maximo posible: {{item.max_name}}
+                {{item.min_name}} con valor: {{item.value}} maximo posible: {{item.max_name}} -- {{item.description}}
               </li>
             </ul>
 
@@ -201,7 +201,7 @@
                         <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential($index+1)" aria-hidden="true"></i>
+                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential(item.id)" aria-hidden="true"></i>
                       </div>
                   </div>
                   <div class="row margin-t-a-b">
@@ -210,7 +210,7 @@
                         <button class="btn btn-default medium-m-t">Amargo</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
-                          <rzslider rz-slider-model="slider.value" rz-slider-options="slider.options"></rzslider>
+                          <rzslider rz-slider-model="item.value" rz-slider-options="slider.options" ng-model="self.class"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
                         <button class="btn btn-default medium-m-t">Amargo</button>
@@ -221,7 +221,7 @@
                           Comentario:
                       </div>
                       <div class="col-md-12 col-xs-12">
-                          <textarea class="text-area-input"></textarea>
+                          <textarea class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
                       </div>
                     </div>
                   </div>

@@ -79,19 +79,10 @@ router.post("/upload-file", (req, res) => {
 });
 
 router.post("/remove_semantic_differential", (req, res) => {
-    console.log(req.body)
-    rpg.execSQL({
+    rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: "delete from semantic_differential where id = $1",
-        sesReqData: ["uid"],
-        postReqData: ["id"],
-        sqlParams: [rpg.param("post", "id")],
-        onStart: (ses,data,calc) => {
-            if (ses.role != "P") {
-                return "select $1"
-            }
-        }
-    })
+        sql: `delete from semantic_differential where id = ${req.body}`
+    })(req, res);
 });
 
 router.post("/semantic_differential", (req, res) => {
@@ -103,6 +94,17 @@ router.post("/semantic_differential", (req, res) => {
         sql: "insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',27,0,now(),now())"
     })(req, res);
     res.end('{"creado": "Diferencial semántico añadido"}')
+})
+
+router.post("/update_semantic_differential", (req, res) => {
+    console.log('-----')
+    console.log(req.body.data)
+    //console.log(rpg.param("post","sesid"))
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `UPDATE semantic_differential SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
+    })(req, res);
+    res.end('{"creado": "Diferencial semántico modificado"}')
 })
 
 router.get("/all_semantic_differential", (req, res) => {

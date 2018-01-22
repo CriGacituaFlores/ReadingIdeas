@@ -305,7 +305,8 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
         options: {
           showTicksValues: true,
           stepsArray: [
-            {value: 1, legend: 'Malo'},
+            {value: 0, legend: 'Malo'},
+            {value: 1},
             {value: 2},
             {value: 3},
             {value: 4},
@@ -315,7 +316,10 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
             {value: 8},
             {value: 9},
             {value: 10, legend: 'Excelente!'}
-          ]
+          ],
+          onEnd: function (sliderId, modelValue) {
+            self.updateSemanticDifferential(sliderid)
+          }
         }
       };
 
@@ -329,6 +333,13 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     }
 
     self.LoadTask();
+
+    self.updateSemanticDifferential = (position) => {
+        let actualSemantic = self.Tasks[position]
+        $http({url: '/update_semantic_differential', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
+
+        })
+    }
 
     self.Sorting = (index) => {
         self.IsProcessing = true;
@@ -345,9 +356,9 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     }
 
     self.removeSemanticDiferential = (index) => {
-        console.log(index)
         $http({url: 'remove_semantic_differential', method: 'POST', data: index}).then((response) => {
             self.LoadTask();
+            Notification.success('Diferencial semántico eliminado')
         });
     }
 

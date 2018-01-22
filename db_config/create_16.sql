@@ -2,6 +2,7 @@ create table if not exists semantic_differential (
     id serial,
     min_name text not null,
     max_name text not null,
+    description text,
     order_sort text,
     sesid integer,
     value integer,
