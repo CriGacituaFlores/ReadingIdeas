@@ -1,9 +1,19 @@
 "use strict";
 
-let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap", "dndLists", "rzModule"]);
+let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap", "dndLists", "rzModule", "xeditable"]);
 
 const DASHBOARD_AUTOREALOD = true;
 const DASHBOARD_AUTOREALOD_TIME = 15;
+
+adpp.run(function(editableOptions) {
+    editableOptions.theme = 'bs3';
+});
+
+adpp.factory("ServiceSessions", function() {
+   return {
+       data: {}
+   }
+})
 
 adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     ngQuillConfigProvider.set({
@@ -43,7 +53,7 @@ adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     });
 }]);
 
-adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale, Notification) {
+adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale, Notification, ServiceSessions) {
     let self = $scope;
 
     self.temp = "";
@@ -53,6 +63,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.sessions = [];
 
     self.selectedSes = null;
+    self.Tasks = [];
     self.documents = [];
     self.questions = [];
     self.questionTexts = [];
@@ -71,6 +82,8 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.selectSession = (ses,id) => {
         self.selectedId = id;
         self.selectedSes = ses;
+        ServiceSessions.data = ses;
+        self.shared.LoadTask(id);
         self.requestDocuments();
         self.requestSemDocuments();
         self.requestQuestions();
@@ -104,6 +117,16 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         if (ses != null)
             self.selectSession(ses,sesid);
     };
+
+    self.shared.LoadTask = (id) => {
+        self.Tasks = [];
+        self.IsProcessing = true;
+        $http({url: '/all_semantic_differential', method: 'POST', data: {id: id}}).then(function(response) {
+            self.Tasks = response.data;
+        }).finally(function () {
+            self.IsProcessing = false;
+        })
+    }
 
     self.requestDocuments = () => {
         let postdata = {sesid: self.selectedSes.id};
@@ -294,11 +317,15 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
 
 });
 
-adpp.controller("SemanticDifferentialController", function($scope, $http, Notification) {
+adpp.controller("SemanticDifferentialController", function($scope, $http, Notification, ServiceSessions) {
     let self = $scope;
 
-    self.Tasks = [];
+    self.serviceSes = ServiceSessions;
     self.IsProcessing = false;
+
+    self.user = {
+        name: 'awesome user'
+    };
 
     $scope.slider = {
         value: 5,
@@ -323,16 +350,18 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
         }
       };
 
-    self.LoadTask = function () {
-        self.IsProcessing = true;
-        $http.get('/all_semantic_differential').then(function(response) {
-            self.Tasks = response.data;
-        }).finally(function () {
-            self.IsProcessing = false;
-        })
-    }
-
-    self.LoadTask();
+    //self.LoadTask = (id = 0) => {
+    //    self.Tasks = [];
+    //    self.IsProcessing = true;
+    //    if (self.serviceSes) {
+    //        id = self.serviceSes.data.id || 0
+    //        $http({url: '/all_semantic_differential', method: 'POST', data: {id: id}}).then(function(response) {
+    //            self.Tasks = response.data;
+    //        }).finally(function () {
+    //            self.IsProcessing = false;
+    //        })
+    //    }
+    //}
 
     self.updateSemanticDifferential = (position) => {
         let actualSemantic = self.Tasks[position]
@@ -355,20 +384,20 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
         });
     }
 
-    self.removeSemanticDiferential = (index) => {
+    self.removeSemanticDiferential = (index,sesId) => {
         $http({url: 'remove_semantic_differential', method: 'POST', data: index}).then((response) => {
-            self.LoadTask();
+            self.shared.LoadTask(sesId);
             Notification.success('Diferencial semántico eliminado')
         });
     }
 
-    self.createSemanticDiferential = () => {
+    self.createSemanticDiferential = (index) => {
         if (self.Tasks.length == 5) {
             Notification.error('Ya existen el máximo de Diferenciales semánticos (5)')
         } else {
-            $http.post('semantic_differential').then((response) => {
+            $http({url: 'semantic_differential', method: 'POST', data: index}).then((response) => {
                 Notification.success(response.data.creado);
-                self.LoadTask();
+                self.shared.LoadTask(index);
             });
         }
     }

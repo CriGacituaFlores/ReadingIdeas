@@ -86,20 +86,18 @@ router.post("/remove_semantic_differential", (req, res) => {
 });
 
 router.post("/semantic_differential", (req, res) => {
-    console.log('-----')
-    console.log(req)
     //console.log(rpg.param("post","sesid"))
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: "insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',27,0,now(),now())"
+        sql: `insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',${req.body},0,now(),now())`
     })(req, res);
     res.end('{"creado": "Diferencial semántico añadido"}')
 })
 
 router.post("/update_semantic_differential", (req, res) => {
-    console.log('-----')
-    console.log(req.body.data)
     //console.log(rpg.param("post","sesid"))
+    console.log(req.body.data.id)
+    console.log('AAAAAA')
     rpg.singleSQL({
         dbcon: pass.dbcon,
         sql: `UPDATE semantic_differential SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
@@ -107,19 +105,18 @@ router.post("/update_semantic_differential", (req, res) => {
     res.end('{"creado": "Diferencial semántico modificado"}')
 })
 
-router.get("/all_semantic_differential", (req, res) => {
+router.post("/all_semantic_differential", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: "select * from semantic_differential where sesid = 27 order by order_sort limit 5"
+        sql: `select * from semantic_differential where sesid = ${req.body.id} order by order_sort limit 5`
     })(req,res);
 })
 
 router.post("/save_semantic_order", (req, res) => {
-    //console.log(req.body)
     for(var i = 0; i < req.body.length; i++){
         rpg.singleSQL({
             dbcon: pass.dbcon,
-            sql: `update semantic_differential set order_sort = '${i+1}' where sesid = 27 and id = '${req.body[i].id}'`
+            sql: `update semantic_differential set order_sort = '${i+1}' where sesid = ${req.body[i].sesid} and id = '${req.body[i].id}'`
         })(req, res)
     }
 });

@@ -338,6 +338,24 @@ canvas{
     cursor: pointer;
 }
 
+.xeditable-input-change {
+    max-width: 100px;
+}
+
+.ellipsis-xeditable {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.editable-buttons {
+    margin-top: 5px;
+}
+
+.margin-t-b-editable {
+    margin-top: 15px;
+}
+
 .mini {
     border: 1px solid #ccc;
     width: calc(100% - 80px);

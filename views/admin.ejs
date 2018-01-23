@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/header.css" />
   <link rel="stylesheet" href="css/simple.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.3/rzslider.css"/>
+  <link rel="stylesheet" href="css/xeditable.css" />
   <script src="libs/angular.min.js"></script>
   <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
   <script src="libs/katex.min.js"></script>
@@ -22,7 +23,7 @@
   <script src="libs/nv.d3.min.js"></script>
   <script src="libs/angular-nvd3.min.js"></script>
   <script src="libs/ng-map.min.js"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAx05l8YIv_oB8f5AMBGIcWmgnqFou0VJI&libraries=drawing,geometry,places"></script>
+  <!--<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyAx05l8YIv_oB8f5AMBGIcWmgnqFou0VJI&libraries=drawing,geometry,places"></script>-->
   <script type="text/javascript" src="libs/quill.min.js"></script>
   <script type="text/javascript" src="libs/ng-quill.min.js"></script>
   <script src="libs/angular-timer.min.js"></script>
@@ -30,6 +31,7 @@
   <script src="/libs/angular-drag-and-drop-lists.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.3/rzslider.js"></script>
   <script src="js/admin-ctrl.js"></script>
+  <script src="/libs/xeditable.js"></script>
 </head>
 
 <body class="bg-white" ng-controller="AdminController">
@@ -175,18 +177,6 @@
             <hr/>
             <h3 class="letter-color-title">Evaluación del texto</h3>
 
-            <ul dnd-list="Tasks">
-              <li ng-repeat="item in Tasks" 
-                  dnd-list-id="{{item.ad}}" 
-                  dnd-draggable="item" 
-                  dnd-moved="Sorting($index)"
-                  dnd-effect-allowed="move"
-                  dnd-selected="models.selected = item"
-                  ng-class="{'selected': models.selected === item}">
-                {{item.min_name}} con valor: {{item.value}} maximo posible: {{item.max_name}} -- {{item.description}}
-              </li>
-            </ul>
-
             <div dnd-list="Tasks">
               <div ng-repeat="item in Tasks" 
                 dnd-list-id="{{item.id}}" 
@@ -201,19 +191,22 @@
                         <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential(item.id)" aria-hidden="true"></i>
+                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential(item.id,selectedSes.id)" aria-hidden="true"></i>
                       </div>
                   </div>
                   <div class="row margin-t-a-b">
                     <div class="col-md-6 col-xs-6">
+                      <div class="col-md-12 col-xs-12">
+                        Valoración:
+                      </div>
                       <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default medium-m-t">Amargo</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
                           <rzslider rz-slider-model="item.value" rz-slider-options="slider.options" ng-model="self.class"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default medium-m-t">Amargo</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
                       </div>
                     </div>
                     <div class="col-md-6 col-xs-6">
@@ -221,7 +214,7 @@
                           Comentario:
                       </div>
                       <div class="col-md-12 col-xs-12">
-                          <textarea class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
+                          <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
                       </div>
                     </div>
                   </div>
@@ -229,7 +222,7 @@
               </div>
             </div>
             
-            <button class="btn bg-principal" ng-click="createSemanticDiferential()">Agregar Diferenciales semánticos</button>
+            <button class="btn bg-principal" ng-click="createSemanticDiferential(selectedSes.id)">Agregar Diferenciales semánticos</button>
           </div>
 
           <div class="col-md-8" ng-show="selectedSes.type == 'M'" ng-controller="SemDocController">
