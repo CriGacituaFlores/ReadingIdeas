@@ -176,6 +176,7 @@
           <div class="col-md-12" ng-show="selectedSes.type == 'D'" ng-controller="SemanticDifferentialController">
             <hr/>
             <h3 class="letter-color-title">Evaluación del texto</h3>
+            
 
             <div dnd-list="Tasks">
               <div ng-repeat="item in Tasks" 
@@ -203,7 +204,7 @@
                         <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
-                          <rzslider id="$index" rz-slider-model="item.value" rz-slider-options="slider.options" ng-model="self.class"></rzslider>
+                          <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
                         <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>

@@ -330,25 +330,33 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     $scope.slider = {
         value: 5,
         options: {
-        showTicksValues: true,
-        stepsArray: [
-            {value: 0, legend: 'Malo'},
-            {value: 1},
-            {value: 2},
-            {value: 3},
-            {value: 4},
-            {value: 5, legend: 'Mediano'},
-            {value: 6},
-            {value: 7, legend: 'Bueno'},
-            {value: 8},
-            {value: 9},
-            {value: 10, legend: 'Excelente!'}
-        ],
-        onEnd: function (sliderId, modelValue) {
-            self.updateSemanticDifferential(modelValue)
-        }
+            showTicksValues: true,
+            stepsArray: [
+                {value: 0, legend: 'Malo'},
+                {value: 1},
+                {value: 2},
+                {value: 3},
+                {value: 4},
+                {value: 5, legend: 'Mediano'},
+                {value: 6},
+                {value: 7, legend: 'Bueno'},
+                {value: 8},
+                {value: 9},
+                {value: 10, legend: 'Excelente!'}
+            ],
+            onEnd: function (sliderId, modelValue) {
+                self.updateSemanticDifferential(sliderId)
+            }
         }
     };
+
+    self.priceSlider = {
+        value: 10
+    }
+    
+    self.processItem = function(sliderId, modelValue) {
+        self.updateSemanticDifferential(sliderId)
+    }
 
     //self.LoadTask = (id = 0) => {
     //    self.Tasks = [];
