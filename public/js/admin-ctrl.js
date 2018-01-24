@@ -330,8 +330,8 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     $scope.slider = {
         value: 5,
         options: {
-          showTicksValues: true,
-          stepsArray: [
+        showTicksValues: true,
+        stepsArray: [
             {value: 0, legend: 'Malo'},
             {value: 1},
             {value: 2},
@@ -343,12 +343,12 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
             {value: 8},
             {value: 9},
             {value: 10, legend: 'Excelente!'}
-          ],
-          onEnd: function (sliderId, modelValue) {
-            self.updateSemanticDifferential(sliderid)
-          }
+        ],
+        onEnd: function (sliderId, modelValue) {
+            self.updateSemanticDifferential(modelValue)
         }
-      };
+        }
+    };
 
     //self.LoadTask = (id = 0) => {
     //    self.Tasks = [];

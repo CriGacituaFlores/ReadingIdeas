@@ -203,7 +203,7 @@
                         <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
-                          <rzslider rz-slider-model="item.value" rz-slider-options="slider.options" ng-model="self.class"></rzslider>
+                          <rzslider id="$index" rz-slider-model="item.value" rz-slider-options="slider.options" ng-model="self.class"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
                         <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
