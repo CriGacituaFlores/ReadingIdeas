@@ -685,31 +685,44 @@
             <td>{{avgAll() | number:0}}%</td>
           </tr>
         </table>
-        <table class="table table-bordered" ng-if="(selectedSes.type == 'L' || selectedSes.type == 'M') && alumState!={} && iterationIndicator <= 4">
-          <tr>
-            <th ng-if="iterationIndicator != 3">Alumno</th>
-            <th ng-if="iterationIndicator == 3">Grupo</th>
-            <th style="width: 420px" ng-if="iterationIndicator != 0 && iterationIndicator != 4">Puntaje</th>
-            <th>Tiempo de término</th>
-          </tr>
-          <tr ng-repeat="(alum, dato) in alumState">
-            <td ng-if="iterationIndicator != 3">
-              {{users[alum].name}}
-              <button class="btn btn-default btn-sm pull-right" ng-click="showReportByUid(alum)" ng-show="iterationIndicator==4">
-                <i class="fa fa-eye"></i>
-              </button>
-            </td>
-            <td ng-if="iterationIndicator == 3" ng-bind="leaderTeamStr[alum]"></td>
-            <td ng-if="iterationIndicator != 0 && iterationIndicator != 4">
-              <div class="bg-darkgreen table-green-bar" ng-show="dato.score != null" style="width: {{400*dato.score}}px;">
-                {{100*dato.score | number:0}}%
-              </div>
-            </td>
-            <td>
-              <span ng-show="dato.dtime != null">{{dato.dtime/60 | number:0}}m {{dato.dtime%60 | number:0}}s</span>
-            </td>
-          </tr>
-        </table>
+        <div class="row">
+          <div class="col-md-7">
+            <table class="table table-bordered" ng-if="(selectedSes.type == 'L' || selectedSes.type == 'M') && alumState!={} && iterationIndicator <= 4">
+              <tr>
+                <th class="bg-principal" ng-if="iterationIndicator != 3">Alumno</th>
+                <th class="bg-principal" ng-if="iterationIndicator == 3">Grupo</th>
+                <th class="bg-principal" style="width: 420px" ng-if="iterationIndicator != 0 && iterationIndicator != 4">Puntaje</th>
+                <th class="bg-principal">Tiempo de término</th>
+              </tr>
+              <tr ng-repeat="(alum, dato) in alumState">
+                <td ng-if="iterationIndicator != 3">
+                  {{users[alum].name}}
+                  <button class="btn btn-default btn-sm pull-right" ng-click="showReportByUid(alum)" ng-show="iterationIndicator==4">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                </td>
+                <td ng-if="iterationIndicator == 3" ng-bind="leaderTeamStr[alum]"></td>
+                <td ng-if="iterationIndicator != 0 && iterationIndicator != 4">
+                  <div class="bg-darkgreen table-green-bar" ng-show="dato.score != null" style="width: {{400*dato.score}}px;">
+                    {{100*dato.score | number:0}}%
+                  </div>
+                </td>
+                <td>
+                  <span ng-show="dato.dtime != null">{{dato.dtime/60 | number:0}}m {{dato.dtime%60 | number:0}}s</span>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div class="col-md-4">
+            <div class="bg-principal">
+                Total participantes
+            </div>
+            <div class="bg-principal">
+                % de completitud
+            </div>
+          </div>
+        </div>
         <!-- RUBRICA DASHBOARD -->
         <div ng-show="iterationIndicator == 5">
           <h4>Detalle:</h4>
