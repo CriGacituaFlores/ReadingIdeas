@@ -161,7 +161,7 @@
                 <div class="input-group">
                   <i class="fa fa-file-text-o margin-icon-document"></i>
                   <strong ng-bind="doc.title" class="margin-icon-document"></strong>
-                  <a href="{{doc.path}}" class="discrete"> - Ver documento original</a>
+                  <a target="_blank" href="{{doc.path}}" class="discrete"> - Ver documento original</a>
                   <span class="input-group-addon border-input-b bg-principal" id="basic-addon1">
                       <a class="bg-principal" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</a>
                   </span>
