@@ -1,12 +1,12 @@
 "use strict";
 
-let app = angular.module("Editor", ['ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
+var app = angular.module("Editor", ['ui.bootstrap','ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
 
 app.factory("$socket", ["socketFactory", function (socketFactory) {
     return socketFactory();
 }]);
 
-app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "Notification", function ($scope, $http, $timeout, $socket, Notification) {
+app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "Notification", "$uibModal", function ($scope, $http, $timeout, $socket, Notification, $uibModal) {
     let self = $scope;
 
     self.iteration = 0;
@@ -26,6 +26,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.teamId = -1;
     self.reportIdeas = {};
     self.shared = {};
+
+    self.openNewSes = () => {
+        $uibModal.open({
+            templateUrl: "templ/modal-information-reading.html",
+            controller: 'EditorController'
+        });
+    };
 
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
     self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
@@ -92,7 +99,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: "record-finish", method: "post", data: postdata}).success((data) => {
                 self.hasFinished = true;
                 self.finished = true;
-                console.log("FINISH");
+                console.log("FINISHAAA");
             });
             return;
         }
@@ -114,7 +121,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: "record-finish", method: "post", data: postdata}).success((data) => {
                 self.hasFinished = true;
                 self.finished = true;
-                console.log("FINISH");
+                console.log("FINISHOOOOO");
             });
         }
     };

@@ -604,10 +604,13 @@
 
       <!-- DASHBOARDS -->
       <div class="pad-content" ng-show="selectedTab == 1" ng-controller="DashboardController">
-        <div class="pull-right">
-          <label>Iteración:</label>
-          <select class="" ng-options="x.val as x.name for x in iterationNames" ng-model="iterationIndicator" ng-change="updateState()"></select>
-          <button class="btn btn-default" ng-click="updateState()">Actualizar</button>
+        <div class="col-md-4">
+          <div class="col-md-4 margin-b-t-editable margin-t-b-editable">
+            <label class="letter-color-title">Iteración:</label>
+          </div>
+          <div class="col-md-8 margin-b-t-editable margin-t-b-editable">
+                <select class="form-control" ng-options="x.val as x.name for x in iterationNames" ng-model="iterationIndicator" ng-change="updateState()"></select>
+          </div>
         </div>
         <h4></h4>
         <br>
@@ -615,10 +618,6 @@
         <nvd3 options="barOpts" data="barData" ng-hide="iterationIndicator == 0 || iterationIndicator == 4"></nvd3>
 
         <div class="row" ng-show="iterationIndicator < 5 && (selectedSes.type == 'L' || selectedSes.type == 'M')">
-          <div class="col-sm-4 col-sm-offset-2">
-            Actividad Finalizada:
-            <strong>{{numComplete}} / {{numUsers}}</strong>
-          </div>
           <div class="col-sm-6" ng-hide="iterationIndicator == 0 || iterationIndicator == 4">
             Rendimiento:
             <strong>{{lectPerformance() | number:0 }}%</strong>
@@ -715,11 +714,17 @@
           </div>
 
           <div class="col-md-4">
-            <div class="bg-principal">
-                Total participantes
+            <div class="col-md-8 bg-principal padding-completness-students">
+              Total participantes
             </div>
-            <div class="bg-principal">
-                % de completitud
+            <div class="col-md-4 padding-completness-students text-center">
+                <strong>{{numComplete}} / {{numUsers}}</strong>
+            </div>
+            <div class="col-md-8 bg-principal padding-completness-students">
+              % de completitud
+            </div>
+            <div class="col-md-4 padding-completness-students text-center">
+              <strong>{{(numComplete * 100) / numUsers}} %</strong>
             </div>
           </div>
         </div>

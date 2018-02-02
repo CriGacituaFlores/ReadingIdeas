@@ -1,80 +1,9 @@
-<!DOCTYPE html>
-<html lang="es" ng-app="Editor">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>DocCollab</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script>
-    <script src="libs/pdf.min.js"></script>
-    <script src="libs/rangy-core.min.js"></script>
-    <script src="libs/rangy-classapplier.min.js"></script>
-    <script src="libs/rangy-serializer.min.js"></script>
-    <script src="libs/textlayerbuilder.js"></script>
-    <script src="libs/angular.min.js"></script>
-    <script src="libs/angular-ui-tree.min.js"></script>
-    <script src="libs/angular-timer.min.js"></script>
-    <script src="libs/socket.min.js"></script>
-    <script src="libs/angular-ui-notification.min.js"></script>
-    <script src="js/editor-ctrl.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/minimal.css">
-    <link rel="stylesheet" href="css/angular-ui-tree.min.css">
-    <link rel="stylesheet" href="css/angular-ui-notification.min.css">
-    <link rel="stylesheet" href="css/main.css"/>
-</head>
-<body class="">
-
-<div class="editor-container" ng-controller="EditorController">
-
-    <div class="row top-bar-mini">
-        <div class="text-center">
-            <span ng-repeat="st in sesStatusses">
-                <span class="statuses-content label label-primary" ng-class="{'label-warning': $index==iteration}" ng-bind="st"></span>
-                <!--<span ng-hide="$last">→</span>-->
-            </span>
-            <span class="pull-right margin-right-24" ng-show="sesSTime != null">
-                <timer start-time="sesSTime">{{hours}}h {{minutes}}m {{seconds}}s</timer>
-            </span>
-        </div>
+<div>
+    <div class="modal-header">
+        <h4>Instrucciones</h4>
     </div>
-
-    <div class="">
-        <div class="top-bar-mini">
-            <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info"></i></button>
-            <strong class="simple-margin-left">Factor detonante: </strong>
-            <span ng-bind="sesDescr"></span>
-        </div>
-
-        <div class="row top-bar">
-            <div class="col-sm-6 col-md-6">
-                <span class="simple-margin-left">Documentos: </span>
-                <span ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title"
-                    ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)"></span>
-                <!--<strong class="pull-right margin-top-8" ng-bind="iterationNames[iteration]"></strong>-->
-            </div>
-            <div class="col-sm-6 col-md-6">
-                <a onclick="window.history.back()" class="btn btn-sm btn-default pull-right">Atrás</a>
-                <button disabled class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && !followLeader"><i class="fa fa-star"></i> Representante </button>
-                <button class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && followLeader" ng-click="takeControl()">Tomar Control</button>
-                <button class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
-                    <i class="fa fa-check"></i> Terminé</button>
-                <span class="pull-right boxed" ng-bind="teamstr"></span>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div id="pdf-container" class="pdf-content col-sm-9">
-            <div class="centered">
-                <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
-                ng-show="$index==selectedDocument"></div>
-            </div>
-        </div>
-        <div class="col-sm-3 side-bar">
-            <h3>Instrucciones:</h3>
+    <div class="modal-body">
+        <h3>Instrucciones:</h3>
             <div ng-bind="instructions[iteration]"></div>
             <hr>
             <div ng-hide="iteration == 0">
@@ -154,24 +83,5 @@
                 </div>
             </div>
             </div>
-        </div>
     </div>
-
-    <div class="report-window" ng-if="writingReport" ng-controller="ReportController">
-        <div class="bar">
-            <span>Respuesta al factor detonante</span>
-            <div class="pull-right">
-                <span ng-show="lastSent != null && isFull">Enviado {{lastSent | date:'HH:mm'}}</span>
-                <button class="btn btn-sm btn-primary" ng-click="sendReport()" ng-show="isFull"><i class="fa fa-send"></i></button>
-                <button class="btn btn-sm btn-primary" ng-click="toggleFull()"><i class="fa fa-minus"></i></button>
-            </div>
-        </div>
-        <div class="content" ng-show="isFull">
-            <textarea class="form-control" ng-model="content" ng-disabled="finished"></textarea>
-        </div>
-    </div>
-
 </div>
-
-</body>
-</html>

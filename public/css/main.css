@@ -93,6 +93,12 @@ hr{
     color: #fff !important;
 }
 
+.padding-completness-students {
+    padding: 10px 10px;
+    border-radius: 5px;
+    border: 1px solid black;
+}
+
 .document-repeat-border {
     padding: 0px 0px;
     border-radius: 3px;
@@ -156,14 +162,14 @@ a:hover{
 
 .top-bar{
     height: 32px;
-    background: #6c859b;
-    color: white;
+    background: white;
+    color: black;
 }
 
 .top-bar-mini{
     /*height: 24px;*/
-    background: #6c859b;
-    color: white;
+    background: #ffffff;
+    color: black;
 }
 
 .side-panel{
@@ -232,7 +238,7 @@ a:hover{
 }
 
 .pdf-content{
-    background: #333;
+    background: #ffffff;
     max-height: calc(100vh - 80px);
     overflow-y: scroll;
 }
@@ -354,6 +360,10 @@ canvas{
 
 .margin-t-b-editable {
     margin-top: 15px;
+}
+
+.margin-b-t-editable {
+    margin-bottom: 15px;
 }
 
 .mini {
