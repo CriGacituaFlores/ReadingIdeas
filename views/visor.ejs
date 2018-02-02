@@ -42,18 +42,17 @@
     </div>
 
     <div class="">
-        <div class="top-bar-mini">
-            <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info"></i></button>
-            <strong class="simple-margin-left">Factor detonante: </strong>
-            <span ng-bind="sesDescr"></span>
-        </div>
-
         <div class="row top-bar">
             <div class="col-sm-6 col-md-6">
-                <span class="simple-margin-left">Documentos: </span>
-                <span ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title"
-                    ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)"></span>
-                <!--<strong class="pull-right margin-top-8" ng-bind="iterationNames[iteration]"></strong>-->
+                <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info fa-information-button"></i></button>
+                <strong class="letter-color-title simple-margin-left">Factor detonante: </strong>
+                <span ng-bind="sesDescr"></span>
+                <span class="letter-color-title simple-margin-left">
+                    Documentos: 
+                </span>
+                <span ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title" ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)">
+
+                </span>
             </div>
             <div class="col-sm-6 col-md-6">
                 <a onclick="window.history.back()" class="btn btn-sm btn-default pull-right">Atrás</a>
@@ -67,18 +66,18 @@
     </div>
 
     <div class="row">
-        <div id="pdf-container" class="pdf-content col-sm-9">
+        <div id="pdf-container" class="pdf-content col-sm-12 col-md-12">
             <div class="centered">
                 <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
                 ng-show="$index==selectedDocument"></div>
             </div>
         </div>
+        <!--
         <div class="col-sm-3 side-bar">
             <h3>Instrucciones:</h3>
             <div ng-bind="instructions[iteration]"></div>
             <hr>
             <div ng-hide="iteration == 0">
-            <!--<a class="btn btn-sm btn-default pull-right margin-top-8" ng-click="setSelOrder()" ng-disabled="!checkAllSync() || followLeader || writingReport">Fijar orden</a>-->
             <h3>Ideas Fuerza:</h3>
             <div class="row">
                 <div class="btn-group center-block w250" ng-show="tabOptions.length > 1">
@@ -119,7 +118,7 @@
             </div>
             <div>
                 <div ng-show="iteration > 1 && sideTab == 1">
-                    <!--<h4>Ideas Individual:</h4>-->
+                    <h4>Ideas Individual:</h4>
                     <div ng-repeat="(uid, sels) in ansIter1">
                         <h5 ng-show="uid != myUid">Anónimo {{uid}}: </h5>
                         <h5 ng-hide="uid != myUid">Mi respuesta: </h5>
@@ -136,7 +135,7 @@
                     </div>
                 </div>
                 <div ng-show="iteration > 2 && sideTab == 2">
-                    <!--<h4>Ideas Grupal Anónimo:</h4>-->
+                    <h4>Ideas Grupal Anónimo:</h4>
                     <div ng-repeat="(uid, sels) in ansIter2">
                         <h5 ng-show="uid != myUid">Anónimo {{uid}}: </h5>
                         <h5 ng-hide="uid != myUid">Mi respuesta: </h5>
@@ -155,6 +154,7 @@
             </div>
             </div>
         </div>
+        -->
     </div>
 
     <div class="report-window" ng-if="writingReport" ng-controller="ReportController">
