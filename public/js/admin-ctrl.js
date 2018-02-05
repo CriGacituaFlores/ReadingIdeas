@@ -942,6 +942,37 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
                 }
             });
         }
+        else if (self.selectedSes.type == "D") {
+            $http({url: "get-alum-state-lect", method: "post", data: postdata}).success((data) => {
+                self.alumState = {};
+                for (let uid in self.users) {
+                    if (self.users[uid].role == "A")
+                        self.alumState[uid] = {};
+                }
+                data.forEach((d) => {
+                    if (self.alumState[d.uid] == null) {
+                        self.alumState[d.uid] = d;
+                    }
+                    else {
+                        self.alumState[d.uid] = d;
+                    }
+                });
+                self.buildBarData(data);
+                self.getAlumDoneTime(postdata);
+                if (self.iterationIndicator == 3) {
+                    $http({url: "get-original-leaders", method: "post", data: {sesid: self.selectedSes.id}}).success((data) => {
+                        let temp = angular.copy(self.alumState);
+                        self.alumState = {};
+                        self.leaderTeamStr = {};
+                        data.forEach((r) => {
+                            self.alumState[r.leader] = temp[r.leader];
+                            self.leaderTeamStr[r.leader] = r.team.map(u => (self.users[u]) ? self.users[u].name : "- ").join(", ");
+                        });
+                    });
+                }
+                self.shared.alumState = self.alumState;
+            });
+        }
         else if (self.selectedSes.type == "M") {
             $http({url: "get-alum-state-semantic", method: "post", data: postdata}).success((data) => {
                 self.alumState = {};

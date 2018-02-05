@@ -123,6 +123,15 @@ router.get("/to-semantic", (req, res) => {
         res.redirect(".");
 });
 
+router.get("/to-differential-semantic", (req, res) => {
+    if (req.session.uid) {
+        req.session.ses = req.query.sesid;
+        res.render("differential-semantic");
+    }
+    else
+        res.redirect(".");
+});
+
 router.get("/semantic", (req, res) => {
     if (req.session.uid && req.session.ses)
         res.render("semantic");

@@ -686,7 +686,7 @@
         </table>
         <div class="row">
           <div class="col-md-7">
-            <table class="table table-bordered" ng-if="(selectedSes.type == 'L' || selectedSes.type == 'M') && alumState!={} && iterationIndicator <= 4">
+            <table class="table table-bordered" ng-if="(selectedSes.type == 'L' || selectedSes.type == 'M' || selectedSes.type == 'D') && alumState!={} && iterationIndicator <= 4">
               <tr>
                 <th class="bg-principal" ng-if="iterationIndicator != 3">Alumno</th>
                 <th class="bg-principal" ng-if="iterationIndicator == 3">Grupo</th>
@@ -712,6 +712,7 @@
               </tr>
             </table>
           </div>
+        
 
           <div class="col-md-4">
             <div class="col-md-8 bg-principal padding-completness-students">
