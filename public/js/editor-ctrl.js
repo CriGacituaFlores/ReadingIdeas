@@ -55,6 +55,18 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         value: 10
     }
 
+    self.ngShowAnswer = true;
+    self.ngShowReading = false;
+    self.ngShowhideFun = function(flag) {
+        if (flag == 'answers') {
+            self.ngShowAnswer = true;
+            self.ngShowReading = false;
+        } else {
+            self.ngShowAnswer = false;
+            self.ngShowReading = true;
+        }
+    };
+
     self.openNewSes = () => {
         $uibModal.open({
             templateUrl: "templ/modal-information-reading.html",

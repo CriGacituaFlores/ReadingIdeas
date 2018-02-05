@@ -15,6 +15,14 @@ body{
     background-color: #6c859b;
 }
 
+.bck-reading-ideas {
+    background-color: #6c859b;
+}
+
+.margin-t-p {
+    margin: 10px;
+}
+
 hr{
     margin: 0;
 }
@@ -259,6 +267,12 @@ a:hover{
     height: calc(100vh - 80px);
     max-height: calc(100vh - 80px);
     overflow-y: auto;
+}
+
+.button-widthss {
+    padding: 10px 0;
+    margin: 5px;
+    width: 150px;
 }
 
 .centered{

@@ -32,31 +32,33 @@
     <script src="/libs/xeditable.js"></script>
     <!-- RZSLIDER -->
 </head>
-<body class="" style="background: white;">
+<body class="bck-reading-ideas">
 
-<div class="editor-container" ng-controller="EditorController">
+<div class="editor-container container bg-white" ng-controller="EditorController">
     <div class="row top-bar-mini">
-        <div class="text-center">
-            <a onclick="window.history.back()" class="btn btn-sm btn-default pull-left">Atrás</a>
+        <div class="text-center margin-t-p">
+            <a onclick="window.history.back()" class="btn btn-sm btn-default pull-left bg-principal">Atrás</a>
             <span ng-repeat="st in sesStatusses">
                 <span class="statuses-content label label-primary" ng-class="{'label-warning': $index==iteration}" ng-bind="st"></span>
                 <!--<span ng-hide="$last">→</span>-->
             </span>
-            <button class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
+            <button class="btn btn-sm btn-default pull-right bg-principal" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Terminé</button>
         </div>
     </div>
 
-    <div class="">
-        <div class="row top-bar">
+    <div class="margin-t-p">
+        <div class="top-bar">
             <div class="col-sm-6 col-md-6">
                 <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info fa-information-button"></i></button>
+                <strong ng-show="iteration==0" class="letter-color-title simple-margin-left">Fase Lectura</strong>
+                <strong ng-show="iteration==1" class="letter-color-title simple-margin-left">Fase Individual</strong>
                 <strong class="letter-color-title simple-margin-left">Factor detonante: </strong>
                 <span ng-bind="sesDescr"></span>
-                <span class="letter-color-title simple-margin-left">
+                <span ng-show="iteration==0" class="letter-color-title simple-margin-left">
                     Documentos: 
                 </span>
-                <span ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title" ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)">
+                <span ng-show="iteration==0" ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title" ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)">
 
                 </span>
             </div>
@@ -71,7 +73,12 @@
         </div>
     </div>
 
-    <div class="row" ng-show="iteration==0">
+    <div class="container" ng-show="iteration==1">
+        <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('answers')" ng-class="{'label label-warning': ngShowAnswer}">Respuestas</button>
+        <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('reading')" ng-class="{'label label-warning': ngShowReading}">Lectura</button>
+    </div>
+
+    <div class="row" ng-show="iteration==0 || (iteration == 1 && ngShowReading)">
         <div id="pdf-container" class="pdf-content col-sm-12 col-md-12">
             <div class="centered">
                 <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
@@ -163,8 +170,7 @@
         -->
     </div>
 
-    <div class="container" ng-show="iteration==1">
-      HOLAA
+    <div class="" ng-show="(iteration == 1 && ngShowAnswer)">
       <h2 ng-bind="item.length"></h2>
       <div ng-repeat="item in Tasks" 
                 dnd-list-id="{{item.id}}" 
@@ -188,7 +194,7 @@
                         <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
-                          <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
+                          <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true}"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
                         <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
