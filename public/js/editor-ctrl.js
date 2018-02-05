@@ -26,6 +26,34 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.teamId = -1;
     self.reportIdeas = {};
     self.shared = {};
+    self.Tasks = [];
+
+    $scope.slider = {
+        value: 5,
+        options: {
+            showTicksValues: true,
+            stepsArray: [
+                {value: 0, legend: 'Malo'},
+                {value: 1},
+                {value: 2},
+                {value: 3},
+                {value: 4},
+                {value: 5, legend: 'Mediano'},
+                {value: 6},
+                {value: 7, legend: 'Bueno'},
+                {value: 8},
+                {value: 9},
+                {value: 10, legend: 'Excelente!'}
+            ],
+            onEnd: function (sliderId, modelValue) {
+                self.updateSemanticDifferential(sliderId)
+            }
+        }
+    };
+
+    self.priceSlider = {
+        value: 10
+    }
 
     self.openNewSes = () => {
         $uibModal.open({
@@ -90,6 +118,11 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     self.finished = true;
                 }
             });
+            $http({url: '/all_semantic_differential', method: 'POST', data: {id: self.sesId}}).then(function(response) {
+                self.Tasks = response.data;
+            }).finally(function () {
+                self.IsProcessing = false;
+            })
         });
     };
 

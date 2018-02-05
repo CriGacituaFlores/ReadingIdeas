@@ -228,6 +228,10 @@ a:hover{
     padding: 10px 0;
 }
 
+.pad-color {
+    background: white;
+}
+
 .pad-height {
     height: 700px;
 }
