@@ -215,7 +215,7 @@
             <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info fa-information-button"></i></button>
             Mi evaluación del texto
         </div>
-        <button class="btn bg-principal" ng-click="createPersonalEvaluation()">Agregar evaluación personal</button>
+        <button class="btn bg-principal" ng-click="createPersonalEvaluation(sesId ,myUid)">Agregar evaluación personal</button>
     </div>
 
     <div class="report-window" ng-if="writingReport" ng-controller="ReportController">

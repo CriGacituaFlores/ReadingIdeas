@@ -27,6 +27,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.reportIdeas = {};
     self.shared = {};
     self.Tasks = [];
+    self.evaluationPersonal = [];
 
     $scope.slider = {
         value: 50,
@@ -58,12 +59,20 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
     };
 
-    self.createPersonalEvaluation = () => {
-        $http({url: 'create-personal-evaluation', method: 'POST'}).success((response) => {
+    self.createPersonalEvaluation = (ses_id, user_id) => {
+        if (self.evaluationPersonal.length == 1) {
+            Notification.error('Ya existen el máximo de evaluaciones personales (1)')
+        } else {
+            $http({url: 'create-personal-evaluation', method: 'POST', data: {ses_id: ses_id, user_id: user_id}}).success((response) => {
+                self.LoadEvaluationPersonal(ses_id, user_id)
+            })
+        }
+    }
 
-        })
-        .catch((error) => {
-
+    self.LoadEvaluationPersonal = (id) => {
+        self.evaluationPersonal = [];
+        $http({url: '/all_personal_evaluations', method: 'POST', data: {id: id}}).then(function(response) {
+            self.evaluationPersonal = response.data;
         })
     }
 
