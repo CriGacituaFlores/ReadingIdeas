@@ -63,15 +63,16 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         if (self.evaluationPersonal.length == 1) {
             Notification.error('Ya existen el máximo de evaluaciones personales (1)')
         } else {
+            Notification.success('Evaluación personal creada')
             $http({url: 'create-personal-evaluation', method: 'POST', data: {ses_id: ses_id, user_id: user_id}}).success((response) => {
                 self.LoadEvaluationPersonal(ses_id, user_id)
             })
         }
     }
 
-    self.LoadEvaluationPersonal = (id) => {
+    self.LoadEvaluationPersonal = (ses_id, user_id) => {
         self.evaluationPersonal = [];
-        $http({url: '/all_personal_evaluations', method: 'POST', data: {id: id}}).then(function(response) {
+        $http({url: '/all_personal_evaluations', method: 'POST', data: {ses_id: ses_id, user_id: user_id}}).then(function(response) {
             self.evaluationPersonal = response.data;
         })
     }
@@ -137,6 +138,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             }).finally(function () {
                 self.IsProcessing = false;
             })
+            self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
     };
 

@@ -232,6 +232,7 @@ a:hover{
 }
 
 .pad-border {
+    border-radius: 10px;
     border: 2px solid #848484;
     padding: 10px 0;
 }

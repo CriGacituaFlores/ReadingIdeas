@@ -52,6 +52,13 @@ router.post("/create-personal-evaluation", (req, res) => {
     res.end('{"creado": "Diferencial semántico añadido"}')
 })
 
+router.post("/all_personal_evaluations", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from user_personal_evaluation where sesid = ${req.body.ses_id} and user_id = ${req.body.user_id} order by order_sort limit 1`
+    })(req,res);
+})
+
 router.post("/get-team-leader",rpg.singleSQL({
     dbcon: pass.dbcon,
     sql: "select leader, original_leader, id from teams inner join teamusers on tmid = id where uid = $1 and sesid = $2",
