@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("Editor", ['ui.bootstrap','ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
+var app = angular.module("Editor", ['ui.bootstrap','ui.tree', 'btford.socket-io', "timer", "ui-notification", "rzModule"]);
 
 app.factory("$socket", ["socketFactory", function (socketFactory) {
     return socketFactory();
@@ -29,31 +29,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.Tasks = [];
 
     $scope.slider = {
-        value: 5,
+        value: 50,
         options: {
-            showTicksValues: true,
-            stepsArray: [
-                {value: 0, legend: 'Malo'},
-                {value: 1},
-                {value: 2},
-                {value: 3},
-                {value: 4},
-                {value: 5, legend: 'Mediano'},
-                {value: 6},
-                {value: 7, legend: 'Bueno'},
-                {value: 8},
-                {value: 9},
-                {value: 10, legend: 'Excelente!'}
-            ],
-            onEnd: function (sliderId, modelValue) {
-                self.updateSemanticDifferential(sliderId)
-            }
+          floor: 0,
+          ceil: 100,
+          step: 1,
+          minLimit: 10,
+          maxLimit: 90
         }
     };
-
-    self.priceSlider = {
-        value: 10
-    }
 
     self.ngShowAnswer = true;
     self.ngShowReading = false;
