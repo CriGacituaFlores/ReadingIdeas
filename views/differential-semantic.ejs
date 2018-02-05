@@ -178,9 +178,6 @@
                       <div class="col-md-6 col-xs-6">
                         <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
                       </div>
-                      <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential(item.id,selectedSes.id)" aria-hidden="true"></i>
-                      </div>
                   </div>
                   <div class="row margin-t-a-b">
                     <div class="col-md-6 col-xs-6">
@@ -188,13 +185,13 @@
                         Valoración:
                       </div>
                       <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
                           <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
                       </div>
                     </div>
                     <div class="col-md-6 col-xs-6">
