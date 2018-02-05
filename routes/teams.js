@@ -44,6 +44,15 @@ router.post("/get-ses-info",rpg.singleSQL({
     sqlParams: [rpg.param("ses","uid"),rpg.param("ses","ses")]
 }));
 
+router.post("/create-personal-evaluation", (req, res) => {
+    //console.log(rpg.param("post","sesid"))
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',${req.body},0,now(),now())`
+    })(req, res);
+    res.end('{"creado": "Diferencial semántico añadido"}')
+})
+
 router.post("/get-team-leader",rpg.singleSQL({
     dbcon: pass.dbcon,
     sql: "select leader, original_leader, id from teams inner join teamusers on tmid = id where uid = $1 and sesid = $2",

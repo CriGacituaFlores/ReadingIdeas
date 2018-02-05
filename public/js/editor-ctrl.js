@@ -58,6 +58,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
     };
 
+    self.createPersonalEvaluation = () => {
+        $http({url: 'create-personal-evaluation', method: 'POST'}).success((response) => {
+
+        })
+        .catch((error) => {
+
+        })
+    }
+
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
     self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
 
