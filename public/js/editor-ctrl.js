@@ -84,6 +84,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
     }
 
+    self.updateEvaluationPersonal = (position) => {
+        let actualSemantic = self.evaluationPersonal[position]
+        $http({url: '/update_personal_evaluations', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
+
+        })
+    }
+
+    self.processItemPersonal = function(sliderId, modelValue) {
+        self.updateEvaluationPersonal(sliderId)
+    }
+
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
     self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
 
