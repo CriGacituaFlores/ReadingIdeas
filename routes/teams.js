@@ -52,6 +52,14 @@ router.post("/create-personal-evaluation", (req, res) => {
     res.end('{"creado": "Diferencial semántico añadido"}')
 })
 
+router.post("/update_semantic_differential_user", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `UPDATE semantic_differential_user SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
+    })(req, res);
+    res.end('{"creado": "Diferencial semántico modificado"}')
+})
+
 router.post("/all_personal_evaluations", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

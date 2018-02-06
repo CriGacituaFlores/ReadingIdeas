@@ -1,6 +1,6 @@
 "use strict";
 
-var app = angular.module("Editor", ['ui.bootstrap','ui.tree', 'btford.socket-io', "timer", "ui-notification", "rzModule"]);
+var app = angular.module("Editor", ['ui.bootstrap','ui.tree', 'btford.socket-io', "timer", "ui-notification", "rzModule", "xeditable"]);
 
 app.factory("$socket", ["socketFactory", function (socketFactory) {
     return socketFactory();
@@ -140,7 +140,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     self.finished = true;
                 }
             });
-            $http({url: '/all_semantic_differential', method: 'POST', data: {id: self.sesId}}).then(function(response) {
+            $http({url: '/all_semantic_differential_user', method: 'POST', data: {id: self.sesId}}).then(function(response) {
                 self.Tasks = response.data;
             }).finally(function () {
                 self.IsProcessing = false;
@@ -148,6 +148,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
     };
+
+    self.updateSemanticDifferentialUser = (position) => {
+        let actualSemantic = self.Tasks[position]
+        $http({url: '/update_semantic_differential_user', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
+
+        })
+    }
+
+    self.processItem = function(sliderId, modelValue) {
+        self.updateSemanticDifferentialUser(sliderId)
+    }
 
     self.finishState = () => {
         if(self.iteration == 0){

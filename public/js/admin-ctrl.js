@@ -372,6 +372,7 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     //}
 
     self.updateSemanticDifferential = (position) => {
+        debugger;
         let actualSemantic = self.Tasks[position]
         $http({url: '/update_semantic_differential', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
 

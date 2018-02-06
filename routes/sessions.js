@@ -97,9 +97,6 @@ router.post("/semantic_differential", (req, res) => {
 })
 
 router.post("/update_semantic_differential", (req, res) => {
-    //console.log(rpg.param("post","sesid"))
-    console.log(req.body.data.id)
-    console.log('AAAAAA')
     rpg.singleSQL({
         dbcon: pass.dbcon,
         sql: `UPDATE semantic_differential SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
@@ -111,6 +108,13 @@ router.post("/all_semantic_differential", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `select * from semantic_differential where sesid = ${req.body.id} order by order_sort limit 5`
+    })(req,res);
+})
+
+router.post("/all_semantic_differential_user", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from semantic_differential_user where sesid = ${req.body.id} and user_id = ${req.session.uid} order by order_sort limit 5`
     })(req,res);
 })
 

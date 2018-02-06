@@ -191,13 +191,13 @@
                     Valoración:
                     </div>
                     <div class="col-md-2 col-xs-2">
-                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
                     </div>
                     <div class="col-md-8 col-xs-8">
-                        <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true}"></rzslider>
+                        <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
                     </div>
                     <div class="col-md-2 col-xs-2">
-                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
                     </div>
                 </div>
                 <div class="col-md-6 col-xs-6">
@@ -205,7 +205,7 @@
                         Comentario:
                     </div>
                     <div class="col-md-12 col-xs-12">
-                        <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
+                        <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
                     </div>
                 </div>
                 </div>
