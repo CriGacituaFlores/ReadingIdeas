@@ -476,6 +476,18 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                 $http({url: "force-state-session", method: "post", data: postdata}).success((data) => {
                     self.shared.updateSesData();
                 });
+            } else if (self.selectedSes.type == "D") {
+                let postdata = {sesid: self.selectedSes.id};
+                $http({url: "change-state-session", method: "post", data: postdata}).success((data) => {
+                    self.shared.updateSesData();
+                });
+                if(self.selectedTab == 0) {
+                    let currentSes = self.selectedSes.id
+                    let all_users = [];
+                    $http({url: 'select-session-users', method: 'post', data: currentSes}).success((data) => {
+                        all_users = data.map(u => u.id)
+                    })
+                }
             }
             else {
                 let postdata = {sesid: self.selectedSes.id};

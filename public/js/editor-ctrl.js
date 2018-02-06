@@ -77,6 +77,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         })
     }
 
+    self.removeEvaluationPersonal = (index,sesId) => {
+        $http({url: 'remove_personal_evaluations', method: 'POST', data: index}).then((response) => {
+            self.LoadEvaluationPersonal(sesId, self.myUid);
+            Notification.success('Evaluacion personal eliminada eliminado')
+        });
+    }
+
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
     self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
 

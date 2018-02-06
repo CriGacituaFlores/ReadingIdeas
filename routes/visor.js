@@ -293,6 +293,24 @@ router.post("/force-state-session", rpg.execSQL({
     }
 }));
 
+router.post("/select-session-users", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id)
+                select min_name, max_name, order_sort, semantic_differential.sesid, value, description, users.id
+                from semantic_differential
+                inner join sessions on
+                sessions.id = semantic_differential.sesid
+                inner join sesusers on
+                sesusers.sesid = sessions.id
+                inner join users on
+                users.id = sesusers.uid
+                where users.id in (select id from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and sesusers.uid != ${req.session.uid})
+                and semantic_differential.sesid = ${req.body}`
+    })(req,res);
+})
+
+
 router.post("/record-finish", rpg.execSQL({
     dbcon: pass.dbcon,
     sql: "with rows as (update finish_session set stime = now() where uid = $1 and sesid = $2 and status = $3 returning 1) " +

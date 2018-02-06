@@ -163,7 +163,7 @@
                   <strong ng-bind="doc.title" class="margin-icon-document"></strong>
                   <a target="_blank" href="{{doc.path}}" class="discrete"> - Ver documento original</a>
                   <span class="input-group-addon border-input-b bg-principal" id="basic-addon1">
-                      <a class="bg-principal" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</a>
+                      <button class="btn bg-principal" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</button>
                   </span>
                 </div>
               </div>
@@ -183,6 +183,7 @@
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
                 dnd-moved="Sorting($index)"
+                dnd-disable-if="selectedSes.status!=1"
                 dnd-effect-allowed="move"
                 dnd-selected="models.selected = item"
                 ng-class="{'selected': models.selected === item}">
@@ -192,7 +193,9 @@
                         <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-trash pull-right mini-m-r mini-f-z cursor-p" ng-click="removeSemanticDiferential(item.id,selectedSes.id)" aria-hidden="true"></i>
+                        <a class="pull-right" ng-click="removeSemanticDiferential(item.id,selectedSes.id)" ng-disabled="selectedSes.status!=1">
+                            <i class="fa fa-trash mini-m-r mini-f-z cursor-p" aria-hidden="true"></i>
+                        </a>
                       </div>
                   </div>
                   <div class="row margin-t-a-b">
@@ -201,13 +204,13 @@
                         Valoración:
                       </div>
                       <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                        <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
                       </div>
                       <div class="col-md-8 col-xs-8">
-                          <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
+                          <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem, disabled: selectedSes.status!=1 ? true : false}"></rzslider>
                       </div>
                       <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                        <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
                       </div>
                     </div>
                     <div class="col-md-6 col-xs-6">
@@ -215,7 +218,7 @@
                           Comentario:
                       </div>
                       <div class="col-md-12 col-xs-12">
-                          <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
+                          <textarea ng-disabled="selectedSes.status!=1" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
                       </div>
                     </div>
                   </div>
@@ -223,7 +226,7 @@
               </div>
             </div>
             
-            <button class="btn bg-principal" ng-click="createSemanticDiferential(selectedSes.id)">Agregar Diferenciales semánticos</button>
+            <button class="btn bg-principal" ng-click="createSemanticDiferential(selectedSes.id)" ng-disabled="selectedSes.status!=1">Agregar Diferenciales semánticos</button>
           </div>
 
           <div class="col-md-8" ng-show="selectedSes.type == 'M'" ng-controller="SemDocController">
