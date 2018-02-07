@@ -296,8 +296,8 @@ router.post("/force-state-session", rpg.execSQL({
 router.post("/select-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id)
-                select min_name, max_name, order_sort, semantic_differential.sesid, value, description, users.id
+        sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_id)
+                select min_name, max_name, order_sort, semantic_differential.sesid, value, description, users.id, semantic_differential.id
                 from semantic_differential
                 inner join sessions on
                 sessions.id = semantic_differential.sesid
@@ -310,10 +310,45 @@ router.post("/select-session-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-differential-by-users", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_id)
+                select min_name, max_name, order_sort, semantic_differential.sesid, value, description, users.id, semantic_differential.id
+                from semantic_differential
+                inner join sessions on
+                sessions.id = semantic_differential.sesid
+                inner join sesusers on
+                sesusers.sesid = sessions.id
+                inner join users on
+                users.id = sesusers.uid
+                where users.id in (select id from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and sesusers.uid != ${req.session.uid})
+                and semantic_differential.sesid = ${req.body}`
+    })(req,res);
+})
+
+router.post("/select-semantic-by-all-users", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select min_name, max_name, avg(value)::INTEGER from semantic_differential_user
+            where semantic_differential_user.sesid = ${req.body}
+            group by semantic_differential_user.semantic_differential_id, semantic_differential_user.min_name, semantic_differential_user.max_name`
+    })(req,res);
+})
+
 router.post("/select-all-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `select * from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and users.id != ${req.session.uid}`
+    })(req,res);
+})
+
+router.post("/select-semantic-by-users", (req, res) => {
+    console.log('session: ' + req.body)
+    console.log('session: ' + req.body.userid)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from semantic_differential_user where user_id = ${req.body.userid} and sesid = ${req.body.ses} limit 5`
     })(req,res);
 })
 

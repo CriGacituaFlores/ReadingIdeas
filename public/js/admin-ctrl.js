@@ -75,12 +75,10 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.iterationNames = [];
     self.iterationUsers = [];
     self.openSidebar = true;
-
-    self.select_session_users = (ses) => {
-        $http({url: 'select-all-users', method: 'post', data: ses.id}).success((data) => {
-            self.iterationUsers = data.map(u => ({id: u.id, name: u.name}))
-        })
-    }
+    self.semanticByUser = [];
+    self.semanticByAllUser = [];
+    self.invited = [];
+    self.isChecked = false;
 
     self.init = () => {
         self.shared.updateSesData();
@@ -88,6 +86,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
 
     self.selectSession = (ses,id) => {
         self.select_session_users(ses);
+        self.select_semantic_by_all_users(ses);
         self.selectedId = id;
         self.selectedSes = ses;
         ServiceSessions.data = ses;
@@ -103,6 +102,33 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         self.shared.resetTab();
         $location.path(self.selectedSes.id);
     };
+
+    self.select_session_users = (ses) => {
+        $http({url: 'select-all-users', method: 'post', data: ses.id}).success((data) => {
+            self.iterationUsers = data.map(u => ({id: u.id, name: u.name}))
+        })
+    }
+
+    self.select_semantic_by_user = (userid,ses) => {
+        $http({url: 'select-semantic-by-users', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
+            self.semanticByUser = data;
+        })
+    }
+
+    self.select_semantic_by_all_users = (ses) => {
+        $http({url: 'select-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
+            self.semanticByAllUser = data;
+        })
+    }
+
+    self.insertinvited = function(user) {
+        if(self.isChecked) {
+            self.invited.push(user);
+            self.isChecked = false
+        } else {
+            self.isChecked = true
+        }
+    }
 
     self.shared.updateSesData = () => {
         $http({url: "get-session-list", method: "post"}).success((data) => {
@@ -380,7 +406,6 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
     //}
 
     self.updateSemanticDifferential = (position) => {
-        debugger;
         let actualSemantic = self.Tasks[position]
         $http({url: '/update_semantic_differential', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
 
