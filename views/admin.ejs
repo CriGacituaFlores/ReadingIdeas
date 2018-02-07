@@ -615,10 +615,25 @@
                 <select class="form-control" ng-options="x.val as x.name for x in iterationNames" ng-model="iterationIndicator" ng-change="updateState()"></select>
           </div>
         </div>
-        <h4></h4>
-        <br>
+        <div class="col-md-12 margin-b-container">
+            <hr>
+        </div>
+        <div class="col-md-4" ng-hide="selectedSes.type != 'D'">
+          <div class="col-md-4 margin-b-t-editable margin-t-b-editable">
+            <label class="letter-color-title">Respuesta de:</label>
+          </div>
+          <div class="col-md-6 margin-b-t-editable margin-t-b-editable">
+            <select class="form-control" ng-options="x.id as x.name for x in iterationUsers" ng-model="iterationIndicator" ng-change="updateState()"></select>
+          </div>
+          <div class="col-md-2 margin-b-t-editable margin-t-b-editable">
+            <input class="" type="checkbox" name="vehicle" value="Bike"> Curso </input>
+          </div>
+        </div>
+        <div class="col-md-12 margin-b-container">
+          <hr>
+        </div>
 
-        <nvd3 options="barOpts" data="barData" ng-hide="iterationIndicator == 0 || iterationIndicator == 4"></nvd3>
+        <nvd3 options="barOpts" data="barData" ng-hide="iterationIndicator == 0 || iterationIndicator == 4 || selectedSes.type == 'D'"></nvd3>
 
         <div class="row" ng-show="iterationIndicator < 5 && (selectedSes.type == 'L' || selectedSes.type == 'M')">
           <div class="col-sm-6" ng-hide="iterationIndicator == 0 || iterationIndicator == 4">
@@ -640,7 +655,7 @@
             <strong>{{100 - avgAll() | number:0 }}%</strong>
           </div>
         </div>
-        <hr>
+        
         <button class="btn btn-default btn-sm pull-right" ng-click="showCf = !showCf" ng-show="selectedSes.type == 'S'">Mostrar Grado de confianza</button>
         <table class="table table-bordered" ng-show="showCf">
           <tr>
@@ -688,49 +703,52 @@
           </tr>
         </table>
         <div class="row">
-          <div class="col-md-7">
-            <table class="table table-bordered" ng-if="(selectedSes.type == 'L' || selectedSes.type == 'M' || selectedSes.type == 'D') && alumState!={} && iterationIndicator <= 4">
-              <tr>
-                <th class="bg-principal" ng-if="iterationIndicator != 3">Alumno</th>
-                <th class="bg-principal" ng-if="iterationIndicator == 3">Grupo</th>
-                <th class="bg-principal" style="width: 420px" ng-if="iterationIndicator != 0 && iterationIndicator != 4">Puntaje</th>
-                <th class="bg-principal">Tiempo de término</th>
-              </tr>
-              <tr ng-repeat="(alum, dato) in alumState">
-                <td ng-if="iterationIndicator != 3">
-                  {{users[alum].name}}
-                  <button class="btn btn-default btn-sm pull-right" ng-click="showReportByUid(alum)" ng-show="iterationIndicator==4">
-                    <i class="fa fa-eye"></i>
-                  </button>
-                </td>
-                <td ng-if="iterationIndicator == 3" ng-bind="leaderTeamStr[alum]"></td>
-                <td ng-if="iterationIndicator != 0 && iterationIndicator != 4">
-                  <div class="bg-darkgreen table-green-bar" ng-show="dato.score != null" style="width: {{400*dato.score}}px;">
-                    {{100*dato.score | number:0}}%
-                  </div>
-                </td>
-                <td>
-                  <span ng-show="dato.dtime != null">{{dato.dtime/60 | number:0}}m {{dato.dtime%60 | number:0}}s</span>
-                </td>
-              </tr>
-            </table>
+          <div class="col-md-12">
+            <div class="col-md-7">
+                <table class="table table-bordered" ng-if="(selectedSes.type == 'L' || selectedSes.type == 'M' || selectedSes.type == 'D') && alumState!={} && iterationIndicator <= 4">
+                  <tr>
+                    <th class="bg-principal" ng-if="iterationIndicator != 3">Alumno</th>
+                    <th class="bg-principal" ng-if="iterationIndicator == 3">Grupo</th>
+                    <th class="bg-principal" style="width: 420px" ng-if="iterationIndicator != 0 && iterationIndicator != 4">Puntaje</th>
+                    <th class="bg-principal">Tiempo de término</th>
+                  </tr>
+                  <tr ng-repeat="(alum, dato) in alumState">
+                    <td ng-if="iterationIndicator != 3">
+                      {{users[alum].name}}
+                      <button class="btn btn-default btn-sm pull-right" ng-click="showReportByUid(alum)" ng-show="iterationIndicator==4">
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </td>
+                    <td ng-if="iterationIndicator == 3" ng-bind="leaderTeamStr[alum]"></td>
+                    <td ng-if="iterationIndicator != 0 && iterationIndicator != 4">
+                      <div class="bg-darkgreen table-green-bar" ng-show="dato.score != null" style="width: {{400*dato.score}}px;">
+                        {{100*dato.score | number:0}}%
+                      </div>
+                    </td>
+                    <td>
+                      <span ng-show="dato.dtime != null">{{dato.dtime/60 | number:0}}m {{dato.dtime%60 | number:0}}s</span>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            
+    
+              <div class="col-md-4">
+                <div class="col-md-8 bg-principal padding-completness-students">
+                  Total participantes
+                </div>
+                <div class="col-md-4 padding-completness-students text-center">
+                    <strong>{{numComplete}} / {{numUsers}}</strong>
+                </div>
+                <div class="col-md-8 bg-principal padding-completness-students">
+                  % de completitud
+                </div>
+                <div class="col-md-4 padding-completness-students text-center">
+                  <strong>{{(numComplete * 100) / numUsers}} %</strong>
+                </div>
+              </div>
           </div>
-        
-
-          <div class="col-md-4">
-            <div class="col-md-8 bg-principal padding-completness-students">
-              Total participantes
-            </div>
-            <div class="col-md-4 padding-completness-students text-center">
-                <strong>{{numComplete}} / {{numUsers}}</strong>
-            </div>
-            <div class="col-md-8 bg-principal padding-completness-students">
-              % de completitud
-            </div>
-            <div class="col-md-4 padding-completness-students text-center">
-              <strong>{{(numComplete * 100) / numUsers}} %</strong>
-            </div>
-          </div>
+          
         </div>
         <!-- RUBRICA DASHBOARD -->
         <div ng-show="iterationIndicator == 5">

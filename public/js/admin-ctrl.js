@@ -73,13 +73,21 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.sesStatusses = ["No Publicada", "Lectura", "Personal", "Anónimo", "Grupal", "Finalizada"];
     self.optConfidence = [0, 25, 50, 75, 100];
     self.iterationNames = [];
+    self.iterationUsers = [];
     self.openSidebar = true;
+
+    self.select_session_users = (ses) => {
+        $http({url: 'select-all-users', method: 'post', data: ses.id}).success((data) => {
+            self.iterationUsers = data.map(u => ({id: u.id, name: u.name}))
+        })
+    }
 
     self.init = () => {
         self.shared.updateSesData();
     };
 
     self.selectSession = (ses,id) => {
+        self.select_session_users(ses);
         self.selectedId = id;
         self.selectedSes = ses;
         ServiceSessions.data = ses;

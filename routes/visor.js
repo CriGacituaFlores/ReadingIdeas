@@ -310,6 +310,13 @@ router.post("/select-session-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-all-users", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and users.id != ${req.session.uid}`
+    })(req,res);
+})
+
 
 router.post("/record-finish", rpg.execSQL({
     dbcon: pass.dbcon,
