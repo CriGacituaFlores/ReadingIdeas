@@ -98,7 +98,7 @@
 
       <ul class="nav nav-tabs col-md-9">
         <li class="nav-item" ng-repeat="x in tabOptions" ng-class="{active: $index==selectedTab}" ng-click="setTab($index)">
-          <a class="nav-link active" href="#" ng-bind="x" ng-class="{'bg-principal': $index==selectedTab}"></a>
+          <a class="nav-link active" href="" ng-bind="x" ng-class="{'bg-principal': $index==selectedTab}"></a>
         </li>
       </ul>
 
@@ -138,18 +138,18 @@
               <div class="col-sm-4 col-md-4">
                 <div class="input-group">
                   <span class="input-group-addon border-input-b bg-principal" id="basic-addon1"><i class="fa fa-file-text"></i></span>
-                  <input type="text" class="form-control border-input-b" name="title" placeholder="Titulo" required ng-disabled="selectedSes.status!=1" maxlength="20">
+                  <input type="text" class="form-control border-input-b" name="title" placeholder="Titulo" required ng-disabled="selectedSes.status!=1 || documents.length >= 1" maxlength="20">
                 </div>
               </div>
               <div class="col-sm-6 col-md-6">
                 <div class="input-group">
                   <span class="input-group-addon border-input-b bg-principal" id="basic-addon1">Elegir archivo</span>
-                  <input type="file" class="form-control border-input-b" name="pdf" ng-disabled="selectedSes.status!=1" required>
+                  <input type="file" class="form-control border-input-b" name="pdf" ng-disabled="selectedSes.status!=1 || documents.length >= 1" required>
                   <input type="text" ng-value="selectedSes.id" name="sesid" hidden>
                 </div>
               </div>
               <div class="col-sm-2 col-md-2">
-                <button class="form-control btn btn-default bg-principal" ng-disabled="selectedSes.status!=1 || busy">Subir
+                <button class="form-control btn btn-default bg-principal" ng-disabled="selectedSes.status!=1 || busy || documents.length >= 1">Subir
                   <i ng-show="busy" class="fa fa-spinner fa-pulse"></i>
                 </button>
               </div>
@@ -163,7 +163,7 @@
                   <strong ng-bind="doc.title" class="margin-icon-document"></strong>
                   <a target="_blank" href="{{doc.path}}" class="discrete"> - Ver documento original</a>
                   <span class="input-group-addon border-input-b bg-principal" id="basic-addon1">
-                      <button class="btn bg-principal" ng-disabled="selectedSes.status!=1" ng-click="deleteDocument(doc.id)">Eliminar</button>
+                      <button class="btn bg-principal" ng-disabled="selectedSes.status!=1" ng-click="removeDocIcon(doc.id)">Eliminar</button>
                   </span>
                 </div>
               </div>
@@ -193,7 +193,7 @@
                         <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
-                        <a class="pull-right" ng-click="removeSemanticDiferential(item.id,selectedSes.id)" ng-disabled="selectedSes.status!=1">
+                        <a class="pull-right" ng-click="removeSemanticIconTrash(item.id,selectedSes.id)" ng-disabled="selectedSes.status!=1">
                             <i class="fa fa-trash mini-m-r mini-f-z cursor-p" aria-hidden="true"></i>
                         </a>
                       </div>

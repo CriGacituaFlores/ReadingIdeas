@@ -15,6 +15,58 @@ adpp.factory("ServiceSessions", function() {
    }
 })
 
+adpp.service('modalService',['$uibModal',
+
+    function($uibModal) {
+        var modalDefaults = {
+            backdrop: true,
+            keyboard: true,
+            modalFade: true,
+            templateUrl: 'templ/model-confirmation.html'
+        };
+
+        var modalOptions = {
+            closeButtonText: 'Cerrar',
+            actionButtonText: 'OK',
+            headerText: 'Continuar?',
+            bodyText: 'Perform this action?'
+        };
+
+        this.showModal = function (customModalDefaults, customModalOptions) {
+            if (!customModalDefaults) customModalDefaults = {};
+            customModalDefaults.backdrop = 'static';
+            return this.show(customModalDefaults, customModalOptions);
+        };
+
+        this.show = function (customModalDefaults, customModalOptions) {
+            //Create temp objects to work with since we're in a singleton service
+            var tempModalDefaults = {};
+            var tempModalOptions = {};
+
+            //Map angular-ui modal custom defaults to modal defaults defined in service
+            angular.extend(tempModalDefaults, modalDefaults, customModalDefaults);
+
+            //Map modal.html $scope custom properties to defaults defined in service
+            angular.extend(tempModalOptions, modalOptions, customModalOptions);
+
+            if (!tempModalDefaults.controller) {
+                tempModalDefaults.controller = function ($scope, $uibModalInstance) {
+                    $scope.modalOptions = tempModalOptions;
+                    $scope.modalOptions.ok = function (result) {
+                        $uibModalInstance.close(result);
+                    };
+                    $scope.modalOptions.close = function (result) {
+                        $uibModalInstance.dismiss('cancel');
+                    };
+                }
+            }
+
+            return $uibModal.open(tempModalDefaults).result;
+        };
+    }
+
+])
+
 adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     ngQuillConfigProvider.set({
         modules:{
@@ -53,7 +105,7 @@ adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     });
 }]);
 
-adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale, Notification, ServiceSessions) {
+adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale, Notification, ServiceSessions, modalService) {
     let self = $scope;
 
     self.temp = "";
@@ -102,6 +154,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         self.shared.resetTab();
         $location.path(self.selectedSes.id);
     };
+
 
     self.select_session_users = (ses) => {
         $http({url: 'select-all-users', method: 'post', data: ses.id}).success((data) => {
@@ -171,11 +224,26 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
 
     self.shared.updateDocuments = self.requestDocuments;
 
+    self.removeDocIcon = (docid) => {
+        let custName = 'Documento';
+
+        let modalOptions = {
+            closeButtonText: 'Cancelar',
+            actionButtonText: 'Eliminar',
+            headerText: 'Eliminar ' + custName + '?',
+            bodyText: 'Estás seguro que desear este Documento?'
+        };
+
+        modalService.showModal({}, modalOptions).then(function (result) {
+            self.deleteDocument(docid)
+        });
+    }
+
     self.deleteDocument = (docid) => {
         let postdata = {docid: docid};
         $http({url: "delete-document", method: "post", data: postdata}).success((data) => {
             self.requestDocuments();
-            Notification.success("Documento eliminado con éxito")
+            Notification.info("Documento eliminado con éxito")
         });
     };
 
@@ -351,7 +419,7 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
 
 });
 
-adpp.controller("SemanticDifferentialController", function($scope, $http, Notification, ServiceSessions) {
+adpp.controller("SemanticDifferentialController", function($scope, $http, $uibModal, Notification, ServiceSessions, modalService) {
     let self = $scope;
 
     self.serviceSes = ServiceSessions;
@@ -426,10 +494,25 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, Notifi
         });
     }
 
+    self.removeSemanticIconTrash = (index,sesId) => {
+        let custName = 'diferencial semántico';
+
+        let modalOptions = {
+            closeButtonText: 'Cancelar',
+            actionButtonText: 'Eliminar',
+            headerText: 'Eliminar ' + custName + '?',
+            bodyText: 'Estás seguro que desear este diferencial semántico?'
+        };
+
+        modalService.showModal({}, modalOptions).then(function (result) {
+            self.removeSemanticDiferential(index,sesId)
+        });
+    }
+
     self.removeSemanticDiferential = (index,sesId) => {
         $http({url: 'remove_semantic_differential', method: 'POST', data: index}).then((response) => {
             self.shared.LoadTask(sesId);
-            Notification.success('Diferencial semántico eliminado')
+            Notification.info('Diferencial semántico eliminado')
         });
     }
 
