@@ -44,7 +44,6 @@ router.post("/get-ses-info",rpg.singleSQL({
     sqlParams: [rpg.param("ses","uid"),rpg.param("ses","ses")]
 }));
 
-<<<<<<< HEAD
 router.post("/create-personal-evaluation", (req, res) => {
     rpg.singleSQL({
         dbcon: pass.dbcon,
@@ -83,8 +82,6 @@ router.post("/remove_personal_evaluations", (req, res) => {
     })(req, res);
 });
 
-=======
->>>>>>> origin/master
 router.post("/get-team-leader",rpg.singleSQL({
     dbcon: pass.dbcon,
     sql: "select leader, original_leader, id from teams inner join teamusers on tmid = id where uid = $1 and sesid = $2",

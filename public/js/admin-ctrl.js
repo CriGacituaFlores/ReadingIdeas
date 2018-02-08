@@ -1,15 +1,10 @@
 "use strict";
 
-<<<<<<< HEAD
 let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap", "dndLists", "rzModule", "xeditable"]);
-=======
-let adpp = angular.module("Admin", ["ui.bootstrap", "ui.multiselect", "nvd3", "timer", "ui-notification", "ngQuill", "ngMap"]);
->>>>>>> origin/master
 
 const DASHBOARD_AUTOREALOD = true;
 const DASHBOARD_AUTOREALOD_TIME = 15;
 
-<<<<<<< HEAD
 adpp.run(function(editableOptions) {
     editableOptions.theme = 'bs3';
 });
@@ -71,10 +66,6 @@ adpp.service('modalService',['$uibModal',
     }
 
 ])
-=======
-window.DIC = {};
-window.warnDIC = {};
->>>>>>> origin/master
 
 adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     ngQuillConfigProvider.set({
@@ -103,13 +94,8 @@ adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
 
                     ['clean'],                                         // remove formatting button
                     ['image','link','video'],                                      // remove formatting button
-<<<<<<< HEAD
-                    ['formula'],
-                    ['map']
-=======
                     ['formula']
                     //['map']
->>>>>>> origin/master
                 ],
                 handlers: {
                     map: quillMapHandler
@@ -119,11 +105,7 @@ adpp.config(['ngQuillConfigProvider', function (ngQuillConfigProvider) {
     });
 }]);
 
-<<<<<<< HEAD
 adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale, Notification, ServiceSessions, modalService) {
-=======
-adpp.controller("AdminController", function ($scope, $http, $uibModal, $location, $locale) {
->>>>>>> origin/master
     let self = $scope;
 
     self.temp = "";
@@ -133,17 +115,13 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.sessions = [];
 
     self.selectedSes = null;
-<<<<<<< HEAD
     self.Tasks = [];
-=======
->>>>>>> origin/master
     self.documents = [];
     self.questions = [];
     self.questionTexts = [];
     self.newUsers = [];
     self.users = {};
     self.selectedId = -1;
-<<<<<<< HEAD
     self.sesStatusses = ["No Publicada", "Lectura", "Personal", "Anónimo", "Grupal", "Finalizada"];
     self.optConfidence = [0, 25, 50, 75, 100];
     self.iterationNames = [];
@@ -165,11 +143,11 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         self.selectedSes = ses;
         ServiceSessions.data = ses;
         self.shared.LoadTask(id);
-=======
-    self.sesStatusses = ["notPublicada", "reading", "personal", "anon", "teamWork", "finished"];
-    self.optConfidence = [0, 25, 50, 75, 100];
-    self.iterationNames = [];
-    self.openSidebar = true;
+        self.sesStatusses = ["notPublicada", "reading", "personal", "anon", "teamWork", "finished"];
+        self.optConfidence = [0, 25, 50, 75, 100];
+        self.iterationNames = [];
+        self.openSidebar = true;
+    }
 
     self.init = () => {
         self.shared.updateSesData();
@@ -179,7 +157,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.selectSession = (ses,id) => {
         self.selectedId = id;
         self.selectedSes = ses;
->>>>>>> origin/master
         self.requestDocuments();
         self.requestSemDocuments();
         self.requestQuestions();
@@ -192,7 +169,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         $location.path(self.selectedSes.id);
     };
 
-<<<<<<< HEAD
 
     self.select_session_users = (ses) => {
         $http({url: 'select-all-users', method: 'post', data: ses.id}).success((data) => {
@@ -221,8 +197,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         }
     }
 
-=======
->>>>>>> origin/master
     self.shared.updateSesData = () => {
         $http({url: "get-session-list", method: "post"}).success((data) => {
             console.log("Session data updated");
@@ -245,7 +219,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
             self.selectSession(ses,sesid);
     };
 
-<<<<<<< HEAD
     self.shared.LoadTask = (id) => {
         self.Tasks = [];
         self.IsProcessing = true;
@@ -256,8 +229,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         })
     }
 
-=======
->>>>>>> origin/master
     self.requestDocuments = () => {
         let postdata = {sesid: self.selectedSes.id};
         $http({url: "documents-session", method: "post", data: postdata}).success((data) => {
@@ -267,7 +238,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
 
     self.shared.updateDocuments = self.requestDocuments;
 
-<<<<<<< HEAD
     self.removeDocIcon = (docid) => {
         let custName = 'Documento';
 
@@ -283,16 +253,11 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         });
     }
 
-=======
->>>>>>> origin/master
     self.deleteDocument = (docid) => {
         let postdata = {docid: docid};
         $http({url: "delete-document", method: "post", data: postdata}).success((data) => {
             self.requestDocuments();
-<<<<<<< HEAD
             Notification.info("Documento eliminado con éxito")
-=======
->>>>>>> origin/master
         });
     };
 
@@ -362,27 +327,19 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         self.shared.updateState()
     };
 
-<<<<<<< HEAD
-=======
     self.updateLang = (lang) => {
         $http.get("data/" + lang + ".json").success((data) => {
             window.DIC = data;
         });
     };
 
->>>>>>> origin/master
     self.init();
 });
 
 adpp.controller("TabsController", function ($scope, $http) {
     let self = $scope;
-<<<<<<< HEAD
-    self.tabOptions = ["Descripción", "Dashboard"];
-    self.tabConfig = ["Usuarios", "Grupos"];
-=======
     self.tabOptions = ["description", "dashboard"];
     self.tabConfig = ["users", "groups"];
->>>>>>> origin/master
     self.selectedTab = 0;
     self.selectedTabConfig = -1;
 
@@ -391,11 +348,7 @@ adpp.controller("TabsController", function ($scope, $http) {
         if (self.selectedSes != null && self.selectedSes.status > 1) {
             self.selectedTab = 1;
         }
-<<<<<<< HEAD
         self.selectedTabConfig = 0;
-=======
-        self.selectedTabConfig = -1;
->>>>>>> origin/master
         if (self.selectedSes.status == 7) {
             self.shared.gotoRubrica();
         }
@@ -403,40 +356,17 @@ adpp.controller("TabsController", function ($scope, $http) {
 
     self.shared.verifyTabs = () => {
         if (self.selectedSes.type == "L") {
-<<<<<<< HEAD
-            self.iterationNames = [{name: "Lectura", val: 0}, {name: "Individual", val: 1},
-                {name: "Grupal anónimo", val: 2}, {name: "Grupal", val: 3}, {name: "Reporte", val: 4},
-                {name: "Calibración Rubrica", val: 5}, {name: "Evaluación de Pares", val: 6}];
-            self.tabOptions = ["Configuración", "Dashboard"];
-            self.tabConfig = ["Usuarios", "Grupos", "Rúbrica"];
-            self.sesStatusses = ["Configuración", "Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
-=======
             self.iterationNames = [{name: "reading", val: 0}, {name: "individual", val: 1},
                 {name: "anon", val: 2}, {name: "teamWork", val: 3}, {name: "report", val: 4},
                 {name: "rubricCalib", val: 5}, {name: "pairEval", val: 6}];
             self.tabOptions = ["configuration", "dashboard"];
             self.tabConfig = ["users", "groups", "rubrica"];
             self.sesStatusses = ["configuration", "reading", "individual", "anon", "teamWork", "report", "rubricCalib", "pairEval", "finished"];
->>>>>>> origin/master
             self.shared.getRubrica();
             self.shared.getExampleReports();
             self.shared.getReports();
         }
         else if(self.selectedSes.type == "S"){
-<<<<<<< HEAD
-            self.iterationNames = [{name: "Individual", val: 1}, {name: "Grupal anónimo", val: 2},
-                {name: "Grupal", val: 3}];
-            self.tabOptions = ["Configuración", "Dashboard"];
-            self.tabConfig = ["Usuarios","Grupos",null,"Opciones"];
-            self.sesStatusses = ["Configuración", "Individual", "Anónimo", "Grupal", "Finalizada"];
-        }
-        else if(self.selectedSes.type == "M"){
-            self.iterationNames = [{name: "Individual", val: 1}, {name: "Grupal", val: 3}, {name: "Reporte", val:4}, {name: "Evaluación de Pares", val: 6}];
-            self.tabOptions = ["Configuración", "Dashboard"];
-            self.tabConfig = ["Usuarios", "Grupos","Rúbrica"];
-            self.sesStatusses = [{i:-1, name: "Configuración"}, {i: 1, name: "Individual"}, {i: 3, name: "Grupal"}, {i: 4, name: "Reporte"},
-                {i: 6, name: "Evaluación de Pares"}, {i: 7, name: "Finalizada"}];
-=======
             self.iterationNames = [{name: "individual", val: 1}, {name: "anon", val: 2},
                 {name: "teamWork", val: 3}];
             self.tabOptions = ["configuration", "dashboard"];
@@ -449,7 +379,6 @@ adpp.controller("TabsController", function ($scope, $http) {
             self.tabConfig = ["Usuarios", "Grupos","Rúbrica"];
             self.sesStatusses = [{i:-1, name: "configuración"}, {i: 1, name: "individual"}, {i: 3, name: "teamWork"}, {i: 4, name: "report"},
                 {i: 6, name: "pairEval"}, {i: 7, name: "finished"}];
->>>>>>> origin/master
             self.shared.getRubrica();
             self.shared.getExampleReports();
             self.shared.getReports();
@@ -498,7 +427,6 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
                     self.busy = false;
                     self.shared.updateDocuments();
                 }, 2000);
-<<<<<<< HEAD
             } else {
                 Notification.error(data.status);
                 event.target.reset();
@@ -506,15 +434,11 @@ adpp.controller("DocumentsController", function ($scope, $http, Notification, $t
             }
         }).error((error) => {
             Notification.error(error);
-=======
-            }
->>>>>>> origin/master
         });
     };
 
 });
 
-<<<<<<< HEAD
 adpp.controller("SemanticDifferentialController", function($scope, $http, $uibModal, Notification, ServiceSessions, modalService) {
     let self = $scope;
 
@@ -625,8 +549,6 @@ adpp.controller("SemanticDifferentialController", function($scope, $http, $uibMo
 
 });
 
-=======
->>>>>>> origin/master
 adpp.controller("SesEditorController", function ($scope, $http, Notification) {
     let self = $scope;
 
@@ -658,10 +580,7 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
         let postdata = {name: self.selectedSes.name, descr: self.selectedSes.descr, id: self.selectedSes.id};
         $http({url: "update-session", method: "post", data: postdata}).success((data) => {
             console.log("Session updated");
-<<<<<<< HEAD
             Notification.success("Configuración inicial actualizada");
-=======
->>>>>>> origin/master
         });
     };
 
@@ -694,7 +613,6 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                 $http({url: "force-state-session", method: "post", data: postdata}).success((data) => {
                     self.shared.updateSesData();
                 });
-<<<<<<< HEAD
             } else if (self.selectedSes.type == "D") {
                 let postdata = {sesid: self.selectedSes.id};
                 $http({url: "change-state-session", method: "post", data: postdata}).success((data) => {
@@ -707,8 +625,6 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                         all_users = data.map(u => u.id)
                     })
                 }
-=======
->>>>>>> origin/master
             }
             else {
                 let postdata = {sesid: self.selectedSes.id};
@@ -816,11 +732,7 @@ adpp.controller("SemDocController", function ($scope, $http, Notification) {
 
 });
 
-<<<<<<< HEAD
-adpp.controller("QuestionsController", function ($scope, $http, Notification, $uibModal, NgMap) {
-=======
 adpp.controller("QuestionsController", function ($scope, $http, Notification, $uibModal, NgMap, $timeout) {
->>>>>>> origin/master
     let self = $scope;
 
     self.qsLabels = ['A', 'B', 'C', 'D', 'E'];
@@ -837,17 +749,10 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
 
     self.newText = {id: null, title: "", content: ""};
 
-<<<<<<< HEAD
-    NgMap.getMap().then((map) => {
-        console.log("MAP correctly loaded");
-        self.map = map;
-    });
-=======
     /*NgMap.getMap().then((map) => {
         console.log("MAP correctly loaded");
         self.map = map;
     });*/
->>>>>>> origin/master
 
     self.selectAnswer = (i) => {
         self.newQuestion.answer = i;
@@ -858,12 +763,9 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
             Notification.error("Debe indicar la respuesta correcta a la pregunta");
             return;
         }
-<<<<<<< HEAD
-=======
         if(self.newQuestion.includesMap){
             encodeMapPlugin();
         }
->>>>>>> origin/master
         let postdata = {
             content: self.newQuestion.content,
             options: self.newQuestion.alternatives.join("\n"),
@@ -871,12 +773,8 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
             answer: self.newQuestion.answer,
             sesid: self.selectedSes.id,
             textid: self.newQuestion.textid,
-<<<<<<< HEAD
-            other: self.newQuestion.other
-=======
             other: self.newQuestion.other,
             pluginData: self.newQuestion.pluginData
->>>>>>> origin/master
         };
         $http({url: "add-question", method: "post", data: postdata}).success((data) => {
             if (data.status == "ok") {
@@ -905,12 +803,9 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
             Notification.error("Debe indicar la respuesta correcta a la pregunta");
             return;
         }
-<<<<<<< HEAD
-=======
         if(self.newQuestion.includesMap){
             encodeMapPlugin();
         }
->>>>>>> origin/master
         let postdata = {
             id: self.newQuestion.id,
             content: self.newQuestion.content,
@@ -919,12 +814,8 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
             answer: self.newQuestion.answer,
             sesid: self.selectedSes.id,
             textid: self.newQuestion.textid,
-<<<<<<< HEAD
-            other: self.newQuestion.other
-=======
             other: self.newQuestion.other,
             pluginData: self.newQuestion.pluginData
->>>>>>> origin/master
         };
         $http({url: "update-question", method: "post", data: postdata}).success((data) => {
             if (data.status == "ok") {
@@ -939,11 +830,8 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
                     textid: null,
                     answer: -1
                 };
-<<<<<<< HEAD
-=======
                 if(self.shared.clearOverlayBuffer)
                     self.shared.clearOverlayBuffer();
->>>>>>> origin/master
             }
         });
     };
@@ -956,11 +844,6 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
             comment: qs.comment,
             other: qs.other,
             textid: qs.textid,
-<<<<<<< HEAD
-            answer: qs.answer
-        };
-        Notification.info("Edite la pregunta en el formulario.");
-=======
             answer: qs.answer,
             includesMap: qs.plugin_data && qs.plugin_data.startsWith("MAP")
         };
@@ -971,7 +854,6 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
             self.shared.processMapData(qs.plugin_data, qs.id);
             futureRefreshMap();
         }
->>>>>>> origin/master
     };
 
     self.startEditText = (tx) => {
@@ -1024,52 +906,6 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
     };
 
     self.configQuillExtra = (editor) => {
-<<<<<<< HEAD
-
-        self.editor = editor;
-
-        editor.getModule("toolbar").addHandler("map", function () {
-            let range = this.quill.getSelection();
-            if (range) {
-                if(self.shared.clearOverlayBuffer)
-                    self.shared.clearOverlayBuffer();
-                let modal = $uibModal.open({
-                    templateUrl: "templ/map-selection.html",
-                    controller: "MapSelectionModalController",
-                    controllerAs: "vm",
-                    size: "lg",
-                    scope: self
-                });
-                modal.rendered.then(() => {
-                    google.maps.event.trigger(self.map, "resize");
-                });
-                modal.result.then((r) => {
-                    if(self.map == null){
-                        NgMap.getMap().then((map) => {
-                            console.log("MAP correctly loaded");
-                            self.map = map;
-                            let lat = self.map.getCenter().lat();
-                            let lng = self.map.getCenter().lng();
-                            let zoom = self.map.getZoom();
-                            let script = "MAP " + lat + " " + lng + " " + zoom + (r.nav ? " NAV" : "") + (r.edit ? " EDIT" : "");
-                            this.quill.insertEmbed(range.index, "code-block", "");
-                            this.quill.insertText(range.index, script);
-                        }, (err) => {
-                            Notification.error("Ocurrio un error al cargar los datos del mapa, intente nuevamente.");
-                        });
-                        return;
-                    }
-                    let lat = self.map.getCenter().lat();
-                    let lng = self.map.getCenter().lng();
-                    let zoom = self.map.getZoom();
-                    let script = "MAP " + lat + " " + lng + " " + zoom + (r.nav ? " NAV" : "") + (r.edit ? " EDIT" : "");
-                    this.quill.insertEmbed(range.index, "code-block", "");
-                    this.quill.insertText(range.index, script);
-                });
-            }
-            $scope.$apply();
-        });
-=======
         self.editor = editor;
     };
 
@@ -1107,7 +943,6 @@ adpp.controller("QuestionsController", function ($scope, $http, Notification, $u
         let lng = map.getCenter().lng();
         let zoom = map.getZoom();
         self.newQuestion.pluginData = "MAP " + lat + " " + lng + " " + zoom + (r.nav ? " NAV" : "") + (r.edit ? " EDIT" : "");
->>>>>>> origin/master
     };
 
 });
@@ -1266,7 +1101,6 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
                 }
             });
         }
-<<<<<<< HEAD
         else if (self.selectedSes.type == "D") {
             $http({url: "get-alum-state-lect", method: "post", data: postdata}).success((data) => {
                 self.alumState = {};
@@ -1298,8 +1132,6 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
                 self.shared.alumState = self.alumState;
             });
         }
-=======
->>>>>>> origin/master
         else if (self.selectedSes.type == "M") {
             $http({url: "get-alum-state-semantic", method: "post", data: postdata}).success((data) => {
                 self.alumState = {};
@@ -2140,8 +1972,6 @@ adpp.controller("GeoAdminController", ["$scope", "$http", "NgMap", function ($sc
         }
     };
 
-<<<<<<< HEAD
-=======
     self.shared.processMapData = (data, qid) => {
         let comps = data.split(" ");
         console.log(comps);
@@ -2161,7 +1991,6 @@ adpp.controller("GeoAdminController", ["$scope", "$http", "NgMap", function ($sc
         });
     };
 
->>>>>>> origin/master
     self.clearOverlay = () => {
         self.newOverlay = {
             name: "",
@@ -2246,11 +2075,8 @@ adpp.controller("GeoAdminController", ["$scope", "$http", "NgMap", function ($sc
     };
 
     self.shared.clearOverlayBuffer = () => {
-<<<<<<< HEAD
-=======
         self.mOverlays = [];
         self.sOverlays = [];
->>>>>>> origin/master
         self.overlayBuffer = [];
     };
 
@@ -2284,19 +2110,13 @@ adpp.controller("GeoAdminController", ["$scope", "$http", "NgMap", function ($sc
         self.newOverlay.fullType = "marker";
         self.newOverlay.type = "M";
         self.newOverlay.geom.position = positionToArray(p.geometry.location);
-<<<<<<< HEAD
-
-=======
         self.newOverlay.centroid = centroidAsLatLng(self.newOverlay.type, self.newOverlay.geom);
 
         self.map.showInfoWindow("iw2");
->>>>>>> origin/master
         self.map.panTo(p.geometry.location);
     };
 
 
-<<<<<<< HEAD
-=======
     self.shared.getPluginMapOptions = () => {
         return {
             nav: self.nav,
@@ -2308,7 +2128,6 @@ adpp.controller("GeoAdminController", ["$scope", "$http", "NgMap", function ($sc
         return self.map;
     };
 
->>>>>>> origin/master
     init();
 
 }]);
@@ -2319,8 +2138,6 @@ adpp.filter('htmlExtractText', function() {
     };
 });
 
-<<<<<<< HEAD
-=======
 adpp.filter('lang', function(){
     filt.$stateful = true;
     return filt;
@@ -2336,7 +2153,6 @@ adpp.filter('lang', function(){
     }
 });
 
->>>>>>> origin/master
 let generateTeams = (alumArr, scFun, n, different) => {
     if(n == null || n == 0) return [];
     let arr = alumArr;
@@ -2446,8 +2262,4 @@ let centroid = (type, geom) => {
     if(type == "P" || type == "L")
         return avgCoord(geom.path);
     return null;
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> origin/master

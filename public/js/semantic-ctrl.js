@@ -255,11 +255,7 @@ app.controller("SemanticController", ["$scope", "$http", "$timeout", "$socket", 
             $http({url: "record-finish", method: "post", data: postdata}).success((data) => {
                 self.hasFinished = true;
                 self.finished = true;
-<<<<<<< HEAD
-                console.log("FINISHEEEE");
-=======
                 console.log("FINISH");
->>>>>>> origin/master
                 if(self.iteration == 3)
                     self.updateSignal();
             });

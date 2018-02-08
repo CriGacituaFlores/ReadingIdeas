@@ -123,7 +123,6 @@ router.get("/to-semantic", (req, res) => {
         res.redirect(".");
 });
 
-<<<<<<< HEAD
 router.get("/to-differential-semantic", (req, res) => {
     if (req.session.uid) {
         req.session.ses = req.query.sesid;
@@ -133,8 +132,6 @@ router.get("/to-differential-semantic", (req, res) => {
         res.redirect(".");
 });
 
-=======
->>>>>>> origin/master
 router.get("/semantic", (req, res) => {
     if (req.session.uid && req.session.ses)
         res.render("semantic");
@@ -158,11 +155,7 @@ router.post("/delete-document", rpg.execSQL({
 
 router.post("/get-questions", rpg.multiSQL({
     dbcon: pass.dbcon,
-<<<<<<< HEAD
-    sql: "select q.id, q.content, q.options, qt.content as text_content from questions as q left outer join question_text as qt on " +
-=======
     sql: "select q.id, q.content, q.options, qt.content as text_content, q.plugin_data from questions as q left outer join question_text as qt on " +
->>>>>>> origin/master
         "q.textid = qt.id where q.sesid = $1 order by q.id asc",
     sesReqData: ["uid", "ses"],
     sqlParams: [rpg.param("ses", "ses")]
@@ -300,7 +293,6 @@ router.post("/force-state-session", rpg.execSQL({
     }
 }));
 
-<<<<<<< HEAD
 router.post("/select-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
@@ -361,8 +353,6 @@ router.post("/select-semantic-by-users", (req, res) => {
 })
 
 
-=======
->>>>>>> origin/master
 router.post("/record-finish", rpg.execSQL({
     dbcon: pass.dbcon,
     sql: "with rows as (update finish_session set stime = now() where uid = $1 and sesid = $2 and status = $3 returning 1) " +
