@@ -15,9 +15,14 @@
     <script src="libs/angular-timer.min.js"></script>
     <script src="libs/socket.min.js"></script>
     <script src="libs/angular-ui-notification.min.js"></script>
+<<<<<<< HEAD
     <script src="js/editor-ctrl.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="libs/ui-bootstrap-tpls-1.1.2.min.js"></script>
+=======
+    <script src="js/editor-ctrl.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+>>>>>>> origin/master
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/minimal.css">
@@ -25,6 +30,7 @@
     <link rel="stylesheet" href="css/angular-ui-notification.min.css">
     <link rel="stylesheet" href="css/main.css"/>
 </head>
+<<<<<<< HEAD
 <body class="">
 
 <div class="editor-container" ng-controller="EditorController">
@@ -61,22 +67,70 @@
                 <button class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && followLeader" ng-click="takeControl()">Tomar Control</button>
                 <span class="pull-right boxed" ng-bind="teamstr"></span>
             </div>
+=======
+<body class="bg-black">
+
+<div class="editor-container" ng-controller="EditorController">
+
+    <div class="row top-bar-mini">
+        <div class="text-center">
+            <span ng-repeat="st in sesStatusses">
+                <span class="label label-primary" ng-class="{'bg-black-alpha': $index==iteration}" ng-bind="st"></span>
+                <span ng-hide="$last">→</span>
+            </span>
+            <span class="pull-right margin-right-24" ng-show="sesSTime != null">
+                <timer start-time="sesSTime">{{hours}}h {{minutes}}m {{seconds}}s</timer>
+            </span>
+        </div>
+    </div>
+
+    <div class="top-bar-mini">
+        <strong class="simple-margin-left">Factor detonante: </strong>
+        <span ng-bind="sesDescr"></span>
+    </div>
+
+    <div class="row top-bar">
+        <div class="col-sm-6 full-height">
+            <span class="simple-margin-left">Documentos: </span>
+            <span ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title"
+                  ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)"></span>
+            <!--<strong class="pull-right margin-top-8" ng-bind="iterationNames[iteration]"></strong>-->
+        </div>
+        <div class="col-sm-6">
+            <a onclick="window.history.back()" class="btn btn-sm btn-default pull-right">Atrás</a>
+            <button disabled class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && !followLeader"><i class="fa fa-star"></i> Representante </button>
+            <button class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && followLeader" ng-click="takeControl()">Tomar Control</button>
+            <button class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
+                <i class="fa fa-check"></i> Terminé</button>
+            <span class="pull-right boxed" ng-bind="teamstr"></span>
+>>>>>>> origin/master
         </div>
     </div>
 
     <div class="row">
+<<<<<<< HEAD
         <div id="pdf-container" class="pdf-content col-sm-12 col-md-12">
+=======
+        <div id="pdf-container" class="pdf-content col-sm-9">
+>>>>>>> origin/master
             <div class="centered">
                 <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
                 ng-show="$index==selectedDocument"></div>
             </div>
         </div>
+<<<<<<< HEAD
         <!--
+=======
+>>>>>>> origin/master
         <div class="col-sm-3 side-bar">
             <h3>Instrucciones:</h3>
             <div ng-bind="instructions[iteration]"></div>
             <hr>
             <div ng-hide="iteration == 0">
+<<<<<<< HEAD
+=======
+            <!--<a class="btn btn-sm btn-default pull-right margin-top-8" ng-click="setSelOrder()" ng-disabled="!checkAllSync() || followLeader || writingReport">Fijar orden</a>-->
+>>>>>>> origin/master
             <h3>Ideas Fuerza:</h3>
             <div class="row">
                 <div class="btn-group center-block w250" ng-show="tabOptions.length > 1">
@@ -117,7 +171,11 @@
             </div>
             <div>
                 <div ng-show="iteration > 1 && sideTab == 1">
+<<<<<<< HEAD
                     <h4>Ideas Individual:</h4>
+=======
+                    <!--<h4>Ideas Individual:</h4>-->
+>>>>>>> origin/master
                     <div ng-repeat="(uid, sels) in ansIter1">
                         <h5 ng-show="uid != myUid">Anónimo {{uid}}: </h5>
                         <h5 ng-hide="uid != myUid">Mi respuesta: </h5>
@@ -134,7 +192,11 @@
                     </div>
                 </div>
                 <div ng-show="iteration > 2 && sideTab == 2">
+<<<<<<< HEAD
                     <h4>Ideas Grupal Anónimo:</h4>
+=======
+                    <!--<h4>Ideas Grupal Anónimo:</h4>-->
+>>>>>>> origin/master
                     <div ng-repeat="(uid, sels) in ansIter2">
                         <h5 ng-show="uid != myUid">Anónimo {{uid}}: </h5>
                         <h5 ng-hide="uid != myUid">Mi respuesta: </h5>
@@ -153,7 +215,10 @@
             </div>
             </div>
         </div>
+<<<<<<< HEAD
         -->
+=======
+>>>>>>> origin/master
     </div>
 
     <div class="report-window" ng-if="writingReport" ng-controller="ReportController">

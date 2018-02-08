@@ -1,12 +1,20 @@
 "use strict";
 
+<<<<<<< HEAD
 var app = angular.module("Editor", ['ui.bootstrap','ui.tree', 'btford.socket-io', "timer", "ui-notification", "rzModule", "xeditable"]);
+=======
+let app = angular.module("Editor", ['ui.tree', 'btford.socket-io', "timer", "ui-notification"]);
+>>>>>>> origin/master
 
 app.factory("$socket", ["socketFactory", function (socketFactory) {
     return socketFactory();
 }]);
 
+<<<<<<< HEAD
 app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "Notification", "$uibModal", function ($scope, $http, $timeout, $socket, Notification, $uibModal) {
+=======
+app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "Notification", function ($scope, $http, $timeout, $socket, Notification) {
+>>>>>>> origin/master
     let self = $scope;
 
     self.iteration = 0;
@@ -26,6 +34,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.teamId = -1;
     self.reportIdeas = {};
     self.shared = {};
+<<<<<<< HEAD
     self.Tasks = [];
     self.evaluationPersonal = [];
 
@@ -94,6 +103,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.processItemPersonal = function(sliderId, modelValue) {
         self.updateEvaluationPersonal(sliderId)
     }
+=======
+>>>>>>> origin/master
 
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
     self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
@@ -151,6 +162,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     self.finished = true;
                 }
             });
+<<<<<<< HEAD
             $http({url: '/all_semantic_differential_user', method: 'POST', data: {id: self.sesId}}).then(function(response) {
                 self.Tasks = response.data;
             }).finally(function () {
@@ -171,13 +183,22 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         self.updateSemanticDifferentialUser(sliderId)
     }
 
+=======
+        });
+    };
+
+>>>>>>> origin/master
     self.finishState = () => {
         if(self.iteration == 0){
             let postdata = {status: self.iteration + 2};
             $http({url: "record-finish", method: "post", data: postdata}).success((data) => {
                 self.hasFinished = true;
                 self.finished = true;
+<<<<<<< HEAD
                 console.log("FINISHAAA");
+=======
+                console.log("FINISH");
+>>>>>>> origin/master
             });
             return;
         }
@@ -199,7 +220,11 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: "record-finish", method: "post", data: postdata}).success((data) => {
                 self.hasFinished = true;
                 self.finished = true;
+<<<<<<< HEAD
                 console.log("FINISHOOOOO");
+=======
+                console.log("FINISH");
+>>>>>>> origin/master
             });
         }
     };

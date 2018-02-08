@@ -127,6 +127,7 @@ app.controller("SelectController", ["$scope", "$http", "$socket", "Notification"
     };
 
     let processMap = (qs) => {
+<<<<<<< HEAD
         const MAP_SCRIPT = '<pre class="ql-syntax" spellcheck="false">MAP ';
         let ini = qs.content.indexOf(MAP_SCRIPT);
         let end = qs.content.indexOf("</pre>");
@@ -140,6 +141,19 @@ app.controller("SelectController", ["$scope", "$http", "$socket", "Notification"
                 zoom: comps[2],
                 nav: comps[3] == "NAV",
                 edit: comps[3] == "EDIT" || comps[4] == "EDIT"
+=======
+        if(qs.plugin_data && qs.plugin_data.startsWith("MAP")){
+            let comps = qs.plugin_data.split(" ");
+            console.log(comps);
+            //qs.content = qs.content.substring(0,ini) + qs.content.substring(end+6);
+            //console.log(qs.content);
+            //qs.content = qs.content.replace(/<p><br><\/p>/g, "");
+            return {
+                center: "[" + comps[1] + ", " + comps[2]  + "]",
+                zoom: comps[3],
+                nav: comps[4] == "NAV",
+                edit: comps[4] == "EDIT" || comps[5] == "EDIT"
+>>>>>>> origin/master
             }
         }
         return null;
@@ -514,7 +528,13 @@ app.controller("GeoController", ["$scope", "$http", "NgMap", "$socket", function
         self.newOverlay.fullType = "marker";
         self.newOverlay.type = "M";
         self.newOverlay.geom.position = positionToArray(p.geometry.location);
+<<<<<<< HEAD
 
+=======
+        self.newOverlay.centroid = centroidAsLatLng(self.newOverlay.type, self.newOverlay.geom);
+
+        self.map.showInfoWindow("iw2");
+>>>>>>> origin/master
         self.map.panTo(p.geometry.location);
     };
 

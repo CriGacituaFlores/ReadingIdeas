@@ -15,6 +15,7 @@ body{
     background-color: #6c859b;
 }
 
+<<<<<<< HEAD
 .bck-reading-ideas {
     background-color: #6c859b;
 }
@@ -23,6 +24,8 @@ body{
     margin: 10px;
 }
 
+=======
+>>>>>>> origin/master
 hr{
     margin: 0;
 }
@@ -41,6 +44,7 @@ hr{
     background-color: rgba(0,0,0,0.2);
 }
 
+<<<<<<< HEAD
 .statuses-content {
     padding: 10px;
 }
@@ -49,6 +53,8 @@ hr{
     font-style: italic;
 }
 
+=======
+>>>>>>> origin/master
 .row-eq-height {
     display: -webkit-box;
     display: -webkit-flex;
@@ -96,6 +102,7 @@ hr{
     background: #fff;
 }
 
+<<<<<<< HEAD
 .bg-principal {
     background: #777 !important;
     color: #fff !important;
@@ -160,10 +167,13 @@ hr{
     color: #fff;
 }
 
+=======
+>>>>>>> origin/master
 .bg-black{
     background: #000;
 }
 
+<<<<<<< HEAD
 .fa-information-button {
     padding: 2px 6px;
     color: black;
@@ -171,31 +181,51 @@ hr{
     border-radius: 5px;
 }
 
+=======
+>>>>>>> origin/master
 a:hover{
     cursor: pointer;
 }
 
 .top-bar{
     height: 32px;
+<<<<<<< HEAD
     background: white;
     color: black;
+=======
+    background: #6c859b;
+    color: white;
+>>>>>>> origin/master
 }
 
 .top-bar-mini{
     /*height: 24px;*/
+<<<<<<< HEAD
     background: #ffffff;
     color: black;
+=======
+    background: #6c859b;
+    color: white;
+>>>>>>> origin/master
 }
 
 .side-panel{
     padding: 8px 24px;
+<<<<<<< HEAD
     background: #6c859b;
+=======
+    background: #e2e2e2;
+>>>>>>> origin/master
     height: calc(100vh - 60px);
     overflow-y: scroll;
 }
 
 .full-width{
+<<<<<<< HEAD
     /*width: 100%;*/
+=======
+    width: 100%;
+>>>>>>> origin/master
 }
 
 .w300{
@@ -231,6 +261,7 @@ a:hover{
     max-height: 80vh;
 }
 
+<<<<<<< HEAD
 .pad-border {
     border-radius: 10px;
     border: 2px solid #848484;
@@ -251,6 +282,8 @@ a:hover{
     height: 700px;
 }
 
+=======
+>>>>>>> origin/master
 .font-large{
     font-size: 110%;
 }
@@ -264,7 +297,11 @@ a:hover{
 }
 
 .pdf-content{
+<<<<<<< HEAD
     background: #ffffff;
+=======
+    background: #333;
+>>>>>>> origin/master
     max-height: calc(100vh - 80px);
     overflow-y: scroll;
 }
@@ -276,12 +313,15 @@ a:hover{
     overflow-y: auto;
 }
 
+<<<<<<< HEAD
 .button-widthss {
     padding: 10px 0;
     margin: 5px;
     width: 150px;
 }
 
+=======
+>>>>>>> origin/master
 .centered{
     margin: 0 auto;
     display: block;
@@ -372,6 +412,7 @@ canvas{
     width: 40px;
 }
 
+<<<<<<< HEAD
 .cursor-p {
     cursor: pointer;
 }
@@ -398,6 +439,8 @@ canvas{
     margin-bottom: 15px;
 }
 
+=======
+>>>>>>> origin/master
 .mini {
     border: 1px solid #ccc;
     width: calc(100% - 80px);
@@ -407,6 +450,7 @@ canvas{
     border-radius: 0 6px 6px 0;
 }
 
+<<<<<<< HEAD
 .text-area-input {
     width: 100%;
 }
@@ -427,14 +471,20 @@ canvas{
     font-size: 18px;
 }
 
+=======
+>>>>>>> origin/master
 .sep-lines{
     line-height: 1.25;
 }
 
 .form-inline-mini{
      display: inline-block;
+<<<<<<< HEAD
      width: 50px;
      border: none;
+=======
+     width: 80px;
+>>>>>>> origin/master
  }
 
 .form-inline-micro{
@@ -445,8 +495,12 @@ canvas{
 
 .form-inline-med{
     display: inline-block;
+<<<<<<< HEAD
     width: 100px;
     border: none;
+=======
+    width: 180px;
+>>>>>>> origin/master
 }
 
 .y-scrollable{
@@ -483,8 +537,12 @@ ul[dnd-list] .dndPlaceholder {
 }
 
 .full-height{
+<<<<<<< HEAD
     /**height: 100%;**/
     margin-right: 30px;
+=======
+    height: 100%;
+>>>>>>> origin/master
 }
 
 .idea-item{
@@ -609,7 +667,11 @@ span.boxed{
 }
 
 div.boxed{
+<<<<<<< HEAD
     border: 2px solid #848484;
+=======
+    border: 1px solid #ccc;
+>>>>>>> origin/master
     padding: 8px;
 }
 
@@ -701,7 +763,11 @@ p{
 ng-quill-editor {
     display: block;
     height: 100px;
+<<<<<<< HEAD
     margin-bottom: 80px;
+=======
+    margin-bottom: 44px;
+>>>>>>> origin/master
 }
 
 ng-quill-editor.large{
@@ -770,6 +836,19 @@ ng-quill-editor.large .ql-editor{
     padding-right: 0 !important;
 }
 
+<<<<<<< HEAD
 .list-group .active {
     background: #777;
+=======
+.gsearch{
+    position: absolute;
+    display: block;
+    width: 200px;
+    top: 14px;
+    right: 48px;
+    z-index: 100;
+    padding: 2px 4px;
+    box-shadow: #999 0 0 8px;
+    border: none;
+>>>>>>> origin/master
 }

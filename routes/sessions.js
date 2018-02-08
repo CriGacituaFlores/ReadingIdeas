@@ -58,6 +58,7 @@ router.post("/update-session", rpg.execSQL({
 }));
 
 router.post("/upload-file", (req, res) => {
+<<<<<<< HEAD
     console.log("UID:" + req.session.uid)
     console.log("TITLE:" + req.body.title)
     console.log("FILE:" + req.files.pdf.mimetype)
@@ -65,17 +66,26 @@ router.post("/upload-file", (req, res) => {
     console.log("PATH:" + req.files.pdf.file.split("public"))
     //console.log("PATH:" + req.files.pdf.file.split("uploads")[0])
     //if (req.session.uid != null && req.body.title != null && req.body.title != "" && req.files.pdf != null && req.files.pdf.mimetype == "application/pdf" && req.body.sesid != null) {
+=======
+    if (req.session.uid != null && req.body.title != null && req.body.title != "" && req.files.pdf != null && req.files.pdf.mimetype == "application/pdf" && req.body.sesid != null) {
+        // console.log(req.body);
+>>>>>>> origin/master
         rpg.execSQL({
             dbcon: pass.dbcon,
             sql: "insert into documents(title,path,sesid,uploader) values ($1,$2,$3,$4)",
             sqlParams: [rpg.param("post", "title"), rpg.param("calc", "path"), rpg.param("post", "sesid"), rpg.param("ses", "uid")],
             onStart: (ses, data, calc) => {
+<<<<<<< HEAD
                 calc.path = req.files.pdf.file.split("public")[1];
+=======
+                calc.path = "uploads" + req.files.pdf.file.split("uploads")[1];
+>>>>>>> origin/master
             },
             onEnd: () => {
             }
         })(req, res);
         res.end('{"status":"ok"}');
+<<<<<<< HEAD
     //}
     //res.end('{"status":"err"}');
 });
@@ -125,6 +135,10 @@ router.post("/save_semantic_order", (req, res) => {
             sql: `update semantic_differential set order_sort = '${i+1}' where sesid = ${req.body[i].sesid} and id = '${req.body[i].id}'`
         })(req, res)
     }
+=======
+    }
+    res.end('{"status":"err"}');
+>>>>>>> origin/master
 });
 
 router.post("/documents-session", rpg.multiSQL({
@@ -136,7 +150,11 @@ router.post("/documents-session", rpg.multiSQL({
 
 router.post("/questions-session", rpg.multiSQL({
     dbcon: pass.dbcon,
+<<<<<<< HEAD
     sql: "select id, content, options, answer, comment, other, textid from questions where sesid = $1 order by id asc",
+=======
+    sql: "select id, content, options, answer, comment, other, textid, plugin_data from questions where sesid = $1 order by id asc",
+>>>>>>> origin/master
     postReqData: ["sesid"],
     sqlParams: [rpg.param("post", "sesid")]
 }));
@@ -170,6 +188,7 @@ router.post("/add-ses-users", (req, res) => {
 
 router.post("/add-question", rpg.singleSQL({
     dbcon: pass.dbcon,
+<<<<<<< HEAD
     sql: "insert into questions(content,options,answer,comment,other,sesid,textid) values ($1,$2,$3,$4,$5,$6,$7) returning id",
     sesReqData: ["uid"],
     postReqData: ["content","options","answer","comment","sesid"],
@@ -178,12 +197,24 @@ router.post("/add-question", rpg.singleSQL({
     onStart: (ses,data,calc) => {
         if (ses.role != "P") {
             return "select $1, $2, $3, $4, $5, $6, $7"
+=======
+    sql: "insert into questions(content,options,answer,comment,other,sesid,textid,plugin_data) values ($1,$2,$3,$4,$5,$6,$7,$8) returning id",
+    sesReqData: ["uid"],
+    postReqData: ["content","options","answer","comment","sesid"],
+    sqlParams: [rpg.param("post", "content"),rpg.param("post", "options"),rpg.param("post", "answer"),
+        rpg.param("post", "comment"),rpg.param("post", "other"),rpg.param("post", "sesid"),rpg.param("post", "textid"),
+        rpg.param("post", "pluginData")],
+    onStart: (ses,data,calc) => {
+        if (ses.role != "P") {
+            return "select $1, $2, $3, $4, $5, $6, $7, $8"
+>>>>>>> origin/master
         }
     }
 }));
 
 router.post("/update-question", rpg.execSQL({
     dbcon: pass.dbcon,
+<<<<<<< HEAD
     sql: "update questions set (content,options,answer,comment,other,textid) = ($1,$2,$3,$4,$5,$6) where id = $7",
     sesReqData: ["uid"],
     postReqData: ["content","options","answer","comment","id"],
@@ -192,6 +223,17 @@ router.post("/update-question", rpg.execSQL({
     onStart: (ses,data,calc) => {
         if (ses.role != "P") {
             return "select $1, $2, $3, $4, $5, $6, $7"
+=======
+    sql: "update questions set (content,options,answer,comment,other,textid,plugin_data) = ($1,$2,$3,$4,$5,$6,$7) where id = $8",
+    sesReqData: ["uid"],
+    postReqData: ["content","options","answer","comment","id"],
+    sqlParams: [rpg.param("post", "content"),rpg.param("post", "options"),rpg.param("post", "answer"),
+        rpg.param("post", "comment"),rpg.param("post", "other"),rpg.param("post", "textid"),rpg.param("post", "pluginData"),
+        rpg.param("post", "id")],
+    onStart: (ses,data,calc) => {
+        if (ses.role != "P") {
+            return "select $1, $2, $3, $4, $5, $6, $7, $8"
+>>>>>>> origin/master
         }
     }
 }));

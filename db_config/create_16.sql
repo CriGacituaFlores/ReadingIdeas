@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 create table if not exists semantic_differential (
     id serial,
     min_name text not null,
@@ -11,3 +12,6 @@ create table if not exists semantic_differential (
     primary key(id),
     foreign key(sesid) references sessions(id)
 );
+=======
+alter table questions add column plugin_data varchar(255);
+>>>>>>> origin/master
