@@ -616,6 +616,7 @@
         <div class="col-md-12 margin-b-container">
             <hr>
         </div>
+        
         <div class="col-md-4" ng-hide="selectedSes.type != 'D' || iterationIndicator!=1">
           <div class="col-md-4 margin-b-t-editable margin-t-b-editable">
             <label class="letter-color-title">Respuesta de:</label>
@@ -673,7 +674,7 @@
                 </div>
               </div>
           </div>
-        <div class="col-md-12" ng-hide="!isChecked || iterationIndicator!=1">
+        <div class="col-md-12" ng-hide="!isChecked || selectedSes.status!=3">
           <div dnd-list="SemantincAvg">
               <div ng-repeat="item in semanticByAllUser" 
                 dnd-list-id="{{item.id}}" 

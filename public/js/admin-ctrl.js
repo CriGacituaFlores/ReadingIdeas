@@ -157,6 +157,8 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.selectSession = (ses,id) => {
         self.selectedId = id;
         self.selectedSes = ses;
+        self.select_session_users(ses)
+        self.select_semantic_by_all_users(ses);
         self.shared.LoadTask(ses.id);
         self.requestDocuments();
         self.requestSemDocuments();
@@ -184,7 +186,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     }
 
     self.select_semantic_by_all_users = (ses) => {
-        debugger;
         $http({url: 'select-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
             self.semanticByAllUser = data;
         })
@@ -965,9 +966,6 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
     self.iterationIndicator = 1;
     self.currentTimer = null;
     self.showCf = false;
-
-    debugger;
-    self.select_semantic_by_all_users(ses);
 
     self.shared.resetGraphs = () => {
         if (self.selectedSes != null && self.selectedSes.type == "L") {
