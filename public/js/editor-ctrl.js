@@ -28,6 +28,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.shared = {};
     self.Tasks = [];
     self.evaluationPersonal = [];
+    self.semanticFilterInGroup = [];
 
     $scope.slider = {
         value: 50,
@@ -122,12 +123,25 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
     };
 
+    self.select_session_users = (ses) => {
+        $http({url: 'select-all-users-group', method: 'post', data: ses}).success((data) => {
+            self.iterationUsers = data.map((u,v) => ({id: u.id, name: u.name, position: v+1}))
+        })
+    }
+
+    self.select_semantic_by_users_and_group = (user_id,session_id) => {
+        $http({url: 'select-semantic-by-users-and-group', method: 'post', data: {user_id:user_id, session_id: session_id}}).success((data) => {
+            self.semanticFilterInGroup = data
+        })
+    }
+
     self.getSesInfo = () => {
         $http({url: "get-ses-info", method: "post"}).success((data) => {
             self.iteration = data.iteration;
             self.myUid = data.uid;
             self.sesName = data.name;
             self.sesId = data.id;
+            self.select_session_users(self.sesId)
             self.sesDescr = data.descr;
             self.sesSTime = (data.stime != null) ? new Date(data.stime) : null;
             $http({url: "get-documents", method: "post"}).success((data) => {

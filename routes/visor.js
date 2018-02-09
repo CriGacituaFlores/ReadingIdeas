@@ -343,12 +343,42 @@ router.post("/select-all-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-all-users-group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and users.id != ${req.session.uid} and users.role != 'P'`
+    })(req,res);
+})
+
 router.post("/select-semantic-by-users", (req, res) => {
     console.log('session: ' + req.body)
     console.log('session: ' + req.body.userid)
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `select * from semantic_differential_user where user_id = ${req.body.userid} and sesid = ${req.body.ses} limit 5`
+    })(req,res);
+})
+
+router.post("/select-semantic-by-users-and-group", (req, res) => {
+    console.log('session: ' + req.body.user_id)
+    console.log('session: ' + req.body.session_id)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select semantic_differential_user.* from teamusers 
+                inner join users on
+                users.id = teamusers.uid
+                inner join semantic_differential_user on
+                users.id = semantic_differential_user.user_id
+                where tmid = (
+                    select teamusers.tmid from teamusers
+                    inner join users on
+                    users.id = teamusers.uid
+                    inner join teams on
+                    teams.id = teamusers.tmid
+                    where teamusers.uid = ${req.body.user_id}
+                    and teams.sesid = ${req.body.session_id}
+                )
+                and users.id = ${req.body.user_id}`
     })(req,res);
 })
 

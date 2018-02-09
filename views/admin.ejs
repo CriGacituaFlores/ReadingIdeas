@@ -622,7 +622,7 @@
             <label class="letter-color-title">Respuesta de:</label>
           </div>
           <div class="col-md-6 margin-b-t-editable margin-t-b-editable">
-            <select class="form-control" ng-disabled="isChecked" ng-options="x.id as x.name for x in iterationUsers" ng-model="selectedUser" ng-change="select_semantic_by_user(selectedUser, selectedSes.id)"></select>
+            <select class="form-control" ng-options="x.id as x.name for x in iterationUsers" ng-model="selectedUser" ng-change="select_semantic_by_user(selectedUser, selectedSes.id)"></select>
           </div>
           <div class="col-md-2 margin-b-t-editable margin-t-b-editable">
             <input class="" type="checkbox" ng-model="isChecked" ng-change="insertinvited('sdsd')"> Curso </input>
