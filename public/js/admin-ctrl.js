@@ -157,6 +157,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.selectSession = (ses,id) => {
         self.selectedId = id;
         self.selectedSes = ses;
+        self.shared.LoadTask(ses.id);
         self.requestDocuments();
         self.requestSemDocuments();
         self.requestQuestions();
@@ -183,6 +184,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     }
 
     self.select_semantic_by_all_users = (ses) => {
+        debugger;
         $http({url: 'select-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
             self.semanticByAllUser = data;
         })
@@ -379,6 +381,17 @@ adpp.controller("TabsController", function ($scope, $http) {
             self.tabConfig = ["Usuarios", "Grupos","Rúbrica"];
             self.sesStatusses = [{i:-1, name: "configuración"}, {i: 1, name: "individual"}, {i: 3, name: "teamWork"}, {i: 4, name: "report"},
                 {i: 6, name: "pairEval"}, {i: 7, name: "finished"}];
+            self.shared.getRubrica();
+            self.shared.getExampleReports();
+            self.shared.getReports();
+        }
+        else if(self.selectedSes.type == "D"){
+            self.iterationNames = [{name: "reading", val: 0}, {name: "individual", val: 1},
+                {name: "anon", val: 2}, {name: "teamWork", val: 3}, {name: "report", val: 4},
+                {name: "rubricCalib", val: 5}, {name: "pairEval", val: 6}];
+            self.tabOptions = ["configuration", "dashboard"];
+            self.tabConfig = ["users", "groups", "rubrica"];
+            self.sesStatusses = ["configuration", "reading", "individual", "anon", "teamWork", "report", "rubricCalib", "pairEval", "finished"];
             self.shared.getRubrica();
             self.shared.getExampleReports();
             self.shared.getReports();
@@ -953,6 +966,9 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
     self.currentTimer = null;
     self.showCf = false;
 
+    debugger;
+    self.select_semantic_by_all_users(ses);
+
     self.shared.resetGraphs = () => {
         if (self.selectedSes != null && self.selectedSes.type == "L") {
             self.iterationIndicator = Math.max(Math.min(6, self.selectedSes.status - 2), 0);
@@ -961,6 +977,9 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
             self.iterationIndicator = Math.max(Math.min(3, self.selectedSes.status - 1), 1);
         }
         else if (self.selectedSes.type == "M") {
+            self.iterationIndicator = Math.max(Math.min(6, self.selectedSes.status - 2), 0);
+        }
+        else if (self.selectedSes.type == "D") {
             self.iterationIndicator = Math.max(Math.min(6, self.selectedSes.status - 2), 0);
         }
         self.alumState = null;
@@ -1130,6 +1149,17 @@ adpp.controller("DashboardController", function ($scope, $http, $timeout, $uibMo
                     });
                 }
                 self.shared.alumState = self.alumState;
+            });
+            $http({url: "get-ideas-progress", method: "post", data: postdata}).success((data) => {
+                self.numProgress = 0;
+                self.numUsers = Object.keys(self.users).length - 1;
+                let n = self.documents.length * 3;
+                if (n != 0) {
+                    data.forEach((d) => {
+                        self.numProgress += d.count / n;
+                    });
+                    self.numProgress *= 100 / self.numUsers;
+                }
             });
         }
         else if (self.selectedSes.type == "M") {

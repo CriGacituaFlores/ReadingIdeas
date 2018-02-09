@@ -176,8 +176,6 @@
           <div class="col-md-12" ng-show="selectedSes.type == 'D'" ng-controller="SemanticDifferentialController">
             <hr/>
             <h3 class="letter-color-title">Evaluación del texto</h3>
-            
-
             <div dnd-list="Tasks">
               <div ng-repeat="item in Tasks" 
                 dnd-list-id="{{item.id}}" 
@@ -612,13 +610,13 @@
             <label class="letter-color-title">Iteración:</label>
           </div>
           <div class="col-md-8 margin-b-t-editable margin-t-b-editable">
-                <select class="form-control" ng-options="x.val as x.name for x in iterationNames" ng-model="iterationIndicator" ng-change="updateState()"></select>
+              <select class="form-control" ng-options="x.val as x.name for x in iterationNames" ng-model="iterationIndicator" ng-change="updateState()"></select>
           </div>
         </div>
         <div class="col-md-12 margin-b-container">
             <hr>
         </div>
-        <div class="col-md-4" ng-hide="selectedSes.type != 'D' || selectedSes.status!=3">
+        <div class="col-md-4" ng-hide="selectedSes.type != 'D' || iterationIndicator!=1">
           <div class="col-md-4 margin-b-t-editable margin-t-b-editable">
             <label class="letter-color-title">Respuesta de:</label>
           </div>
@@ -629,7 +627,7 @@
             <input class="" type="checkbox" ng-model="isChecked" ng-change="insertinvited('sdsd')"> Curso </input>
           </div>
         </div>
-        <div class="col-md-12" ng-hide="isChecked || selectedSes.status!=3">
+        <div class="col-md-12" ng-hide="isChecked || selectedSes.status != 3">
             <div dnd-list="SemanticByUser">
                 <div ng-repeat="item in semanticByUser" 
                   dnd-list-id="{{item.id}}" 
@@ -675,7 +673,7 @@
                 </div>
               </div>
           </div>
-        <div class="col-md-12" ng-hide="!isChecked || selectedSes.status!=3">
+        <div class="col-md-12" ng-hide="!isChecked || iterationIndicator!=1">
           <div dnd-list="SemantincAvg">
               <div ng-repeat="item in semanticByAllUser" 
                 dnd-list-id="{{item.id}}" 

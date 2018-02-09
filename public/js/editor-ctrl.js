@@ -185,12 +185,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             return;
         }
         if(self.selections.length < self.documents.length){
-            Notification.error("No hay suficientes ideas fuerza para terminar la actividad");
-            return;
+            //Notification.error("No hay suficientes ideas fuerza para terminar la actividad");
+            //return;
         }
         if(!self.areAllIdeasSync()) {
-            Notification.error("Hay ideas fuerza que no han sido enviadas");
-            return;
+            //Notification.error("Hay ideas fuerza que no han sido enviadas");
+            //return;
         }
         let confirm = window.confirm("¿Esta seguro que desea terminar la actividad?\nEsto implica no volver a poder editar sus respuestas");
         if(confirm) {
