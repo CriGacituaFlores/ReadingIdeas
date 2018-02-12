@@ -29,6 +29,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.Tasks = [];
     self.evaluationPersonal = [];
     self.semanticFilterInGroup = [];
+    self.personalEvaluationByUser = null;
 
     $scope.slider = {
         value: 50,
@@ -130,8 +131,11 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.select_semantic_by_users_and_group = (user_id,session_id) => {
-        $http({url: 'select-semantic-by-users-and-group', method: 'post', data: {user_id:user_id, session_id: session_id}}).success((data) => {
+        $http({url: 'select-semantic-by-users-and-group', method: 'post', data: {user_id: user_id, session_id: session_id}}).success((data) => {
             self.semanticFilterInGroup = data
+        })
+        $http({url: 'select_personal_evaluation_by_user', method: 'post', data: {user_id: user_id, session_id: session_id}}).success((data) => {
+            self.personalEvaluationByUser = data
         })
     }
 
@@ -183,6 +187,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.processItem = function(sliderId, modelValue) {
         self.updateSemanticDifferentialUser(sliderId)
+    }
+
+    self.updateAnonymousSemanticDifferentialUser = (position) => {
+        let actualAnonymousSemantic = self.Tasks[position]
+        $http({url: '/update_anonymous_semantic_differential_user', method: 'POST', data: {data: actualAnonymousSemantic, id: actualAnonymousSemantic.id}}).then((response) => {
+
+        })
+    }
+
+    self.processItemAnonymous = (sliderId, modelValue) => {
+        self.updateAnonymousSemanticDifferentialUser(sliderId)
     }
 
     self.finishState = () => {

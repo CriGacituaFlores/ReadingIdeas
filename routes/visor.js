@@ -382,6 +382,13 @@ router.post("/select-semantic-by-users-and-group", (req, res) => {
     })(req,res);
 })
 
+router.post("/select_personal_evaluation_by_user", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from user_personal_evaluation where user_id = ${req.body.user_id} and sesid = ${req.body.session_id}`
+    })(req,res);
+})
+
 
 router.post("/record-finish", rpg.execSQL({
     dbcon: pass.dbcon,
