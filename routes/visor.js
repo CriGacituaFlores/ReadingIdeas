@@ -368,6 +368,15 @@ router.post("/select-semantic-by-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-anonymous-by-user", (req, res) => {
+    console.log('session: ' + req.body)
+    console.log('session: ' + req.body.userid)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from anonymous_semantic_differential_user where user_id = ${req.body.userid} and sesid = ${req.body.ses} limit 5`
+    })(req,res);
+})
+
 router.post("/select-semantic-by-users-and-group", (req, res) => {
     console.log('session: ' + req.body.user_id)
     console.log('session: ' + req.body.session_id)
