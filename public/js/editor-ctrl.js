@@ -27,6 +27,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.reportIdeas = {};
     self.shared = {};
     self.Tasks = [];
+    self.anonymousTasks = [];
     self.evaluationPersonal = [];
     self.semanticFilterInGroup = [];
     self.personalEvaluationByUser = null;
@@ -171,6 +172,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             });
             $http({url: '/all_semantic_differential_user', method: 'POST', data: {id: self.sesId}}).then(function(response) {
                 self.Tasks = response.data;
+            }).finally(function () {
+                self.IsProcessing = false;
+            })
+            $http({url: '/all_anonymous_semantic_differential_user', method: 'POST', data: {id: self.sesId}}).then(function(response) {
+  
+                self.anonymousTasks = response.data;
             }).finally(function () {
                 self.IsProcessing = false;
             })

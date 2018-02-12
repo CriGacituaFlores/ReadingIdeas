@@ -628,7 +628,7 @@
             <input class="" type="checkbox" ng-model="isChecked" ng-change="insertinvited('sdsd')"> Curso </input>
           </div>
         </div>
-        <div class="col-md-12" ng-hide="isChecked || selectedSes.status != 3">
+        <div class="col-md-12" ng-hide="isChecked">
             <div dnd-list="SemanticByUser">
                 <div ng-repeat="item in semanticByUser" 
                   dnd-list-id="{{item.id}}" 
@@ -674,7 +674,7 @@
                 </div>
               </div>
           </div>
-        <div class="col-md-12" ng-hide="!isChecked || selectedSes.status!=3">
+        <div class="col-md-12" ng-hide="!isChecked">
           <div dnd-list="SemantincAvg">
               <div ng-repeat="item in semanticByAllUser" 
                 dnd-list-id="{{item.id}}" 
@@ -711,6 +711,20 @@
                 </div>
               </div>
             </div>
+        </div>
+        <div class="col-md-4" ng-hide="selectedSes.type != 'D' || iterationIndicator!=2">
+          <div class="col-md-4 margin-b-t-editable margin-t-b-editable">
+            <label class="letter-color-title">Respuesta anónima de:</label>
+          </div>
+          <div class="col-md-6 margin-b-t-editable margin-t-b-editable">
+            <select class="form-control" ng-options="x.id as x.name for x in iterationUsers" ng-model="selectedUser" ng-change="select_semantic_and_anonymous_copy_by_user(selectedUser, selectedSes.id)"></select>
+          </div>
+          <div class="col-md-2 margin-b-t-editable margin-t-b-editable">
+            <input class="" type="checkbox" ng-model="isCheckedAnonymous" ng-change="doNothing('sdsd')"> Curso </input>
+          </div>
+        </div>
+        <div ng-hide="isCheckedAnonymous">
+          holaa
         </div>
         <div class="col-md-12 margin-b-container">
           <hr>

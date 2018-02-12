@@ -131,6 +131,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.semanticByAllUser = [];
     self.invited = [];
     self.isChecked = false;
+    self.semanticNoAnonymousByUser = [];
 
     self.init = () => {
         self.shared.updateSesData();
@@ -182,6 +183,12 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.select_semantic_by_user = (userid,ses) => {
         $http({url: 'select-semantic-by-users', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
             self.semanticByUser = data;
+        })
+    }
+
+    self.select_semantic_and_anonymous_copy_by_user = (userid,ses) => {
+        $http({url: 'select-semantic-by-users', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
+            self.semanticNoAnonymousByUser = data;
         })
     }
 
@@ -639,7 +646,8 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                     $http({url: 'select-session-users', method: 'post', data: currentSes}).success((data) => {
                         all_users = data.map(u => u.id)
                     })
-                }else if(self.semanticTab == 3) {
+                }
+                if(self.selectedSes.status == 3) {
                     let currentSes = self.selectedSes.id
                     let all_anonymous_users = [];
                     $http({url: 'select-anonymous-session-users', method: 'post', data: currentSes}).success((data) => {

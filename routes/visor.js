@@ -387,7 +387,8 @@ router.post("/select-semantic-by-users-and-group", (req, res) => {
                     where teamusers.uid = ${req.body.user_id}
                     and teams.sesid = ${req.body.session_id}
                 )
-                and users.id = ${req.body.user_id}`
+                and users.id = ${req.body.user_id}
+                and semantic_differential_user.sesid = ${req.body.session_id}`
     })(req,res);
 })
 
