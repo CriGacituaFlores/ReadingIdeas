@@ -310,6 +310,15 @@ router.post("/select-session-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-anonymous-session-users", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into anonymous_semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_user_id)
+        select min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_user.id from semantic_differential_user
+        where sesid = ${req.body}`
+    })(req,res);
+})
+
 router.post("/select-differential-by-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

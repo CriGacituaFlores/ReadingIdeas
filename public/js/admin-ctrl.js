@@ -344,12 +344,13 @@ adpp.controller("TabsController", function ($scope, $http) {
     self.tabOptions = ["description", "dashboard"];
     self.tabConfig = ["users", "groups"];
     self.selectedTab = 0;
+    self.semanticTab = 0;
     self.selectedTabConfig = -1;
 
     self.shared.resetTab = () => {
         self.selectedTab = 0;
         if (self.selectedSes != null && self.selectedSes.status > 1) {
-            self.selectedTab = 1;
+            //self.selectedTab = 1;
         }
         self.selectedTabConfig = 0;
         if (self.selectedSes.status == 7) {
@@ -632,13 +633,20 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                 $http({url: "change-state-session", method: "post", data: postdata}).success((data) => {
                     self.shared.updateSesData();
                 });
-                if(self.selectedTab == 0) {
+                if(self.selectedSes.status == 2) {
                     let currentSes = self.selectedSes.id
                     let all_users = [];
                     $http({url: 'select-session-users', method: 'post', data: currentSes}).success((data) => {
                         all_users = data.map(u => u.id)
                     })
+                }else if(self.semanticTab == 3) {
+                    let currentSes = self.selectedSes.id
+                    let all_anonymous_users = [];
+                    $http({url: 'select-anonymous-session-users', method: 'post', data: currentSes}).success((data) => {
+                        all_anonymous_users = data.map(u => u.id)
+                    })
                 }
+                self.semanticTab += 1;
             }
             else {
                 let postdata = {sesid: self.selectedSes.id};
