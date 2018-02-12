@@ -129,10 +129,12 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.openSidebar = true;
     self.semanticByUser = [];
     self.semanticByAllUser = [];
+    self.anonymousByAllUser = [];
     self.invited = [];
     self.isChecked = false;
     self.semanticNoAnonymousByUser = [];
     self.anonumousUser = [];
+    self.isCheckedAnonymous = false;
 
     self.init = () => {
         self.shared.updateSesData();
@@ -201,6 +203,23 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         $http({url: 'select-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
             self.semanticByAllUser = data;
         })
+    }
+
+    //self.select_anonymous_semantic_by_all_users = (ses) => {
+    //    $http({url: 'select-anonymous-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
+    //        self.anonymousByAllUser = data;
+    //    })
+    //}
+
+    self.callAnonymousAvg = (ses) => {
+        if(!self.isCheckedAnonymous) {
+            $http({url: 'select-anonymous-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
+                debugger;
+                self.anonymousByAllUser = data;
+            })
+        } else {
+
+        }
     }
 
     self.insertinvited = function(user) {

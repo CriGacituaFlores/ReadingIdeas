@@ -720,7 +720,7 @@
             <select class="form-control" ng-options="x.id as x.name for x in iterationUsers" ng-model="selectedUser" ng-change="select_semantic_and_anonymous_copy_by_user(selectedUser, selectedSes.id)"></select>
           </div>
           <div class="col-md-2 margin-b-t-editable margin-t-b-editable">
-            <input class="" type="checkbox" ng-model="isCheckedAnonymous" ng-change="doNothing('sdsd')"> Curso </input>
+            <input class="" type="checkbox" ng-model="isCheckedAnonymous" ng-change="callAnonymousAvg(selectedSes)"> Curso </input>
           </div>
         </div>
         <div class="col-md-12">
@@ -817,6 +817,46 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="col-md-6" ng-hide="!isCheckedAnonymous">
+              <div dnd-list="anonymousByAllUser">
+                  <div ng-repeat="item in anonymousByAllUser" 
+                    dnd-list-id="{{item.id}}" 
+                    dnd-draggable="item" 
+                    dnd-moved="Sorting($index)"
+                    dnd-disable-if="selectedSes.status!=1"
+                    dnd-effect-allowed="move"
+                    dnd-selected="models.selected = item"
+                    ng-class="{'selected': models.selected === item}">
+                    <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                      <div class="row">
+                          <div class="col-md-6 col-xs-6">
+                            <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                          </div>
+                          <div class="col-md-6 col-xs-6">
+                          </div>
+                      </div>
+                      <div class="row margin-t-a-b">
+                        <div class="col-md-6 col-xs-6">
+                          <div class="col-md-12 col-xs-12">
+                            Valoración:
+                          </div>
+                          <div class="col-md-2 col-xs-2">
+                            <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                          </div>
+                          <div class="col-md-8 col-xs-8">
+                              <rzslider rz-slider-model="item.avg" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, disabled: selectedSes.status!=1 ? true : false}"></rzslider>
+                          </div>
+                          <div class="col-md-2 col-xs-2">
+                            <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
           </div>
         </div>
         

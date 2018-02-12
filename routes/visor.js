@@ -345,6 +345,15 @@ router.post("/select-semantic-by-all-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-anonymous-semantic-by-all-users", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select min_name, max_name, avg(value)::INTEGER from anonymous_semantic_differential_user
+            where anonymous_semantic_differential_user.sesid = ${req.body}
+            group by anonymous_semantic_differential_user.semantic_differential_user_id, anonymous_semantic_differential_user.min_name, anonymous_semantic_differential_user.max_name`
+    })(req,res);
+})
+
 router.post("/select-all-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
