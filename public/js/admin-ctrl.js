@@ -214,7 +214,6 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.callAnonymousAvg = (ses) => {
         if(!self.isCheckedAnonymous) {
             $http({url: 'select-anonymous-semantic-by-all-users', method: 'post', data: ses.id}).success((data) => {
-                debugger;
                 self.anonymousByAllUser = data;
             })
         } else {

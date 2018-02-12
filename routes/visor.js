@@ -313,8 +313,8 @@ router.post("/select-session-users", (req, res) => {
 router.post("/select-anonymous-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into anonymous_semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_user_id)
-        select min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_user.id from semantic_differential_user
+        sql: `insert into anonymous_semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_id)
+        select min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_user.semantic_differential_id from semantic_differential_user
         where sesid = ${req.body}`
     })(req,res);
 })
@@ -350,7 +350,7 @@ router.post("/select-anonymous-semantic-by-all-users", (req, res) => {
         dbcon: pass.dbcon,
         sql: `select min_name, max_name, avg(value)::INTEGER from anonymous_semantic_differential_user
             where anonymous_semantic_differential_user.sesid = ${req.body}
-            group by anonymous_semantic_differential_user.semantic_differential_user_id, anonymous_semantic_differential_user.min_name, anonymous_semantic_differential_user.max_name`
+            group by anonymous_semantic_differential_user.semantic_differential_id, anonymous_semantic_differential_user.min_name, anonymous_semantic_differential_user.max_name`
     })(req,res);
 })
 
