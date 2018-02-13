@@ -31,6 +31,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.evaluationPersonal = [];
     self.semanticFilterInGroup = [];
     self.personalEvaluationByUser = null;
+    self.personalEvaluationBySession = [];
 
     $scope.slider = {
         value: 50,
@@ -176,10 +177,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.IsProcessing = false;
             })
             $http({url: '/all_anonymous_semantic_differential_user', method: 'POST', data: {id: self.sesId}}).then(function(response) {
-  
                 self.anonymousTasks = response.data;
             }).finally(function () {
                 self.IsProcessing = false;
+            })
+            $http({url: '/all_semantic_by_leader', method: 'POST', data: {id: self.sesId}}).then((response) => {
+                self.leaderTasks = response.data
+            })
+            $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesiD}}).then((response) => {
+                self.personalEvaluationBySession = response.data;
             })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });

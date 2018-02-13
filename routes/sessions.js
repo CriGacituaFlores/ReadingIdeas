@@ -118,10 +118,24 @@ router.post("/all_semantic_differential_user", (req, res) => {
     })(req,res);
 })
 
+router.post("/all_semantic_by_leader", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from anonymous_semantic_differential_user where sesid = ${req.body.id} and user_id = ${req.session.uid} limit 5`
+    })(req,res);
+})
+
+router.post("/personal_evaluations_by_ses", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from user_personal_evaluation where sesid = ${req.body.id}`
+    })(req,res);
+})
+
 router.post("/all_anonymous_semantic_differential_user", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `select * from anonymous_semantic_differential_user where sesid = ${req.body.id} and user_id = ${req.session.uid} order by order_sort limit 5`
+        sql: `select * from anonymous_semantic_differential_user where sesid = 61 and user_id = 6 order by order_sort limit 5`
     })(req,res);
 })
 
