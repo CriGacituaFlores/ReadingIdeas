@@ -128,7 +128,17 @@ router.post("/all_semantic_by_leader", (req, res) => {
 router.post("/personal_evaluations_by_ses", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `select * from user_personal_evaluation where sesid = ${req.body.id}`
+        sql: `select user_personal_evaluation.* from user_personal_evaluation
+                inner join sessions on
+                sessions.id = user_personal_evaluation.sesid
+                inner join teams on
+                teams.sesid = sessions.id
+                where user_personal_evaluation.sesid = ${req.body.id}
+                and teams.id = (select teams.id from teamusers
+                                    inner join teams on
+                                    teamusers.tmid = teams.id
+                                    where teamusers.uid = ${req.session.uid}
+                                    and teams.sesid = ${req.body.id})`
     })(req,res);
 })
 

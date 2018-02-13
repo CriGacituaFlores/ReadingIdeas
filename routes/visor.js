@@ -354,6 +354,25 @@ router.post("/select-anonymous-semantic-by-all-users", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-anonymous-semantic-by-group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select min_name, max_name, avg(value)::INTEGER from anonymous_semantic_differential_user
+                inner join sessions on
+                sessions.id = anonymous_semantic_differential_user.sesid
+                inner join teams on
+                teams.sesid = sessions.id
+                where anonymous_semantic_differential_user.sesid = ${req.body.id}
+                and teams.id = (select teams.id from teamusers
+                                    inner join teams on
+                                    teamusers.tmid = teams.id
+                                    where teamusers.uid = ${req.session.uid}
+                                    and teams.sesid = ${req.body.id})
+                group by anonymous_semantic_differential_user.semantic_differential_id, anonymous_semantic_differential_user.min_name, anonymous_semantic_differential_user.max_name`
+    })(req,res);
+})
+
+
 router.post("/select-all-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

@@ -30,6 +30,7 @@
     <link rel="stylesheet" href="css/xeditable.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-slider/6.4.3/rzslider.js"></script>
     <script src="/libs/xeditable.js"></script>
+
     <!-- RZSLIDER -->
 </head>
 <body class="bck-reading-ideas">
@@ -42,8 +43,11 @@
                 <span class="statuses-content label label-primary" ng-class="{'label-warning': $index==iteration}" ng-bind="st"></span>
                 <!--<span ng-hide="$last">→</span>-->
             </span>
-            <button class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-hide="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Terminé</button>
+            <button ng-show="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners()" ng-class="{'btn-success': hasFinished || finished}">
+                <i class="fa fa-check"></i> Enviar a compañero
+            </button>
         </div>
     </div>
 
@@ -85,8 +89,10 @@
                 </strong>
             </div>
         </div>
-        <div class="container" ng-show="!followLeader">
-            <label class="letter-color-title">Elige respuesta grupal</label>
+        <div class="container" ng-show="!followLeader && !waiting_partners">
+            <div class="col-md-12">
+                <label class="letter-color-title">Elige respuesta grupal</label>
+            </div>
             <div ng-repeat="item in leaderTasks" 
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
@@ -126,7 +132,9 @@
                     </div>
                 </div>
             </div>
-            <label class="letter-color-title">Respuestas Personales</label>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuestas Personales</label>
+            </div>
             <div ng-repeat="item in personalEvaluationBySession" 
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
@@ -166,6 +174,106 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-12">
+                <hr>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuesta promedio grupal</label>
+            </div>
+            <div ng-repeat="item in avgByGroup" 
+                dnd-list-id="{{item.id}}" 
+                dnd-draggable="item" 
+                dnd-moved="Sorting($index)"
+                dnd-disable-if="selectedSes.status!=1"
+                dnd-effect-allowed="move"
+                dnd-selected="models.selected = item"
+                ng-class="{'selected': models.selected === item}">
+                <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                  <div class="row">
+                      <div class="col-md-6 col-xs-6">
+                        <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                      </div>
+                      <div class="col-md-6 col-xs-6">
+                      </div>
+                  </div>
+                  <div class="row margin-t-a-b">
+                    <div class="col-md-6 col-xs-6">
+                      <div class="col-md-12 col-xs-12">
+                        Valoración:
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                      </div>
+                      <div class="col-md-8 col-xs-8">
+                          <rzslider rz-slider-model="item.avg" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, disabled: selectedSes.status!=1 ? true : false}"></rzslider>
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuestas Personales</label>
+            </div>
+            <div ng-repeat="item in personalEvaluationBySession" 
+                dnd-list-id="{{item.id}}" 
+                dnd-draggable="item" 
+                dnd-moved="Sorting($index)"
+                dnd-effect-allowed="move"
+                dnd-selected="models.selected = item"
+                ng-class="{'selected': models.selected === item}">
+                <div class="col-md-12 col-xs-12 pad-border pad-color margin-t-a-b">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                        <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                    <div class="row margin-t-a-b">
+                        <div class="col-md-6 col-xs-6">
+                            <div class="col-md-12 col-xs-12">
+                                Valoración:
+                            </div>
+                            <div class="col-md-2 col-xs-2">
+                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
+                            </div>
+                            <div class="col-md-8 col-xs-8">
+                                <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
+                            </div>
+                            <div class="col-md-2 col-xs-2">
+                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                            <div class="col-md-12 col-xs-12">
+                                Comentario:
+                            </div>
+                            <div class="col-md-12 col-xs-12">
+                                <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12" ng-show="waiting_partners">
+            <div class="col-md-12">
+                <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
+            </div>
+            <div class="col-md-12">
+                <strong>
+                    <i class="fa fa-clock-o fa-5" aria-hidden="true"></i>
+                    <span>
+                        Tus compañeros de grupo están agregando sus comentarios sobre la respuesta grupal. Una vez que todos envíen sus comentarios
+                       , podrás leerlos y cambiar la respuesta grupal si así lo estimas conveniente.
+                    </span>
+                </strong>
+            </div>
+            <div class="col-md-12 text-center">
+                    <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
+            </div>
+
         </div>
     </div>
 

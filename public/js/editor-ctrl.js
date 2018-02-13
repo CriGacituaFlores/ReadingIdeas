@@ -32,6 +32,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.semanticFilterInGroup = [];
     self.personalEvaluationByUser = null;
     self.personalEvaluationBySession = [];
+    self.avgByGroup = [];
+    self.waiting_partners = false;
 
     $scope.slider = {
         value: 50,
@@ -108,7 +110,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.applier = rangy.createClassApplier("highlight");
     self.secondaryApplier = rangy.createClassApplier("highlight-secondary");
 
-    self.init = () => {
+    self.init = () => {    
         self.getSesInfo();
         $socket.on("stateChange", (data) => {
             console.log("SOCKET.IO", data);
@@ -184,8 +186,11 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/all_semantic_by_leader', method: 'POST', data: {id: self.sesId}}).then((response) => {
                 self.leaderTasks = response.data
             })
-            $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesiD}}).then((response) => {
+            $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationBySession = response.data;
+            })
+            $http({url: 'select-anonymous-semantic-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.avgByGroup = response.data
             })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
@@ -211,6 +216,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.processItemAnonymous = (sliderId, modelValue) => {
         self.updateAnonymousSemanticDifferentialUser(sliderId)
+    }
+
+    self.sendToPartners = () => {
+        self.waiting_partners = true;
+
+        //
     }
 
     self.finishState = () => {

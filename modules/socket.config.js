@@ -17,4 +17,7 @@ module.exports.configSocket = function(io){
     module.exports.updateOverlay = function(qid){
         io.of("/").emit("updateOverlay", {qid: qid});
     };
+    module.exports.updateStatusIteration = function(sesid){
+        io.of("/").emit("updateStatusIteration", {ses: sesid});
+    };
 };
