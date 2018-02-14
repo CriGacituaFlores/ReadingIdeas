@@ -34,6 +34,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.personalEvaluationBySession = [];
     self.avgByGroup = [];
     self.waiting_partners = false;
+    self.times_waiting = 0;
+    self.final_response = false;
+
 
     $scope.slider = {
         value: 50,
@@ -126,6 +129,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                  self.getTeamInfo();
              }
         });
+        $socket.on("updateWaiting", (data) => {
+            console.log("SOCKET.IO", data);
+            self.getCurrentStatus(true);
+        });
     };
 
     self.select_session_users = (ses) => {
@@ -152,6 +159,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.select_session_users(self.sesId)
             self.sesDescr = data.descr;
             self.sesSTime = (data.stime != null) ? new Date(data.stime) : null;
+            self.final_response = data.final_response
+            self.waiting_partners = data.waiting_partners
+            self.times_waiting = data.times_waiting
             $http({url: "get-documents", method: "post"}).success((data) => {
                 self.documents = data;
                 data.forEach((doc,i) => {
@@ -218,10 +228,14 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         self.updateAnonymousSemanticDifferentialUser(sliderId)
     }
 
-    self.sendToPartners = () => {
-        self.waiting_partners = true;
+    self.sendToPartners = (sesid) => {
+        $http({url: '/update_session_on_team_task', method: 'post', data: sesid}).success((response) => {
 
-        //
+        });
+    }
+
+    self.getCurrentStatus = (status) => {
+        self.waiting_partners = status;
     }
 
     self.finishState = () => {

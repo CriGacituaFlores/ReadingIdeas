@@ -7,7 +7,7 @@
     <script src="libs/angular.min.js"></script>
     <!--<script src="js/ses-ctrl.js"></script>-->
     <script src="libs/socket.min.js"></script>
-    <script src="js/ses-ctrl.min.js"></script>
+    <script src="js/ses-ctrl.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
     <link rel="stylesheet" href="css/main.css"/>
@@ -19,7 +19,7 @@
     <a href="logout" class="pull-right">Salir</a>
 
     <h3>Lista de Sesiones</h3>
-
+    
     <div class="list-group">
         <a class="list-group-item" ng-repeat="ses in sessions"
            href="to-{{(ses.type=='L')?'visor':((ses.type=='S')?'select':((ses.type=='D')?'differential-semantic':'semantic'))}}?sesid={{ses.id}}">

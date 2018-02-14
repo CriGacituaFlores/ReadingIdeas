@@ -279,6 +279,14 @@ router.post("/change-state-session", rpg.execSQL({
     }
 }));
 
+router.post("/update_session_on_team_task", rpg.execSQL({
+    dbcon: pass.dbcon,
+    sql: "select 1+1",
+    onEnd: (req,res) => {
+        socket.updateWaiting(req.body.sesid);
+    }
+}))
+
 router.post("/force-state-session", rpg.execSQL({
     dbcon: pass.dbcon,
     sql: "with rows as (update sessions set status = $1 where id = $2 returning id, status) insert into " +
