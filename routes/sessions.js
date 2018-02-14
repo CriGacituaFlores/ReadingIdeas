@@ -118,10 +118,10 @@ router.post("/all_semantic_differential_user", (req, res) => {
     })(req,res);
 })
 
-router.post("/all_semantic_by_leader", (req, res) => {
+router.post("/all_semantic_by_leader_first_iteration", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `select * from anonymous_semantic_differential_user where sesid = ${req.body.id} and user_id = ${req.session.uid} limit 5`
+        sql: `select * from first_iteration_group where sesid = ${req.body.id} and user_id = ${req.session.uid} limit 5`
     })(req,res);
 })
 

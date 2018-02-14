@@ -193,7 +193,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             }).finally(function () {
                 self.IsProcessing = false;
             })
-            $http({url: '/all_semantic_by_leader', method: 'POST', data: {id: self.sesId}}).then((response) => {
+            $http({url: '/all_semantic_by_leader_first_iteration', method: 'POST', data: {id: self.sesId}}).then((response) => {
                 self.leaderTasks = response.data
             })
             $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
@@ -215,6 +215,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.processItem = function(sliderId, modelValue) {
         self.updateSemanticDifferentialUser(sliderId)
+    }
+
+    self.updateSemanticDifferentialFirstIteration = (position) => {
+        let actualSemantic = self.leaderTasks[position]
+        $http({url: '/update_semantic_differential_first_iteration', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
+
+        })
+    }
+
+    self.processItemFirstIteration = function(sliderId, modelValue) {
+        self.updateSemanticDifferentialFirstIteration(sliderId)
     }
 
     self.updateAnonymousSemanticDifferentialUser = (position) => {
