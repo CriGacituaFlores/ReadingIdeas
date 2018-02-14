@@ -237,7 +237,7 @@
             <div class="col-md-12">
                 <label class="letter-color-title">Respuestas Personales</label>
             </div>
-            <div ng-repeat="item in personalEvaluationBySession" 
+            <div ng-repeat="item in personalEvaluationFirstIteration" 
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
                 dnd-moved="Sorting($index)"
@@ -319,7 +319,7 @@
             <div class="col-md-12">
                 <label class="letter-color-title">Respuestas Personales</label>
             </div>
-            <div ng-repeat="item in personalEvaluationBySession" 
+            <div ng-repeat="item in personalEvaluationByGroup" 
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
                 dnd-moved="Sorting($index)"

@@ -37,6 +37,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.times_waiting = 0;
     self.final_response = false;
     self.current_leader = null;
+    self.personalEvaluationFirstIteration = [];
+    self.personalEvaluationByGroup = [];
 
     $scope.slider = {
         value: 50,
@@ -202,6 +204,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             })
             $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationBySession = response.data;
+            })
+            $http({url: '/personal_evaluations_first_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.personalEvaluationFirstIteration = response.data
+            })
+            $http({url: '/personal_evaluations_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.personalEvaluationByGroup = response.data
             })
             $http({url: 'select-anonymous-semantic-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.avgByGroup = response.data

@@ -345,6 +345,25 @@ router.post("/select-first-iteration-group", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-first-iteration-personal-evaluation", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into first_iteration_personal_evaluation (id, min_name, max_name, description, order_sort, sesid, value, user_id, created_at, updated_at, team_id)
+                select user_personal_evaluation.id, user_personal_evaluation.min_name, user_personal_evaluation.max_name, user_personal_evaluation.description,
+                user_personal_evaluation.order_sort, user_personal_evaluation.sesid, user_personal_evaluation.value, user_personal_evaluation.user_id,
+                user_personal_evaluation.created_at, user_personal_evaluation.updated_at, teams.id
+                from user_personal_evaluation
+                inner join users on
+                users.id = user_personal_evaluation.user_id
+                inner join teamusers on
+                users.id = teamusers.uid
+                inner join teams on
+                teams.id = teamusers.tmid
+                where user_personal_evaluation.sesid = ${req.body}
+                and teams.sesid = ${req.body}`
+    })(req,res);
+})
+
 router.post("/select-anonymous-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

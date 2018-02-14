@@ -677,6 +677,14 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                         all_anonymous_users = data.map(u => u.id)
                     })
                 }
+                if(self.selectedSes.status == 4){
+                    $http({url: 'select-first-iteration-group', method: 'post', data: currentSes}).success((data) => {
+
+                    })
+                    $http({url: 'select-first-iteration-personal-evaluation', method: 'post', data: currentSes}).success((data) => {
+
+                    })
+                }
                 self.semanticTab += 1;
             }
             else {
