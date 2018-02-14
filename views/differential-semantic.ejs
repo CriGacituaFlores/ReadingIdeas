@@ -96,14 +96,99 @@
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuesta</label>
             </div>
+            <div class="container">
+                <div ng-repeat="item in leaderTasks" 
+                    dnd-list-id="{{item.id}}" 
+                    dnd-draggable="item" 
+                    dnd-moved="Sorting($index)"
+                    dnd-effect-allowed="move"
+                    dnd-selected="models.selected = item"
+                    ng-class="{'selected': models.selected === item}">
+                    <div class="col-md-12 col-xs-12 pad-border pad-color margin-t-a-b">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                            <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="row margin-t-a-b">
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Valoración:
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
+                                </div>
+                                <div class="col-md-8 col-xs-8">
+                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Comentario:
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <label class="letter-color-title">Respuestas personales</label>
+            </div>
+            <div class="container">
+                <div ng-repeat="item in personalEvaluationBySession" 
+                    dnd-list-id="{{item.id}}" 
+                    dnd-draggable="item" 
+                    dnd-moved="Sorting($index)"
+                    dnd-effect-allowed="move"
+                    dnd-selected="models.selected = item"
+                    ng-class="{'selected': models.selected === item}">
+                    <div class="col-md-12 col-xs-12 pad-border pad-color margin-t-a-b">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                            <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="row margin-t-a-b">
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Valoración:
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
+                                </div>
+                                <div class="col-md-8 col-xs-8">
+                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Comentario:
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-md-12">
                 <hr>
             </div>
             <div class="col-md-12">
                 <label class="letter-color-title">Ronda 1: Tu comentario</label>
+            </div>
+            <div class="col-md-12">
+                <textarea rows="5" class="text-area-input" ng-model="" ng-change="addCommentByCurrentUser(1234)"></textarea>
             </div>
         </div>
         <div class="container" ng-show="!followLeader && !waiting_partners">
