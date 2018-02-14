@@ -118,10 +118,26 @@ router.post("/all_semantic_differential_user", (req, res) => {
     })(req,res);
 })
 
-router.post("/all_semantic_by_leader_first_iteration", (req, res) => {
+router.post("/get_current_leader", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `select * from first_iteration_group where sesid = ${req.body.id} and user_id = ${req.session.uid} limit 5`
+        sql: `select teams.leader from teams where teams.id = (
+            select teamusers.tmid from users
+            inner join teamusers on
+            users.id = teamusers.uid
+            inner join teams on
+            teams.id = teamusers.tmid
+            where teamusers.uid = ${req.session.uid}
+            and teams.sesid = ${req.body.session_id}
+        )`
+    })(req,res);
+})
+
+router.post("/all_semantic_by_leader_first_iteration", (req, res) => {
+    console.log('CURRENT_LEADER: ' + req.body.leader_id)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from first_iteration_group where sesid = ${req.body.id} and user_id = ${req.body.leader_id} limit 5`
     })(req,res);
 })
 

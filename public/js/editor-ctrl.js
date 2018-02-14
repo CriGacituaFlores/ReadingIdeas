@@ -36,7 +36,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.waiting_partners = false;
     self.times_waiting = 0;
     self.final_response = false;
-
+    self.current_leader = null;
 
     $scope.slider = {
         value: 50,
@@ -193,8 +193,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             }).finally(function () {
                 self.IsProcessing = false;
             })
-            $http({url: '/all_semantic_by_leader_first_iteration', method: 'POST', data: {id: self.sesId}}).then((response) => {
-                self.leaderTasks = response.data
+            $http({url: '/get_current_leader', method: 'post', data: {session_id: self.sesId}}).then((response) => {
+                self.current_leader = response.data[0].leader
+            }).then(() => {
+                $http({url: '/all_semantic_by_leader_first_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
+                    self.leaderTasks = response.data
+                })
             })
             $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationBySession = response.data;
