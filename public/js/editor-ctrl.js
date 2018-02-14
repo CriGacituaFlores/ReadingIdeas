@@ -131,7 +131,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
         $socket.on("updateWaiting", (data) => {
             console.log("SOCKET.IO", data);
-            self.getCurrentStatus(true);
+            self.getCurrentStatus(data);
         });
     };
 
@@ -230,12 +230,20 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.sendToPartners = (sesid) => {
         $http({url: '/update_session_on_team_task', method: 'post', data: sesid}).success((response) => {
-
+            $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
+                self.waiting_partners = response.waiting_partners
+                self.times_waiting = response.times_waiting
+                self.final_response = response.final_response
+            })
         });
     }
 
-    self.getCurrentStatus = (status) => {
-        self.waiting_partners = status;
+    self.getCurrentStatus = (sesid) => {
+        $http({url: '/select_session_on_team_task', method: 'post', data: sesid.ses}).success((response) => {
+            self.waiting_partners = response.waiting_partners
+            self.times_waiting = response.times_waiting
+            self.final_response = response.final_response
+        })
     }
 
     self.finishState = () => {

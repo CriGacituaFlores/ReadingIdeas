@@ -45,10 +45,10 @@
             </span>
             <button ng-hide="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Terminé</button>
-            <button ng-show="iteration==3 && !followLeader" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(61)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && !followLeader" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar a compañero
             </button>
-            <button ng-show="iteration==3 && followLeader && waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendCommentary(61)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && followLeader && waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
         </div>
@@ -93,7 +93,18 @@
             </div>
         </div>
         <div ng-show="waiting_partners && followLeader">
-            MUESTRALO
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuesta grupal propuesta</label>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuestas personales</label>
+            </div>
+            <div class="col-md-12">
+                <hr>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Ronda 1: Tu comentario</label>
+            </div>
         </div>
         <div class="container" ng-show="!followLeader && !waiting_partners">
             <div class="col-md-12">

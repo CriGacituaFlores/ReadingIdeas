@@ -279,13 +279,23 @@ router.post("/change-state-session", rpg.execSQL({
     }
 }));
 
-router.post("/update_session_on_team_task", rpg.execSQL({
-    dbcon: pass.dbcon,
-    sql: "select 1+1",
-    onEnd: (req,res) => {
-        socket.updateWaiting(req.body.sesid);
-    }
-}))
+router.post("/update_session_on_team_task", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `update sessions set waiting_partners = true where sessions.id = ${req.body}`,
+        onEnd: (req,res) => {
+            socket.updateWaiting(req.body);
+        }
+    })(req, res);
+});
+
+router.post("/select_session_on_team_task", (req, res) => {
+    console.log('THE BODY: ' + req.body)
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from sessions where sessions.id = ${req.body}`
+    })(req, res);
+});
 
 router.post("/force-state-session", rpg.execSQL({
     dbcon: pass.dbcon,
