@@ -39,6 +39,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.current_leader = null;
     self.personalEvaluationFirstIteration = [];
     self.personalEvaluationByGroup = [];
+    self.firstIterationComment = [];
+    self.countFirstIteration = null;
+    self.countSecondIteration = null;
+    self.userIterationStatus = []
+    self.finishTheFirstTime = false;
+    self.firstIterationCommentForLeader = [];
+    self.leaderTasksSecondIteration = [];
+    self.personalEvaluationSecondIteration = [];
+    self.countEvaluationSecondIteration = 0;
 
     $scope.slider = {
         value: 50,
@@ -135,7 +144,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             console.log("SOCKET.IO", data);
             self.getCurrentStatus(data);
         });
+        $socket.on("updateUserIteration", (data) => {
+            console.log("SOCKET.IO", data);
+            self.getUserStatus(data);
+        });
     };
+
+    
 
     self.select_session_users = (ses) => {
         $http({url: 'select-all-users-group', method: 'post', data: ses}).success((data) => {
@@ -164,6 +179,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.final_response = data.final_response
             self.waiting_partners = data.waiting_partners
             self.times_waiting = data.times_waiting
+            self.getUserStatus({ses: self.sesId})
             $http({url: "get-documents", method: "post"}).success((data) => {
                 self.documents = data;
                 data.forEach((doc,i) => {
@@ -201,6 +217,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 $http({url: '/all_semantic_by_leader_first_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
                     self.leaderTasks = response.data
                 })
+                $http({url: '/all_semantic_by_leader_second_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
+                    self.leaderTasksSecondIteration = response.data
+                })
             })
             $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationBySession = response.data;
@@ -208,15 +227,27 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/personal_evaluations_first_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationFirstIteration = response.data
             })
+            $http({url: '/personal_evaluations_second_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.personalEvaluationSecondIteration = response.data
+            })
             $http({url: '/personal_evaluations_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationByGroup = response.data
             })
             $http({url: 'select-anonymous-semantic-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.avgByGroup = response.data
             })
+            $http({url: '/select-first-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.firstIterationComment = response.data[0]
+            })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
     };
+
+    self.updateFirstIterationComment = (id, comment) => {
+        $http({url: '/update_first_iteration_comment', method: 'post', data: {id: id, comment: comment}}).then((response) => {
+
+        })
+    }
 
     self.updateSemanticDifferentialUser = (position) => {
         let actualSemantic = self.Tasks[position]
@@ -228,6 +259,21 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.processItem = function(sliderId, modelValue) {
         self.updateSemanticDifferentialUser(sliderId)
     }
+    //
+
+    self.updateSecondIterationPersonalEvaluation = (position) => {
+        let actualSemantic = self.personalEvaluationSecondIteration[position]
+        debugger;
+        $http({url: '/update_second_iteration_personal_evaluation', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
+
+        })
+    }
+
+    self.processItemSecondIterationPersonalEvaluation = function(sliderId, modelValue) {
+        self.updateSecondIterationPersonalEvaluation(sliderId)
+    }
+
+    //
 
     self.updateSemanticDifferentialFirstIteration = (position) => {
         let actualSemantic = self.leaderTasks[position]
@@ -238,6 +284,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.processItemFirstIteration = function(sliderId, modelValue) {
         self.updateSemanticDifferentialFirstIteration(sliderId)
+    }
+
+    self.updateSemanticDifferentialSecondIteration = (position) => {
+        let actualSemantic = self.leaderTasksSecondIteration[position]
+        $http({url: '/update_semantic_differential_second_iteration', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
+
+        })
+    }
+
+    self.processItemSecondIteration = function(sliderId, modelValue) {
+        self.updateSemanticDifferentialSecondIteration(sliderId)
     }
 
     self.updateAnonymousSemanticDifferentialUser = (position) => {
@@ -258,7 +315,29 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.times_waiting = response.times_waiting
                 self.final_response = response.final_response
             })
+            $http({url: '/select-first-iteration-comment', method: 'post', data: sesid}).success((response) => {
+
+            })
+            $http({url: '/select-times-between-iterations', method: 'post', data: sesid}).success((response) => {
+            
+            })
+            $http({url: '/update_team_id_for_first_iteration_group', method: 'post', data: sesid.ses}).then((response) => {
+                return sesid.ses
+            }).then((response) => {
+                $http({url: '/insert_values_to_second_iteration', method: 'post', data: response}).then((response) => {
+
+                })
+                $http({url: '/insert_comments_to_second_iteration', method: 'post', data: response}).then((response) => {
+
+                })
+            })
         });
+    }
+
+    self.sendFirstCommentary = (sesid) => {
+        $http({url: '/send_first_commentary', method: 'post', data: sesid}).then((response) => {
+
+        })
     }
 
     self.getCurrentStatus = (sesid) => {
@@ -266,6 +345,38 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.waiting_partners = response.waiting_partners
             self.times_waiting = response.times_waiting
             self.final_response = response.final_response
+        })
+    }
+
+    self.getUserStatus = (sesid) => {
+        $http({url: '/get_user_status_by_group', method: 'post', data: sesid.ses}).then((response) => {
+            self.userIterationStatus = response.data
+            let count = 0
+            response.data.map(function(usr){
+                if(usr.first_time == true){
+                    count += 1
+                }
+            })
+            if(count == response.data.length){
+                self.finishTheFirstTime = true
+                $http({url: '/first_iteration_comments_by_group', method: 'post', data: sesid.ses}).then((response) => {
+                    self.firstIterationCommentForLeader = response.data
+                })
+
+                $http({url: '/personal_evaluations_second_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                    var arr = []
+                    arr.push(self.countEvaluationSecondIteration = response.data.length)
+                    arr.push(self.sesId)
+                    return arr
+                }).then((response) => {
+                    if (response[0] == 0){
+                        debugger;
+                        $http({url: 'select-second-iteration-personal-evaluation', method: 'post', data: response[1]}).then((response) => {
+                            debugger;
+                        })
+                    }
+                })
+            }
         })
     }
 

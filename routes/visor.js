@@ -297,6 +297,47 @@ router.post("/select_session_on_team_task", (req, res) => {
     })(req, res);
 });
 
+router.post("/send_first_commentary", (req, res) => {
+    console.log('THE BODY: ' + req.body)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update session_iteration set first_time = true where user_id = ${req.session.uid} and session_id = ${req.body}`,
+        onEnd: (req,res) => {
+            socket.updateUserIteration(req.body);
+        }
+    })(req, res);
+});
+
+router.post("/get_user_status_by_group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select users.name as user_name, session_iteration.first_time as first_time, session_iteration.second_time as second_time from teams
+                inner join teamusers on
+                teamusers.tmid = teams.id
+                inner join users on
+                teamusers.uid = users.id
+                inner join session_iteration on
+                session_iteration.user_id = users.id
+                where leader = ${req.session.uid}
+                and sesid = ${req.body}
+                and users.id != ${req.session.uid}`
+    })(req, res);
+});
+
+router.post("/first_iteration_comments_by_group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select first_iteration_comments.*, users.name from first_iteration_comments
+                inner join users on
+                users.id = first_iteration_comments.user_id
+                where session_id = ${req.body}
+                and team_id = (
+                select id from teams where teams.leader = ${req.session.uid} and teams.sesid = ${req.body}
+                )
+                and first_iteration_comments.user_id <> ${req.session.uid}`
+    })(req, res);
+});
+
 router.post("/force-state-session", rpg.execSQL({
     dbcon: pass.dbcon,
     sql: "with rows as (update sessions set status = $1 where id = $2 returning id, status) insert into " +
@@ -364,6 +405,107 @@ router.post("/select-first-iteration-personal-evaluation", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-second-iteration-personal-evaluation", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into second_iteration_personal_evaluation (min_name, max_name, description, order_sort, sesid, value, user_id, team_id, created_at, updated_at)
+                select first_iteration_personal_evaluation.min_name, first_iteration_personal_evaluation.max_name, first_iteration_personal_evaluation.description, first_iteration_personal_evaluation.order_sort, first_iteration_personal_evaluation.sesid, first_iteration_personal_evaluation.value, first_iteration_personal_evaluation.user_id, first_iteration_personal_evaluation.team_id, first_iteration_personal_evaluation.created_at, first_iteration_personal_evaluation.updated_at from first_iteration_personal_evaluation
+                inner join sessions on
+                sessions.id = first_iteration_personal_evaluation.sesid
+                inner join teams on
+                teams.sesid = sessions.id
+                where first_iteration_personal_evaluation.sesid = 1
+                and teams.id = (select teams.id from teamusers
+                inner join teams on
+                teamusers.tmid = teams.id
+                where teamusers.uid = ${req.session.uid}
+                and teams.sesid = ${req.body})`
+    })(req,res);
+})
+
+router.post("/select-first-iteration-comment", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into first_iteration_comments (team_id, user_id,session_id)
+                select teams.id,users.id, teams.sesid from users
+                inner join teamusers on
+                teamusers.uid = users.id
+                inner join teams on
+                teams.id = teamusers.tmid
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}`
+    })(req,res);
+})
+
+router.post("/select-times-between-iterations", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into session_iteration (team_id, user_id,session_id)
+                select teams.id,users.id, teams.sesid from users
+                inner join teamusers on
+                teamusers.uid = users.id
+                inner join teams on
+                teams.id = teamusers.tmid
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body.sesid}`
+    })(req,res);
+})
+
+router.post("/update_team_id_for_first_iteration_group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update first_iteration_group set team_id = t1.team_id from
+                (select first_iteration_group.id, teams.id as team_id
+                from first_iteration_group
+                inner join users on
+                users.id = first_iteration_group.user_id
+                inner join teamusers on
+                teamusers.uid = users.id
+                inner join teams on
+                teams.id = teamusers.tmid
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}
+                group by teamusers.uid, first_iteration_group.id, teams.id) t1
+                where first_iteration_group.id = t1.id`
+    })(req,res);
+})
+
+router.post("/insert_values_to_second_iteration", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into second_iteration_group (min_name, max_name, order_sort, sesid, value, description, user_id, team_id, semantic_differential_id)
+                select first_iteration_group.min_name, first_iteration_group.max_name, first_iteration_group.order_sort, first_iteration_group.sesid, first_iteration_group.value, first_iteration_group.description, first_iteration_group.user_id, first_iteration_group.team_id, first_iteration_group.semantic_differential_id
+                from first_iteration_group
+                inner join users on
+                users.id = first_iteration_group.user_id
+                inner join teamusers on
+                teamusers.uid = users.id
+                inner join teams on
+                teams.id = teamusers.tmid
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}
+                group by teamusers.uid, first_iteration_group.id, teams.id`
+    })(req,res);
+})
+
+router.post("/insert_comments_to_second_iteration", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into second_iteration_comments (team_id, user_id, comment, session_id, created_at, updated_at)
+                select team_id, user_id, comment, session_id, created_at, updated_at
+                from first_iteration_comments
+                inner join users on
+                users.id = first_iteration_comments.user_id
+                inner join teamusers on
+                teamusers.uid = users.id
+                inner join teams on
+                teams.id = teamusers.tmid
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}
+                group by teamusers.uid, first_iteration_comments.id, teams.id`
+    })(req,res);
+})
+
 router.post("/select-anonymous-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
@@ -423,6 +565,20 @@ router.post("/select-anonymous-semantic-by-group", (req, res) => {
                                     where teamusers.uid = ${req.session.uid}
                                     and teams.sesid = ${req.body.id})
                 group by anonymous_semantic_differential_user.semantic_differential_id, anonymous_semantic_differential_user.min_name, anonymous_semantic_differential_user.max_name`
+    })(req,res);
+})
+
+router.post("/select-first-iteration-comment-array", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from first_iteration_comments where session_id = ${req.body.id} and user_id = ${req.session.uid}`
+    })(req,res);
+})
+
+router.post('/update_first_iteration_comment', (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update first_iteration_comments set comment = '${req.body.comment}' where id = ${req.body.id}`
     })(req,res);
 })
 

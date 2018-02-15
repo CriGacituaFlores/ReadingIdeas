@@ -60,6 +60,14 @@ router.post("/update_semantic_differential_user", (req, res) => {
     res.end('{"creado": "Diferencial semántico modificado"}')
 })
 
+router.post("/update_second_iteration_personal_evaluation", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `UPDATE second_iteration_personal_evaluation SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
+    })(req, res);
+    res.end('{"creado": "Diferencial semántico modificado"}')
+})
+
 router.post("/update_semantic_differential_first_iteration", (req, res) => {
     rpg.singleSQL({
         dbcon: pass.dbcon,
@@ -68,6 +76,13 @@ router.post("/update_semantic_differential_first_iteration", (req, res) => {
     res.end('{"creado": "Diferencial semántico modificado"}')
 })
 
+router.post("/update_semantic_differential_second_iteration", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `UPDATE second_iteration_group SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
+    })(req, res);
+    res.end('{"creado": "Diferencial semántico modificado"}')
+})
 
 router.post("/update_anonymous_semantic_differential_user", (req, res) => {
     rpg.singleSQL({

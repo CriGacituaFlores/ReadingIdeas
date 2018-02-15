@@ -22,4 +22,8 @@ module.exports.configSocket = function(io){
         console.log('ENTROOOOO')
         io.of("/").emit("updateWaiting", {ses: sesid});
     };
+    module.exports.updateUserIteration = function(sesid){
+        console.log('ENTROOOOO')
+        io.of("/").emit("updateUserIteration", {ses: sesid});
+    };
 };

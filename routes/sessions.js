@@ -141,6 +141,14 @@ router.post("/all_semantic_by_leader_first_iteration", (req, res) => {
     })(req,res);
 })
 
+router.post("/all_semantic_by_leader_second_iteration", (req, res) => {
+    console.log('CURRENT_LEADER: ' + req.body.leader_id)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from second_iteration_group where sesid = ${req.body.id} and user_id = ${req.body.leader_id} limit 5`
+    })(req,res);
+})
+
 router.post("/personal_evaluations_by_ses", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
@@ -167,6 +175,23 @@ router.post("/personal_evaluations_first_iteration_by_group", (req, res) => {
         inner join teams on
         teams.sesid = sessions.id
         where first_iteration_personal_evaluation.sesid = ${req.body.id}
+        and teams.id = (select teams.id from teamusers
+                            inner join teams on
+                            teamusers.tmid = teams.id
+                            where teamusers.uid = ${req.session.uid}
+                            and teams.sesid = ${req.body.id})`
+    })(req,res);
+})
+
+router.post("/personal_evaluations_second_iteration_by_group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select second_iteration_personal_evaluation.* from second_iteration_personal_evaluation
+        inner join sessions on
+        sessions.id = second_iteration_personal_evaluation.sesid
+        inner join teams on
+        teams.sesid = sessions.id
+        where second_iteration_personal_evaluation.sesid = ${req.body.id}
         and teams.id = (select teams.id from teamusers
                             inner join teams on
                             teamusers.tmid = teams.id

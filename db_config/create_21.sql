@@ -112,7 +112,7 @@ create table if not exists third_iteration_personal_evaluation (
     foreign key(team_id) references teams(id)
 );
 
-create table if not exists first_iteration_comments {
+create table if not exists first_iteration_comments (
   id serial,
   team_id integer,
   user_id integer,
@@ -124,9 +124,9 @@ create table if not exists first_iteration_comments {
   foreign key(session_id) references sessions(id),
   foreign key(user_id) references users(id),
   foreign key(team_id) references teams(id)
-};
+);
 
-create table if not exists second_iteration_comments {
+create table if not exists second_iteration_comments (
   id serial,
   team_id integer,
   user_id integer,
@@ -138,9 +138,9 @@ create table if not exists second_iteration_comments {
   foreign key(session_id) references sessions(id),
   foreign key(user_id) references users(id),
   foreign key(team_id) references teams(id)
-};
+);
 
-create table if not exists final_response_user {
+create table if not exists final_response_user (
   id serial,
   user_id integer,
   team_id integer,
@@ -152,4 +152,17 @@ create table if not exists final_response_user {
   foreign key(session_id) references sessions(id),
   foreign key(user_id) references users(id),
   foreign key(team_id) references teams(id)
-}
+);
+
+create table if not exists session_iteration (
+    id serial
+    first_time boolean default false,
+    second_time boolean default false,
+    user_id integer,
+    session_id integer,
+    team_id integer,
+    primary key(id),
+    foreign key(session_id) references sessions(id),
+    foreign key(user_id) references users(id),
+    foreign key(team_id) references teams(id)
+);
