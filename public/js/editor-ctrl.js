@@ -45,6 +45,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.countSecondIteration = null;
     self.userIterationStatus = []
     self.finishTheFirstTime = false;
+    self.finishTheSecondTime = false;
     self.firstIterationCommentForLeader = [];
     self.leaderTasksSecondIteration = [];
     self.personalEvaluationSecondIteration = [];
@@ -415,6 +416,19 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                         })
                     }
                 })
+            }
+        })
+        $http({url: '/get_user_status_by_group', method: 'post', data: sesid.ses}).then((response) => {
+            self.userIterationStatus = response.data
+            let count = 0
+            response.data.map(function(usr){
+                if(usr.second_time == true){
+                    count += 1
+                }
+            })
+
+            if(count == response.data.length){
+                self.finishTheSecondTime = true
             }
         })
     }
