@@ -289,6 +289,16 @@ router.post("/update_session_on_team_task", (req, res) => {
     })(req, res);
 });
 
+router.post("/update_session_on_team_task_second_time", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `update sessions set waiting_partners = true, times_waiting = times_waiting+1 where sessions.id = ${req.body}`,
+        onEnd: (req,res) => {
+            socket.updateWaiting(req.body);
+        }
+    })(req, res);
+});
+
 router.post("/select_session_on_team_task", (req, res) => {
     console.log('THE BODY: ' + req.body)
     rpg.singleSQL({
@@ -302,6 +312,17 @@ router.post("/send_first_commentary", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `update session_iteration set first_time = true where user_id = ${req.session.uid} and session_id = ${req.body}`,
+        onEnd: (req,res) => {
+            socket.updateUserIteration(req.body);
+        }
+    })(req, res);
+});
+
+router.post("/send_second_commentary", (req, res) => {
+    console.log('THE BODY: ' + req.body)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update session_iteration set second_time = true where user_id = ${req.session.uid} and session_id = ${req.body}`,
         onEnd: (req,res) => {
             socket.updateUserIteration(req.body);
         }
@@ -427,6 +448,20 @@ router.post("/select-first-iteration-comment", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into first_iteration_comments (team_id, user_id,session_id)
+                select teams.id,users.id, teams.sesid from users
+                inner join teamusers on
+                teamusers.uid = users.id
+                inner join teams on
+                teams.id = teamusers.tmid
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}`
+    })(req,res);
+})
+
+router.post("/select-second-iteration-comment", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into second_iteration_comments (team_id, user_id,session_id)
                 select teams.id,users.id, teams.sesid from users
                 inner join teamusers on
                 teamusers.uid = users.id
@@ -575,10 +610,24 @@ router.post("/select-first-iteration-comment-array", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-second-iteration-comment-array", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from second_iteration_comments where session_id = ${req.body.id} and user_id = ${req.session.uid}`
+    })(req,res);
+})
+
 router.post('/update_first_iteration_comment', (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `update first_iteration_comments set comment = '${req.body.comment}' where id = ${req.body.id}`
+    })(req,res);
+})
+
+router.post('/update_second_iteration_comment', (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update second_iteration_comments set comment = '${req.body.comment}' where id = ${req.body.id}`
     })(req,res);
 })
 

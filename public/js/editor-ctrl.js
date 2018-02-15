@@ -40,6 +40,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.personalEvaluationFirstIteration = [];
     self.personalEvaluationByGroup = [];
     self.firstIterationComment = [];
+    self.secondIterationComment = [];
     self.countFirstIteration = null;
     self.countSecondIteration = null;
     self.userIterationStatus = []
@@ -48,6 +49,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.leaderTasksSecondIteration = [];
     self.personalEvaluationSecondIteration = [];
     self.countEvaluationSecondIteration = 0;
+    self.names = ["Enviar a compañeros", "Respuesta final"];
 
     $scope.slider = {
         value: 50,
@@ -239,12 +241,21 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/select-first-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.firstIterationComment = response.data[0]
             })
+            $http({url: '/select-second-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.secondIterationComment = response.data[0]
+            })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
     };
 
     self.updateFirstIterationComment = (id, comment) => {
         $http({url: '/update_first_iteration_comment', method: 'post', data: {id: id, comment: comment}}).then((response) => {
+
+        })
+    }
+
+    self.updateSecondIterationComment = (id, comment) => {
+        $http({url: '/update_second_iteration_comment', method: 'post', data: {id: id, comment: comment}}).then((response) => {
 
         })
     }
@@ -334,8 +345,36 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
     }
 
+    self.updateThisThing = (result, sesid) => {
+        if(result == "Enviar a compañeros"){
+            $http({url: '/update_session_on_team_task_second_time', method: 'post', data: sesid}).then((response) => {
+                $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
+                    self.waiting_partners = response.waiting_partners
+                    self.times_waiting = response.times_waiting
+                    self.final_response = response.final_response
+                })
+                $http({url: '/select-second-iteration-comment', method: 'post', data: sesid}).success((response) => {
+
+                })
+                $http({url: '/select-times-between-second-iterations', method: 'post', data: sesid}).success((response) => {
+            
+                })
+            })
+        } else if (result == "Respuesta Final") {
+
+        } else {
+
+        }
+    }
+
     self.sendFirstCommentary = (sesid) => {
         $http({url: '/send_first_commentary', method: 'post', data: sesid}).then((response) => {
+
+        })
+    }
+
+    self.sendSecondCommentary = (sesid) => {
+        $http({url: '/send_second_commentary', method: 'post', data: sesid}).then((response) => {
 
         })
     }
