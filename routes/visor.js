@@ -872,6 +872,19 @@ router.post("/select-semantic-by-users-and-group", (req, res) => {
     })(req,res);
 })
 
+router.post("/currentTeamForUser", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select teamusers.tmid from teamusers
+        inner join users on
+        users.id = teamusers.uid
+        inner join teams on
+        teams.id = teamusers.tmid
+        where teamusers.uid = ${req.body.userid}
+        and teams.sesid = ${req.body.ses}`
+    })(req,res)
+})
+
 router.post("/select_personal_evaluation_by_user", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

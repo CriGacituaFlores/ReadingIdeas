@@ -139,8 +139,13 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.isCheckedAnonymous = false;
     self.isCheckedGroupCourse = false;
     self.groupSemantic = [];
+    self.groupSemanticFirst = [];
+    self.groupSemanticSecond = [];
+    self.groupSemanticThird = [];
     self.groupPersonalEvaluation = [];
     self.avg_by_iteration = [];
+    self.stages = [{name: "Individual"},{name: "Anónima"},{name: "Grupal"}]
+    self.iterationUsersGroup = [];
 
     self.init = () => {
         self.shared.updateSesData();
@@ -188,12 +193,43 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         $http({url: 'select-all-users', method: 'post', data: ses.id}).success((data) => {
             self.iterationUsers = data.map(u => ({id: u.id, name: u.name}))
         })
+        $http({url: 'select-all-users-group', method: 'post', data: ses.id}).success((data) => {
+            self.iterationUsersGroup = data.map(u => ({id: u.id, name: u.name}))
+        })
     }
 
     self.select_group_users = (ses) => {
         $http({url: '/select-all-groups', method: 'post', data: ses.id}).success((data) => {
             self.iterationGroups = data.map((g,v) => ({id: g.id, name: `Grupo ${v+1}`}))
         })
+    }
+
+    self.selectUserTaskByStage = (stage,userid,ses) => {
+        $http({url: '/currentTeamForUser', method: 'post', data: {userid: userid, ses: ses}}).then((response) => {
+            return response
+        }).then((response) => {
+            let tmid = response.data[0].tmid;
+            if(stage.name == "Individual"){
+                $http({url: 'select-semantic-by-users', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
+                    self.semanticByUser = data;
+                })
+            } else if (stage.name == "Anónima") {
+                $http({url: 'select-anonymous-by-user', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
+                    self.anonumousUser = data;
+                })
+            } else if (stage.name == "Grupal") {
+                $http({url: 'select_first_iteration_group', method: 'post', data: {group_id: tmid, ses_id: ses}}).then((response) => {
+                    self.groupSemanticFirst = response.data;
+                })
+                $http({url: 'select_second_iteration_group', method: 'post', data: {group_id: tmid, ses_id: ses}}).then((response) => {
+                    self.groupSemanticSecond = response.data;
+                })
+                $http({url: 'select_third_iteration_group', method: 'post', data: {group_id: tmid, ses_id: ses}}).then((response) => {
+                    self.groupSemanticThird = response.data;
+                })
+            }
+        })
+        
     }
 
     self.select_semantic_by_user = (userid,ses) => {
