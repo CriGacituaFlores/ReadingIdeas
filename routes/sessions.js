@@ -157,6 +157,14 @@ router.post("/all_semantic_by_leader_third_iteration", (req, res) => {
     })(req,res);
 })
 
+router.post("/all_personal_iteration_by_leader_third_iteration", (req, res) => {
+    console.log('CURRENT_LEADER: ' + req.body.leader_id)
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from third_iteration_personal_evaluation where sesid = ${req.body.id} and user_id = ${req.body.leader_id} limit 5`
+    })(req,res);
+})
+
 router.post("/personal_evaluations_by_ses", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

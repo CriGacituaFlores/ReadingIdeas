@@ -130,22 +130,35 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.iterationGroupParts = [{name: "Primera iteración"}, {name: "Segunda iteración"}, {name: "Tercera iteración"}];
     self.openSidebar = true;
     self.semanticByUser = [];
+    self.semanticByUser2 = [];
     self.semanticByAllUser = [];
     self.anonymousByAllUser = [];
     self.invited = [];
     self.isChecked = false;
     self.semanticNoAnonymousByUser = [];
     self.anonumousUser = [];
+    self.anonumousUser2 = [];
     self.isCheckedAnonymous = false;
     self.isCheckedGroupCourse = false;
     self.groupSemantic = [];
     self.groupSemanticFirst = [];
+    self.groupSemanticFirst2 = [];
     self.groupSemanticSecond = [];
+    self.groupSemanticSecond2 = [];
     self.groupSemanticThird = [];
+    self.groupSemanticThird2 = [];
     self.groupPersonalEvaluation = [];
     self.avg_by_iteration = [];
     self.stages = [{name: "Individual"},{name: "Anónima"},{name: "Grupal"}]
     self.iterationUsersGroup = [];
+    self.semanticByTeacher = [];
+    self.semanticByTeacher2 = [];
+    self.courseIndividual = [];
+    self.courseIndividual2 = [];
+    self.courseFirstIteration = [];
+    self.courseFirstIteration2 = [];
+    self.courseSecondIteration = [];
+    self.courseThirdIteration = [];
 
     self.init = () => {
         self.shared.updateSesData();
@@ -229,7 +242,89 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
                 })
             }
         })
-        
+    }
+
+    self.selectUserTaskByStage2 = (stage,userid,ses) => {
+        $http({url: '/currentTeamForUser', method: 'post', data: {userid: userid, ses: ses}}).then((response) => {
+            return response
+        }).then((response) => {
+            let tmid = response.data[0].tmid;
+            if(stage.name == "Individual"){
+                $http({url: 'select-semantic-by-users', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
+                    self.semanticByUser2 = data;
+                })
+            } else if (stage.name == "Anónima") {
+                $http({url: 'select-anonymous-by-user', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
+                    self.anonumousUser2 = data;
+                })
+            } else if (stage.name == "Grupal") {
+                $http({url: 'select_first_iteration_group', method: 'post', data: {group_id: tmid, ses_id: ses}}).then((response) => {
+                    self.groupSemanticFirst2 = response.data;
+                })
+                $http({url: 'select_second_iteration_group', method: 'post', data: {group_id: tmid, ses_id: ses}}).then((response) => {
+                    self.groupSemanticSecond2 = response.data;
+                })
+                $http({url: 'select_third_iteration_group', method: 'post', data: {group_id: tmid, ses_id: ses}}).then((response) => {
+                    self.groupSemanticThird2 = response.data;
+                })
+            }
+        })
+    }
+
+    self.select_all_by_stage = (stage, ses) => {
+        if(stage.name == "Individual"){
+            $http({url: '/select-semantic-by-all-users', method: 'post', data: ses}).then((response) => {
+                self.courseIndividual = response.data
+            })
+        } else if (stage.name == "Anónima") {
+            $http({url: '/select-anonymous-semantic-by-all-users', method: 'post', data: ses}).then((response) => {
+                self.courseIndividual = response.data
+            })
+        } else if (stage.name == "Grupal") {
+            $http({url: '/course_first_iteration', method: 'post', data: ses}).then((response) => {
+                self.courseFirstIteration = response.data
+            })
+            $http({url: '/course_second_iteration', method: 'post', data: ses}).then((response) => {
+                self.courseSecondIteration = response.data
+            })
+            $http({url: '/course_third_iteration', method: 'post', data: ses}).then((response) => {
+                self.courseThirdIteration = response.data
+            })
+        }
+    }
+
+    self.select_all_by_stage2 = (stage, ses) => {
+        if(stage.name == "Individual"){
+            $http({url: '/select-semantic-by-all-users', method: 'post', data: ses}).then((response) => {
+                self.courseIndividual2 = response.data
+            })
+        } else if (stage.name == "Anónima") {
+            $http({url: '/select-anonymous-semantic-by-all-users', method: 'post', data: ses}).then((response) => {
+                self.courseIndividual2 = response.data
+            })
+        } else if (stage.name == "Grupal") {
+            $http({url: '/course_first_iteration', method: 'post', data: ses}).then((response) => {
+                self.courseFirstIteration2 = response.data
+            })
+            $http({url: '/course_second_iteration', method: 'post', data: ses}).then((response) => {
+                self.courseSecondIteration2 = response.data
+            })
+            $http({url: '/course_third_iteration', method: 'post', data: ses}).then((response) => {
+                self.courseThirdIteration2 = response.data
+            })
+        }
+    }
+
+    self.differential_semantic_from_teacher = (ses) => {
+        $http({url: '/semantic_from_teacher', method: 'post', data: ses}).then((response) => {
+            self.semanticByTeacher = response.data
+        })
+    }
+
+    self.differential_semantic_from_teacher2 = (ses) => {
+        $http({url: '/semantic_from_teacher', method: 'post', data: ses}).then((response) => {
+            self.semanticByTeacher2 = response.data
+        })
     }
 
     self.select_semantic_by_user = (userid,ses) => {

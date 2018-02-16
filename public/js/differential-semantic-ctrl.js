@@ -10,8 +10,7 @@ app.controller("SemanticController", ["$scope", "$http", "$timeout", "$socket", 
     let self = $scope;
 
     self.iteration = 0;
-    self.sesStatusses = [{i: 1, name: "Individual"}, {i: 3, name: "Grupal"}, {i: 4, name: "Reporte"},
-        {i: 5, name: "Evaluación de Pares"}, {i: 6, name: "Finalizada"}];
+    self.sesStatusses = [{i: 1, name: "Individual"}, {i: 3, name: "Grupal"}, {i: 4, name: "Discusión"}];
 
     self.documents = [];
     self.finished = false;

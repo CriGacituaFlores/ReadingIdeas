@@ -56,6 +56,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.option_first_time = ["Enviar a compañeros", "Respuesta final"];
     self.option_second_time = ["Respuesta final"];
     self.lastQuestion = "";
+    self.anonymous_semantic_discussion = [];
+    self.discussion_personal = [];
+    self.personalIterationLast = [];
 
     $scope.slider = {
         value: 50,
@@ -124,7 +127,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.iterationNames = ["Lectura", "Individual", "Grupal Anónimo", "Grupal"];
-    self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Reporte", "Rubrica Calibración", "Evaluación de Pares", "Finalizada"];
+    self.sesStatusses = ["Lectura", "Individual", "Anónimo", "Grupal", "Discusión"];
 
     self.tabOptions = ["Actual"];
 
@@ -231,6 +234,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 $http({url: '/all_semantic_by_leader_third_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
                     self.leaderTasksThirdIteration = response.data
                 })
+                $http({url: '/all_personal_iteration_by_leader_third_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
+                    self.personalIterationLast = response.data
+                })
             })
             $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationBySession = response.data;
@@ -255,6 +261,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             })
             $http({url: '/select-second-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.secondIterationComment = response.data[0]
+            })
+            $http({url: '/discussion_anonymous_semantic', method: 'post', data: self.sesId}).then((response) => {
+                self.anonymous_semantic_discussion = response.data
+            })
+            $http({url: '/discussion_personal', method: 'post', data: self.sesId}).then((response) => {
+                self.discussion_personal = response.data
             })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
