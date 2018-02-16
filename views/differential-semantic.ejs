@@ -48,13 +48,16 @@
             <button ng-show="iteration==3 && !followLeader && !finishTheFirstTime" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar a compañero
             </button>
-            <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting != 2" class="btn btn-sm btn-default pull-right" ng-click="sendFirstCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting != 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendFirstCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
-            <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting == 2" class="btn btn-sm btn-default pull-right" ng-click="sendSecondCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting == 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendSecondCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
-            <select ng-show="!followLeader" ng-options="x for x in names" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <select ng-show="!followLeader && !finishTheSecondTime" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <select ng-show="!followLeader && finishTheSecondTime" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <button ng-show="final_response && followLeader" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask()" ng-class="{'btn-success': hasFinished || finished}">
+                    <i class="fa fa-check"></i> Terminé</button>
         </div>
     </div>
 
@@ -195,7 +198,7 @@
                 <textarea rows="5" class="text-area-input" ng-model="firstIterationComment.comment" ng-change="updateFirstIterationComment(firstIterationComment.id, firstIterationComment.comment)">{{firstIterationComment.comment}}</textarea>
             </div>
         </div>
-        <div class="col-md-12" ng-show="waiting_partners && followLeader && times_waiting == 2">
+        <div class="col-md-12" ng-show="waiting_partners && followLeader && times_waiting == 2 && !final_response">
             AAAAAadsadsadsads adsad 
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuestaaaxzxx</label>
@@ -591,12 +594,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="finishTheSecondTime && !followLeader && times_waiting == 2">
+        <div class="col-md-12" ng-show="finishTheSecondTime && !followLeader && times_waiting == 2 && !final_response">
             <div class="col-md-12">
-                <label class="letter-color-title">Ronda {{times_waiting}}: Comentario de tus compañeros</label>
+                <label class="letter-color-title">Ronda {{times_waiting}}: Comentario de tus compañerosxx</label>
             </div>
             <div class="col-md-12">
-                <div ng-repeat="comment in firstIterationCommentForLeader">
+                <div ng-repeat="comment in secondIterationCommentForLeader">
                     <label>Compañero: {{comment.name}}</label>
                     <textarea rows="5" class="text-area-input" ng-model="comment.comment" ng-disabled="true">{{comment.comment}}</textarea>
                 </div>
@@ -605,10 +608,10 @@
                 <hr>
             </div>
             <div class="col-md-12">
-                <label class="letter-color-title">Elige respuesta grupalaa</label>
+                <label class="letter-color-title">Elige respuesta grupalaa1234</label>
             </div>
             <div class="col-md-12">
-                <div ng-repeat="item in leaderTasksSecondIteration" 
+                <div ng-repeat="item in leaderTasksThirdIteration" 
                     dnd-list-id="{{item.id}}" 
                     dnd-draggable="item" 
                     dnd-moved="Sorting($index)"
@@ -627,13 +630,13 @@
                                     Valoración:
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialSecondIteration($index)">{{ item.min_name || 'empty' }}</button>
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialThirdIteration($index)">{{ item.min_name || 'empty' }}</button>
                                 </div>
                                 <div class="col-md-8 col-xs-8">
-                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemSecondIteration}"></rzslider>
+                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemThirdIteration}"></rzslider>
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialSecondIteration($index)">{{ item.max_name || 'empty' }}</button>
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialThirdIteration($index)">{{ item.max_name || 'empty' }}</button>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -641,7 +644,7 @@
                                     Comentario:
                                 </div>
                                 <div class="col-md-12 col-xs-12">
-                                    <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialSecondIteration($index)">{{item.description}}</textarea>
+                                    <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialThirdIteration($index)">{{item.description}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -652,7 +655,7 @@
                 <label class="letter-color-title">Respuestas Personalessss</label>
             </div>
             <div class="col-md-12">
-                    <div ng-repeat="item in personalEvaluationSecondIteration" 
+                    <div ng-repeat="item in personalEvaluationThirdIteration" 
                     dnd-list-id="{{item.id}}" 
                     dnd-draggable="item" 
                     dnd-moved="Sorting($index)"
@@ -671,13 +674,13 @@
                                     Valoración:
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSecondIterationPersonalEvaluation($index)">{{ item.min_name || 'empty' }}</button>
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateThirdIterationPersonalEvaluation($index)">{{ item.min_name || 'empty' }}</button>
                                 </div>
                                 <div class="col-md-8 col-xs-8">
-                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemSecondIterationPersonalEvaluation}"></rzslider>
+                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemThirdIterationPersonalEvaluation}"></rzslider>
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSecondIterationPersonalEvaluation($index)">{{ item.max_name || 'empty' }}</button>
+                                    <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateThirdIterationPersonalEvaluation($index)">{{ item.max_name || 'empty' }}</button>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -685,7 +688,7 @@
                                     Comentario:
                                 </div>
                                 <div class="col-md-12 col-xs-12">
-                                    <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSecondIterationPersonalEvaluation($index)">{{item.description}}</textarea>
+                                    <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateThirdIterationPersonalEvaluation($index)">{{item.description}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -708,6 +711,116 @@
             </div>
             <div class="col-md-12 text-center">
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
+            </div>
+        </div>
+        <div ng-show="final_response && followLeader" class="col-md-12">
+            <div class="col-md-12">
+                <label class="letter-color-title">Qué tan de acuerdo estas con la respuesta grupal?</label>
+            </div>
+            <div class="col-md-12">
+                <label>
+                    <input type="radio" ng-model="lastQuestion" value="red">
+                    De acuerdo
+                </label>
+                <br/>
+                <label>
+                    <input type="radio" ng-model="lastQuestion" ng-value="specialValue">
+                    Parcialmente de acuerdo
+                </label>
+                <br/>
+                <label>
+                    <input type="radio" ng-model="lastQuestion" value="blue">
+                    Nada de acuerdo
+                </label>
+                <br/>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuesta general</label>
+            </div>
+            <div class="col-md-12">
+                <div ng-repeat="item in leaderTasksThirdIteration" 
+                    dnd-list-id="{{item.id}}" 
+                    dnd-draggable="item" 
+                    dnd-moved="Sorting($index)"
+                    dnd-effect-allowed="move"
+                    dnd-selected="models.selected = item"
+                    ng-class="{'selected': models.selected === item}">
+                    <div class="col-md-12 col-xs-12 pad-border pad-color margin-t-a-b">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                            <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="row margin-t-a-b">
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Valoración:
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialThirdIteration($index)">{{ item.min_name || 'empty' }}</button>
+                                </div>
+                                <div class="col-md-8 col-xs-8">
+                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemThirdIteration, disabled: true}"></rzslider>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialThirdIteration($index)">{{ item.max_name || 'empty' }}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Comentario:
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <textarea ng-disabled="true" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialThirdIteration($index)">{{item.description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuestas personales</label>
+            </div>
+            <div class="col-md-12">
+                <div ng-repeat="item in personalEvaluationThirdIteration" 
+                    dnd-list-id="{{item.id}}" 
+                    dnd-draggable="item" 
+                    dnd-moved="Sorting($index)"
+                    dnd-effect-allowed="move"
+                    dnd-selected="models.selected = item"
+                    ng-class="{'selected': models.selected === item}">
+                    <div class="col-md-12 col-xs-12 pad-border pad-color margin-t-a-b">
+                        <div class="row">
+                            <div class="col-md-6 col-xs-6">
+                            <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                        <div class="row margin-t-a-b">
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Valoración:
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateThirdIterationPersonalEvaluation($index)">{{ item.min_name || 'empty' }}</button>
+                                </div>
+                                <div class="col-md-8 col-xs-8">
+                                    <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemThirdIterationPersonalEvaluation, disabled: true}"></rzslider>
+                                </div>
+                                <div class="col-md-2 col-xs-2">
+                                    <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateThirdIterationPersonalEvaluation($index)">{{ item.max_name || 'empty' }}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <div class="col-md-12 col-xs-12">
+                                    Comentario:
+                                </div>
+                                <div class="col-md-12 col-xs-12">
+                                    <textarea ng-disabled="true" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateThirdIterationPersonalEvaluation($index)">{{item.description}}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

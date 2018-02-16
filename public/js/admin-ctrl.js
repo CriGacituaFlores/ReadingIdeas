@@ -126,6 +126,8 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.optConfidence = [0, 25, 50, 75, 100];
     self.iterationNames = [];
     self.iterationUsers = [];
+    self.iterationGroups = [];
+    self.iterationGroupParts = [{name: "Primera iteración"}, {name: "Segunda iteración"}, {name: "Tercera iteración"}];
     self.openSidebar = true;
     self.semanticByUser = [];
     self.semanticByAllUser = [];
@@ -135,6 +137,10 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
     self.semanticNoAnonymousByUser = [];
     self.anonumousUser = [];
     self.isCheckedAnonymous = false;
+    self.isCheckedGroupCourse = false;
+    self.groupSemantic = [];
+    self.groupPersonalEvaluation = [];
+    self.avg_by_iteration = [];
 
     self.init = () => {
         self.shared.updateSesData();
@@ -162,6 +168,7 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         self.selectedId = id;
         self.selectedSes = ses;
         self.select_session_users(ses)
+        self.select_group_users(ses)
         self.select_semantic_by_all_users(ses);
         self.shared.LoadTask(ses.id);
         self.requestDocuments();
@@ -183,6 +190,12 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         })
     }
 
+    self.select_group_users = (ses) => {
+        $http({url: '/select-all-groups', method: 'post', data: ses.id}).success((data) => {
+            self.iterationGroups = data.map((g,v) => ({id: g.id, name: `Grupo ${v+1}`}))
+        })
+    }
+
     self.select_semantic_by_user = (userid,ses) => {
         $http({url: 'select-semantic-by-users', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
             self.semanticByUser = data;
@@ -196,7 +209,51 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
         $http({url: 'select-anonymous-by-user', method: 'post', data: {userid: userid, ses: ses}}).success((data) => {
             self.anonumousUser = data;
         })
-        
+    }
+
+    self.select_tasks_by_iteration = (group, part, ses) => {
+        if(part.name == "Primera iteración"){
+            $http({url: 'select_first_iteration_group', method: 'post', data: {group_id: group, ses_id: ses}}).then((response) => {
+                self.groupSemantic = response.data;
+            })
+            $http({url: 'select_first_iteration_personal_evaluation', method: 'post', data: {group_id: group, ses_id: ses}}).then((response) => {
+                self.groupPersonalEvaluation = response.data;
+            })
+        } else if (part.name == "Segunda iteración") {
+            $http({url: 'select_second_iteration_group', method: 'post', data: {group_id: group, ses_id: ses}}).then((response) => {
+                self.groupSemantic = response.data;
+            })
+            $http({url: 'select_second_iteration_personal_evaluation', method: 'post', data: {group_id: group, ses_id: ses}}).then((response) => {
+                self.groupPersonalEvaluation = response.data;
+            })
+        } else if (part.name == "Tercera iteración") {
+            $http({url: 'select_third_iteration_group', method: 'post', data: {group_id: group, ses_id: ses}}).then((response) => {
+                self.groupSemantic = response.data;
+            })
+            $http({url: 'select_third_iteration_personal_evaluation', method: 'post', data: {group_id: group, ses_id: ses}}).then((response) => {
+                self.groupPersonalEvaluation = response.data;
+            })
+        } else {
+
+        }
+    }
+
+    self.select_all_by_iteration = (part, ses) => {
+        if(part.name == "Primera iteración"){
+            $http({url: 'select_all_by_first_iteration', method: 'post', data: {ses_id: ses}}).then((response) => {
+                self.avg_by_iteration = response.data;
+            })
+        } else if (part.name == "Segunda iteración") {
+            $http({url: 'select_all_by_second_iteration', method: 'post', data: {ses_id: ses}}).then((response) => {
+                self.avg_by_iteration = response.data;
+            })
+        } else if (part.name == "Tercera iteración") {
+            $http({url: 'select_all_by_third_iteration', method: 'post', data: {ses_id: ses}}).then((response) => {
+                self.avg_by_iteration = response.data;
+            })
+        } else {
+
+        }
     }
 
     self.select_semantic_by_all_users = (ses) => {

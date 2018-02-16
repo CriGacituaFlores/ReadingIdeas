@@ -816,6 +816,153 @@
               </div>
             </div>
           </div>
+          <div class="col-md-6" ng-hide="selectedSes.type != 'D' || iterationIndicator!=3">
+            <div class="col-md-4 margin-b-t-editable margin-t-b-editable">
+              <label class="letter-color-title">Respuestas de grupo:</label>
+            </div>
+            <div class="col-md-3 margin-b-t-editable margin-t-b-editable">
+              <select class="form-control" ng-options="x.id as x.name for x in iterationGroups" ng-model="selectedGroup" ng-change=""></select>
+            </div>
+            <div class="col-md-3 margin-b-t-editable margin-t-b-editable">
+              <select class="form-control" ng-options="x.name for x in iterationGroupParts" ng-model="selectedGroupPart" ng-change="select_tasks_by_iteration(selectedGroup,selectedGroupPart,selectedSes.id)"></select>
+            </div>
+            <div class="col-md-2 margin-b-t-editable margin-t-b-editable">
+              <input class="" type="checkbox" ng-model="isCheckedGroupCourse" ng-change="select_all_by_iteration(selectedGroupPart, selectedSes.id)"> Curso </input>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <h2>Resuesta grupal</h2>
+            <div dnd-list="groupSemantic">
+              <div ng-repeat="item in groupSemantic" 
+                dnd-list-id="{{item.id}}" 
+                dnd-draggable="item" 
+                dnd-moved="Sorting($index)"
+                dnd-disable-if="selectedSes.status!=1"
+                dnd-effect-allowed="move"
+                dnd-selected="models.selected = item"
+                ng-class="{'selected': models.selected === item}">
+                <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                  <div class="row">
+                      <div class="col-md-6 col-xs-6">
+                        <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                      </div>
+                      <div class="col-md-6 col-xs-6">
+                      </div>
+                  </div>
+                  <div class="row margin-t-a-b">
+                    <div class="col-md-6 col-xs-6">
+                      <div class="col-md-12 col-xs-12">
+                        Valoración:
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                      </div>
+                      <div class="col-md-8 col-xs-8">
+                          <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, disabled: true}"></rzslider>
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                      </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                      <div class="col-md-12 col-xs-12">
+                        Comentario:
+                      </div>
+                      <div class="col-md-12 col-xs-12">
+                        <textarea ng-disabled="true" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class">{{item.description}}</textarea>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <h2>Resuesta personales</h2>
+            <div dnd-list="groupPersonalEvaluation">
+                <div ng-repeat="item in groupPersonalEvaluation" 
+                  dnd-list-id="{{item.id}}" 
+                  dnd-draggable="item" 
+                  dnd-moved="Sorting($index)"
+                  dnd-disable-if="selectedSes.status!=1"
+                  dnd-effect-allowed="move"
+                  dnd-selected="models.selected = item"
+                  ng-class="{'selected': models.selected === item}">
+                  <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                    <div class="row">
+                        <div class="col-md-6 col-xs-6">
+                          <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-md-6 col-xs-6">
+                        </div>
+                    </div>
+                    <div class="row margin-t-a-b">
+                      <div class="col-md-6 col-xs-6">
+                        <div class="col-md-12 col-xs-12">
+                          Valoración:
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                          <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                        </div>
+                        <div class="col-md-8 col-xs-8">
+                            <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, disabled: true}"></rzslider>
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                          <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                        </div>
+                      </div>
+                      <div class="col-md-6 col-xs-6">
+                        <div class="col-md-12 col-xs-12">
+                          Comentario:
+                        </div>
+                        <div class="col-md-12 col-xs-12">
+                          <textarea ng-disabled="true" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class">{{item.description}}</textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+          </div>
+          <div class="col-md-12">
+              <h2>Resuesta curso</h2>
+              <div dnd-list="avg_by_iteration">
+                  <div ng-repeat="item in avg_by_iteration" 
+                    dnd-list-id="{{item.id}}" 
+                    dnd-draggable="item" 
+                    dnd-moved="Sorting($index)"
+                    dnd-disable-if="selectedSes.status!=1"
+                    dnd-effect-allowed="move"
+                    dnd-selected="models.selected = item"
+                    ng-class="{'selected': models.selected === item}">
+                    <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                      <div class="row">
+                          <div class="col-md-6 col-xs-6">
+                            <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                          </div>
+                          <div class="col-md-6 col-xs-6">
+                          </div>
+                      </div>
+                      <div class="row margin-t-a-b">
+                        <div class="col-md-6 col-xs-6">
+                          <div class="col-md-12 col-xs-12">
+                            Valoración:
+                          </div>
+                          <div class="col-md-2 col-xs-2">
+                            <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                          </div>
+                          <div class="col-md-8 col-xs-8">
+                              <rzslider rz-slider-model="item.avg" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, disabled: true}"></rzslider>
+                          </div>
+                          <div class="col-md-2 col-xs-2">
+                            <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
         </div>
         <div class="col-md-12">
           <div class="col-md-12" ng-hide="!isCheckedAnonymous">
