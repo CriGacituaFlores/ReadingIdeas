@@ -476,11 +476,10 @@ adpp.controller("TabsController", function ($scope, $http) {
         }
         else if(self.selectedSes.type == "D"){
             self.iterationNames = [{name: "reading", val: 0}, {name: "individual", val: 1},
-                {name: "anon", val: 2}, {name: "teamWork", val: 3}, {name: "report", val: 4},
-                {name: "rubricCalib", val: 5}, {name: "pairEval", val: 6}];
+                {name: "anon", val: 2}, {name: "teamWork", val: 3}, {name: "discussion", val: 4}];
             self.tabOptions = ["configuration", "dashboard"];
             self.tabConfig = ["users", "groups", "rubrica"];
-            self.sesStatusses = ["configuration", "reading", "individual", "anon", "teamWork", "report", "rubricCalib", "pairEval", "finished"];
+            self.sesStatusses = ["configuration", "reading", "individual", "anon", "teamWork", "discussion", "finished"];
             self.shared.getRubrica();
             self.shared.getExampleReports();
             self.shared.getReports();
