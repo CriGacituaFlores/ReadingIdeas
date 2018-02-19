@@ -297,7 +297,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.updateSecondIterationPersonalEvaluation = (position) => {
         let actualSemantic = self.personalEvaluationSecondIteration[position]
-        debugger;
         $http({url: '/update_second_iteration_personal_evaluation', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
 
         })
@@ -309,7 +308,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.updateThirdIterationPersonalEvaluation = (position) => {
         let actualSemantic = self.personalEvaluationThirdIteration[position]
-        debugger;
         $http({url: '/update_third_iteration_personal_evaluation', method: 'POST', data: {data: actualSemantic, id: actualSemantic.id }}).then((response) => {
 
         })
@@ -538,7 +536,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     };
 
     self.finishGroupTask = () => {
-        debugger;
+
     }
 
     self.areAllIdeasSync = () => {

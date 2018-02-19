@@ -73,7 +73,7 @@
                     Documentos: 
                 </span>
                 <span ng-show="iteration==0" ng-repeat="doc in documents" class="side-top-btn" ng-bind="doc.title" ng-class="{'active': $index==selectedDocument}" ng-click="selectPDF($index)">
-
+                    
                 </span>
             </div>
             <div class="col-sm-6 col-md-6">
@@ -1005,7 +1005,7 @@
             </div>
         </div>
         </div>
-    </div>
+    
 
     <div class="container" ng-show="iteration==1">
         <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('answers')" ng-class="{'label label-warning': ngShowAnswer}">Respuestas</button>
@@ -1015,8 +1015,7 @@
     <div class="row" ng-show="iteration==0 || (iteration == 1 && ngShowReading)">
         <div id="pdf-container" class="pdf-content col-sm-12 col-md-12">
             <div class="centered">
-                <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered"
-                ng-show="$index==selectedDocument"></div>
+                <div ng-repeat="doc in documents" id="pdf-canvas-{{$index}}" class="centered" ng-show="$index==selectedDocument"></div>
             </div>
         </div>
         <!--
@@ -1103,7 +1102,7 @@
         </div>
         -->
     </div>
-    
+
     <div class="" ng-show="(iteration == 1 && ngShowAnswer)">
       <h2 ng-bind="item.length"></h2>
       <div ng-repeat="item in Tasks" 
