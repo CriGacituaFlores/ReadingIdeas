@@ -91,7 +91,7 @@ router.post("/semantic_differential", (req, res) => {
     //console.log(rpg.param("post","sesid"))
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: `insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Amargo','Dulce',${req.body},0,now(),now())`
+        sql: `insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Indefinido','Indefinido',${req.body},0,now(),now())`
     })(req, res);
     res.end('{"creado": "Diferencial semántico añadido"}')
 })
