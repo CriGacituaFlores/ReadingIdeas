@@ -417,17 +417,10 @@ router.post("/select-session-users", (req, res) => {
 router.post("/select-first-iteration-group", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into first_iteration_group (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_id)
-                select min_name, max_name, order_sort, semantic_differential.sesid, value, description, users.id, semantic_differential.id
-                from semantic_differential
-                inner join sessions on
-                sessions.id = semantic_differential.sesid
-                inner join sesusers on
-                sesusers.sesid = sessions.id
-                inner join users on
-                users.id = sesusers.uid
-                where users.id in (select id from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and sesusers.uid != ${req.session.uid})
-                and semantic_differential.sesid = ${req.body}`
+        sql: `insert into first_iteration_group (min_name, max_name, description, order_sort, sesid, value, user_id, semantic_differential_id)
+                select min_name, max_name, description, order_sort, semantic_differential_user.sesid, value, semantic_differential_user.user_id, semantic_differential_id from semantic_differential_user
+                where user_id in (select leader from teams where sesid = ${req.body})
+                and sesid = ${req.body}`
     })(req,res);
 })
 

@@ -38,6 +38,7 @@
 <div class="editor-container container bg-white box-shadow-css" ng-controller="EditorController">
     <div class="row top-bar-mini">
         <div class="text-center margin-t-p">
+            {{iteration}} - {{!followLeader}} - {{!finishTheFirstTime}} - {{ waiting_partners }}
             <a onclick="window.history.back()" class="btn btn-sm btn-default pull-left bg-principal">Atrás</a>
             <span ng-repeat="st in sesStatusses">
                 <span class="statuses-content label label-primary" ng-class="{'label-warning': $index==iteration}" ng-bind="st"></span>
@@ -45,7 +46,7 @@
             </span>
             <button ng-hide="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
-            <button ng-show="iteration==3 && !followLeader && !finishTheFirstTime" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && !followLeader" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar a compañero
             </button>
             <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting != 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendFirstCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
@@ -80,7 +81,6 @@
                 <span class="pull-right margin-right-24" ng-show="sesSTime != null">
                     <timer start-time="sesSTime">{{hours}}h {{minutes}}m {{seconds}}s</timer>
                 </span>
-                <button disabled class="btn btn-sm btn-default pull-right" ng-show="iteration == 3 && !followLeader"><i class="fa fa-star"></i> Representante </button>
                 <span class="pull-right boxed" ng-bind="teamstr"></span>
             </div>
         </div>
@@ -89,12 +89,12 @@
     <div class="row" ng-show="iteration==3">
         <div class="container" ng-show="followLeader && !waiting_partners">
             <div class="col-md-12">
-                <label class="letter-color-title">Esperando la respuesta de tu lider</label>
+                <label class="letter-color-title">Esperando la respuesta de tu compañero(a) de grupo</label>
             </div>
             <div class="col-md-12">
                 <strong>
                     <i class="fa fa-clock-o fa-5" aria-hidden="true"></i>
-                    <span>El lider de tu grupo está generando la respuesta grupal. Una vez que la envíe podrás realizar comentarios sobre ella.</span>
+                    <span>Uno de tuscompañeros está generando una respuesta grupal. Una vez que la comparta contigo podrárealizar tus comentarios.</span>
                 </strong>
             </div>
         </div>
@@ -712,7 +712,7 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div ng-show="final_response && followLeader" class="col-md-12">
+        <div ng-show="!final_response && followLeader && waiting_partners" class="col-md-12">
             <div class="col-md-12">
                 <label class="letter-color-title">Qué tan de acuerdo estas con la respuesta grupal?</label>
             </div>
@@ -1243,7 +1243,6 @@
                 </div>
             </div>
         </div>
-        {{semanticFilterInGroup}}
         <div ng-repeat="item in semanticFilterInGroup" 
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
@@ -1283,11 +1282,11 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <div ng-show="personalEvaluationByUser.length > 0">
-            <h2>Evaluación personal</h2>
-            {{personalEvaluationByUser}}
-            <div ng-repeat="item in personalEvaluationByUser" 
+    <div ng-show="personalEvaluationByUser.length > 0">
+        respuesta personal
+        <div ng-repeat="item in personalEvaluationByUser" 
                     dnd-list-id="{{item.id}}" 
                     dnd-draggable="item" 
                     dnd-moved="Sorting($index)"
@@ -1328,7 +1327,6 @@
             </div>
         </div>
         
-    </div>
 
 </div>
 
