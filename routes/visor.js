@@ -400,8 +400,8 @@ router.post("/force-state-session", rpg.execSQL({
 router.post("/select-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, description, user_id, semantic_differential_id)
-                select min_name, max_name, order_sort, semantic_differential.sesid, value, description, users.id, semantic_differential.id
+        sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, user_id, semantic_differential_id)
+                select min_name, max_name, order_sort, semantic_differential.sesid, value, users.id, semantic_differential.id
                 from semantic_differential
                 inner join sessions on
                 sessions.id = semantic_differential.sesid

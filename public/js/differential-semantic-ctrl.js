@@ -248,7 +248,7 @@ app.controller("SemanticController", ["$scope", "$http", "$timeout", "$socket", 
         if(self.iteration == 4){
             self.shared.sendReport();
         }
-        let confirm = window.confirm("¿Esta seguro que desea terminar la actividad?\nEsto implica no volver a poder editar sus respuestas");
+        let confirm = window.confirm("¿Estás listo realmente?\nSi envías tu respuesta, no tendrás posibilidad de hacer máscambios");
         if(confirm) {
             let postdata = {status: self.iteration + 2};
             $http({url: "record-finish", method: "post", data: postdata}).success((data) => {

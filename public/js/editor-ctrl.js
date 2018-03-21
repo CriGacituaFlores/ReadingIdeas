@@ -523,7 +523,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             //Notification.error("Hay ideas fuerza que no han sido enviadas");
             //return;
         }
-        let confirm = window.confirm("¿Esta seguro que desea terminar la actividad?\nEsto implica no volver a poder editar sus respuestas");
+        let confirm = window.confirm("¿Estás listo realmente?\nSi envías tu respuesta, no tendrás posibilidad de hacer máscambios");
         if(confirm) {
             self.setSelOrder();
             let postdata = {status: self.iteration + 2};
