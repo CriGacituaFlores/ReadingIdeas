@@ -342,16 +342,7 @@ router.post("/send_second_commentary", (req, res) => {
 router.post("/get_user_status_by_group", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `select users.name as user_name, session_iteration.first_time as first_time, session_iteration.second_time as second_time from teams
-                inner join teamusers on
-                teamusers.tmid = teams.id
-                inner join users on
-                teamusers.uid = users.id
-                inner join session_iteration on
-                session_iteration.user_id = users.id
-                where leader = ${req.session.uid}
-                and sesid = ${req.body}
-                and users.id != ${req.session.uid}`
+        sql: `select * from session_iteration where team_id = ${req.body} and user_id != ${req.session.uid}`
     })(req, res);
 });
 
@@ -512,7 +503,7 @@ router.post("/select-times-between-iterations", (req, res) => {
                 inner join teams on
                 teams.id = teamusers.tmid
                 where teams.leader = ${req.session.uid}
-                and teams.sesid = ${req.body.sesid}`
+                and teams.sesid = ${req.body}`
     })(req,res);
 })
 

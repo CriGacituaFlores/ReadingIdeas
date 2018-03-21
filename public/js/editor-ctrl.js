@@ -191,7 +191,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.final_response = data.final_response
             self.waiting_partners = data.waiting_partners
             self.times_waiting = data.times_waiting
-            self.getUserStatus({ses: self.sesId})
             $http({url: "get-documents", method: "post"}).success((data) => {
                 self.documents = data;
                 data.forEach((doc,i) => {
@@ -271,6 +270,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             })
             $http({url: '/current_team', method: 'post', data: self.sesId}).then((response) => {
                 self.currentTeam = response.data
+                self.getUserStatus({ses: self.sesId})
             })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
@@ -376,7 +376,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
             })
             $http({url: '/select-times-between-iterations', method: 'post', data: sesid}).success((response) => {
-            
+
             })
             $http({url: '/update_team_id_for_first_iteration_group', method: 'post', data: sesid.ses}).then((response) => {
                 return sesid.ses
@@ -427,6 +427,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.sendFirstCommentary = (sesid) => {
+        debugger;
         $http({url: '/send_first_commentary', method: 'post', data: sesid}).then((response) => {
 
         })
@@ -447,7 +448,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.getUserStatus = (sesid) => {
-        $http({url: '/get_user_status_by_group', method: 'post', data: sesid.ses}).then((response) => {
+        $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam[0].id || 0}).then((response) => {
             self.userIterationStatus = response.data
             let count = 0
             response.data.map(function(usr){
@@ -455,7 +456,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     count += 1
                 }
             })
-            if(count == response.data.length){
+            if(count == response.data.length && count != 0){
                 self.finishTheFirstTime = true
                 $http({url: '/first_iteration_comments_by_group', method: 'post', data: sesid.ses}).then((response) => {
                     self.firstIterationCommentForLeader = response.data
@@ -475,6 +476,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 })
             }
         })
+        
         $http({url: '/get_user_status_by_group', method: 'post', data: sesid.ses}).then((response) => {
             self.userIterationStatus = response.data
             let count = 0
@@ -483,7 +485,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     count += 1
                 }
             })
-
             if(count == response.data.length){
                 self.finishTheSecondTime = true
                 $http({url: '/second_iteration_comments_by_group', method: 'post', data: sesid.ses}).then((response) => {
