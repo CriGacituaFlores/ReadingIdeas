@@ -24,6 +24,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.leader = false;
     self.finished = false;
     self.teamId = -1;
+    self.currentTeam = null;
     self.reportIdeas = {};
     self.shared = {};
     self.Tasks = [];
@@ -95,7 +96,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             Notification.error('Ya existen el máximo de evaluaciones personales (1)')
         } else {
             Notification.success('Evaluación personal creada')
-            $http({url: 'create-personal-evaluation', method: 'POST', data: {ses_id: ses_id, user_id: user_id}}).success((response) => {
+            $http({url: 'create-personal-evaluation', method: 'POST', data: {ses_id: ses_id, user_id: user_id, team_id: self.currentTeam[0].id}}).success((response) => {
                 self.LoadEvaluationPersonal(ses_id, user_id)
             })
         }
@@ -267,6 +268,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             })
             $http({url: '/discussion_personal', method: 'post', data: self.sesId}).then((response) => {
                 self.discussion_personal = response.data
+            })
+            $http({url: '/current_team', method: 'post', data: self.sesId}).then((response) => {
+                self.currentTeam = response.data
             })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });

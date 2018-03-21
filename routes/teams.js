@@ -47,7 +47,7 @@ router.post("/get-ses-info",rpg.singleSQL({
 router.post("/create-personal-evaluation", (req, res) => {
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: `insert into user_personal_evaluation(min_name,max_name,sesid,value,created_at,updated_at,user_id) values('Indefinido','Indefinido',${req.body.ses_id},0,now(),now(),${req.body.user_id})`
+        sql: `insert into user_personal_evaluation(min_name,max_name,sesid,value,created_at,updated_at,user_id,team_id) values('Indefinido','Indefinido',${req.body.ses_id},0,now(),now(),${req.body.user_id},${req.body.team_id})`
     })(req, res);
     res.end('{"creado": "Item agregado correctamente"}')
 })

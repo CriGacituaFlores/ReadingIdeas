@@ -415,6 +415,7 @@ router.post("/select-session-users", (req, res) => {
 })
 
 router.post("/select-first-iteration-group", (req, res) => {
+    console.log('PASO POR ACAAA')
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into first_iteration_group (min_name, max_name, description, order_sort, sesid, value, user_id, semantic_differential_id)
@@ -425,21 +426,15 @@ router.post("/select-first-iteration-group", (req, res) => {
 })
 
 router.post("/select-first-iteration-personal-evaluation", (req, res) => {
+    console.log('YYY PASO POR ACAAA')
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into first_iteration_personal_evaluation (id, min_name, max_name, description, order_sort, sesid, value, user_id, created_at, updated_at, team_id)
                 select user_personal_evaluation.id, user_personal_evaluation.min_name, user_personal_evaluation.max_name, user_personal_evaluation.description,
                 user_personal_evaluation.order_sort, user_personal_evaluation.sesid, user_personal_evaluation.value, user_personal_evaluation.user_id,
-                user_personal_evaluation.created_at, user_personal_evaluation.updated_at, teams.id
-                from user_personal_evaluation
-                inner join users on
-                users.id = user_personal_evaluation.user_id
-                inner join teamusers on
-                users.id = teamusers.uid
-                inner join teams on
-                teams.id = teamusers.tmid
-                where user_personal_evaluation.sesid = ${req.body}
-                and teams.sesid = ${req.body}`
+                user_personal_evaluation.created_at, user_personal_evaluation.updated_at, user_personal_evaluation.team_id from user_personal_evaluation
+                    where user_id in (select leader from teams where sesid = ${req.body})
+                    and sesid = ${req.body}`
     })(req,res);
 })
 
@@ -908,6 +903,17 @@ router.post("/discussion_personal", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `select * from user_personal_evaluation where sesid = ${req.body} and user_id = ${req.session.uid}`
+    })(req,res);
+})
+
+router.post("/current_team", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select teams.id from teams
+                inner join teamusers on
+                teamusers.tmid = teams.id
+                where teamusers.uid = ${req.session.uid}
+                and teams.sesid = ${req.body}`
     })(req,res);
 })
 

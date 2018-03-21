@@ -865,6 +865,7 @@ adpp.controller("SesEditorController", function ($scope, $http, Notification) {
                     })
                 }
                 if(self.selectedSes.status == 4){
+                    let currentSes = self.selectedSes.id
                     $http({url: 'select-first-iteration-group', method: 'post', data: currentSes}).success((data) => {
 
                     })
