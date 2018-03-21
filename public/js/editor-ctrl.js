@@ -351,7 +351,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.updateAnonymousSemanticDifferentialUser = (position) => {
-        let actualAnonymousSemantic = self.Tasks[position]
+        let actualAnonymousSemantic = self.anonymousTasks[position]
         $http({url: '/update_anonymous_semantic_differential_user', method: 'POST', data: {data: actualAnonymousSemantic, id: actualAnonymousSemantic.id}}).then((response) => {
 
         })

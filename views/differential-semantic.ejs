@@ -44,7 +44,7 @@
                 <!--<span ng-hide="$last">→</span>-->
             </span>
             <button ng-hide="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
-                    <i class="fa fa-check"></i> Terminé</button>
+                    <i class="fa fa-check"></i> Continuar</button>
             <button ng-show="iteration==3 && !followLeader && !finishTheFirstTime" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar a compañero
             </button>
@@ -57,7 +57,7 @@
             <select ng-show="!followLeader && !finishTheSecondTime" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
             <select ng-show="!followLeader && finishTheSecondTime" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
             <button ng-show="final_response && followLeader" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask()" ng-class="{'btn-success': hasFinished || finished}">
-                    <i class="fa fa-check"></i> Terminé</button>
+                    <i class="fa fa-check"></i> Continuar</button>
         </div>
     </div>
 
@@ -1194,7 +1194,7 @@
 
     <div class="" ng-show="(iteration == 2 && ngShowAnswer)">
         <h2 ng-bind="item.length"></h2>
-      <div ng-repeat="item in Tasks" 
+      <div ng-repeat="item in anonymousTasks" 
                 dnd-list-id="{{item.id}}" 
                 dnd-draggable="item" 
                 dnd-moved="Sorting($index)"
