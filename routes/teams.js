@@ -49,7 +49,7 @@ router.post("/create-personal-evaluation", (req, res) => {
         dbcon: pass.dbcon,
         sql: `insert into user_personal_evaluation(min_name,max_name,sesid,value,created_at,updated_at,user_id) values('Indefinido','Indefinido',${req.body.ses_id},0,now(),now(),${req.body.user_id})`
     })(req, res);
-    res.end('{"creado": "Diferencial semántico añadido"}')
+    res.end('{"creado": "Item agregado correctamente"}')
 })
 
 router.post("/update_semantic_differential_user", (req, res) => {
@@ -57,7 +57,7 @@ router.post("/update_semantic_differential_user", (req, res) => {
         dbcon: pass.dbcon,
         sql: `UPDATE semantic_differential_user SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
     })(req, res);
-    res.end('{"creado": "Diferencial semántico modificado"}')
+    res.end('{"creado": "Item modificado correctamente"}')
 })
 
 router.post("/update_second_iteration_personal_evaluation", (req, res) => {

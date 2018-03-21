@@ -93,7 +93,7 @@ router.post("/semantic_differential", (req, res) => {
         dbcon: pass.dbcon,
         sql: `insert into semantic_differential(min_name,max_name,sesid,value,created_at,updated_at) values('Indefinido','Indefinido',${req.body},0,now(),now())`
     })(req, res);
-    res.end('{"creado": "Diferencial semántico añadido"}')
+    res.end('{"creado": "Item agregado correctamente"}')
 })
 
 router.post("/update_semantic_differential", (req, res) => {
@@ -101,7 +101,7 @@ router.post("/update_semantic_differential", (req, res) => {
         dbcon: pass.dbcon,
         sql: `UPDATE semantic_differential SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
     })(req, res);
-    res.end('{"creado": "Diferencial semántico modificado"}')
+    res.end('{"creado": "Item modificado correctamente"}')
 })
 
 router.post("/all_semantic_differential", (req, res) => {
