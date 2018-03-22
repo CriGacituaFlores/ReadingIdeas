@@ -56,10 +56,11 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.countEvaluationSecondIteration = 0;
     self.option_first_time = ["Enviar a compañeros", "Respuesta final"];
     self.option_second_time = ["Respuesta final"];
-    self.lastQuestion = "";
+    self.final_response_value = '';
     self.anonymous_semantic_discussion = [];
     self.discussion_personal = [];
     self.personalIterationLast = [];
+    self.user_is_done = false;
 
     $scope.slider = {
         value: 50,
@@ -71,6 +72,19 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
           maxLimit: 90
         }
     };
+
+    self.finishGroupTask = (response, sesid) => {
+        if(response == 'de_acuerdo') {
+            debugger;
+            self.setFinalResponseByUser(sesid, response)
+        } else if (response == 'parcialmente_de_acuerdo') {
+
+        } else if (response == 'no_de_acuerdo') {
+
+        } else {
+
+        }
+    }
 
     self.ngShowAnswer = true;
     self.ngShowReading = false;
@@ -100,6 +114,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.LoadEvaluationPersonal(ses_id, user_id)
             })
         }
+    }
+
+    self.setFinalResponseByUser = (ses_id, response_value) => {
+        $http({url: 'final_response_by_user', method: 'post', data: {ses_id: ses_id, team_id: self.currentTeam[0].id, response_value: response_value}}).success((response) => {
+            self.user_is_done = true;
+        })
     }
 
     self.LoadEvaluationPersonal = (ses_id, user_id) => {
@@ -158,6 +178,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
         $socket.on("updateUserIteration", (data) => {
             console.log("SOCKET.IO", data);
+            debugger;
             self.getUserStatus(data);
         });
     };
@@ -378,15 +399,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/select-times-between-iterations', method: 'post', data: sesid}).success((response) => {
 
             })
-            $http({url: '/update_team_id_for_first_iteration_group', method: 'post', data: sesid.ses}).then((response) => {
-                return sesid.ses
-            }).then((response) => {
-                $http({url: '/insert_values_to_second_iteration', method: 'post', data: response}).then((response) => {
 
-                })
-                $http({url: '/insert_comments_to_second_iteration', method: 'post', data: response}).then((response) => {
+            debugger;
+            $http({url: '/insert_values_to_second_iteration', method: 'post', data: sesid}).then((response) => {
 
-                })
+            })
+
+            debugger;
+            $http({url: '/select-second-iteration-comment', method: 'post', data: sesid}).success((response) => {
+
             })
         });
     }
@@ -414,7 +435,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 })
             })
         } else if (result == "Respuesta final") {
+            debugger;
             $http({url: '/update_session_on_team_task_final_response', method: 'post', data: sesid}).then((response) => {
+                debugger;
                 $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
                     self.waiting_partners = response.waiting_partners
                     self.times_waiting = response.times_waiting
@@ -448,6 +471,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.getUserStatus = (sesid) => {
+        $http({url: '/all_semantic_by_leader_second_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
+            self.leaderTasksSecondIteration = response.data
+        })
         $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam[0].id || 0}).then((response) => {
             self.userIterationStatus = response.data
             let count = 0
@@ -485,7 +511,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     count += 1
                 }
             })
-            if(count == response.data.length){
+            if(count == response.data.length && count != 0){
                 self.finishTheSecondTime = true
                 $http({url: '/second_iteration_comments_by_group', method: 'post', data: sesid.ses}).then((response) => {
                     self.secondIterationCommentForLeader = response.data
@@ -539,10 +565,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             });
         }
     };
-
-    self.finishGroupTask = () => {
-
-    }
 
     self.areAllIdeasSync = () => {
         for(let i = 0; i < self.selections.length; i++){

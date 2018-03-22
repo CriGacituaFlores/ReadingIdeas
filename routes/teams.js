@@ -116,6 +116,13 @@ router.post("/update_personal_evaluations", (req, res) => {
     res.end('{"creado": "Diferencial semántico modificado"}')
 })
 
+router.post("/final_response_by_user", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `insert into final_response_user(user_id, team_id, session_id, option_value) values(${req.session.uid}, ${req.body.team_id}, ${req.body.ses_id}, ${req.body.response_value})`
+    })(req,res);
+})
+
 router.post("/all_personal_evaluations", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,

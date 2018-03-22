@@ -38,7 +38,6 @@
 <div class="editor-container container bg-white box-shadow-css" ng-controller="EditorController">
     <div class="row top-bar-mini">
         <div class="text-center margin-t-p">
-            {{iteration}} - {{!followLeader}} - {{!finishTheFirstTime}} - {{ waiting_partners }}
             <a onclick="window.history.back()" class="btn btn-sm btn-default pull-left bg-principal">Atrás</a>
             <span ng-repeat="st in sesStatusses">
                 <span class="statuses-content label label-primary" ng-class="{'label-warning': $index==iteration}" ng-bind="st"></span>
@@ -46,8 +45,7 @@
             </span>
             <button ng-hide="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
-            {{waiting_partners}}
-            <button ng-show="iteration==3 && !followLeader" ng-disabled="waiting_partners" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && !followLeader && !finishTheSecondTime && !waiting_partners" ng-disabled="finishTheFirstTime" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar a compañero
             </button>
             <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting != 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendFirstCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
@@ -56,9 +54,9 @@
             <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting == 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendSecondCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
-            <select ng-show="!followLeader && !finishTheSecondTime" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <select ng-show="!followLeader && !finishTheSecondTime && finishTheFirstTime && !final_response" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
             <select ng-show="!followLeader && finishTheSecondTime" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
-            <button ng-show="final_response && followLeader" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask()" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="final_response && followLeader" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
         </div>
     </div>
@@ -99,7 +97,7 @@
                 </strong>
             </div>
         </div>
-        <div ng-show="waiting_partners && followLeader && times_waiting != 2">
+        <div ng-show="waiting_partners && followLeader && times_waiting != 2 && !final_response">
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuestaaa</label>
             </div>
@@ -466,7 +464,6 @@
                 </div>
             </div>
         </div>
-        {{finishTheFirstTime}}
         <div class="col-md-12" ng-show="waiting_partners && !followLeader && !finishTheFirstTime">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
@@ -483,19 +480,24 @@
             <div class="col-md-12 text-center">
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
-            {{messagess}}
         </div>
-        <div class="col-md-12" ng-show="finishTheFirstTime && !followLeader && times_waiting != 2">
+        <div class="col-md-12" ng-show="final_response && !followLeader">
             <div class="col-md-12">
-                <div ng-repeat="usr in userIterationStatus">
-                    nombre: {{usr.user_name}}
-                    <br>
-                    primera parte: {{usr.first_time ? 'si' : 'aun no'}}
-                    <br>
-                    segunda parte: {{usr.second_time ? 'si' : 'aun no'}}
-                    <hr>
-                </div>
+                <label class="letter-color-title">Esperando Respuesta final de tus compañeros </label>
             </div>
+            <div class="col-md-12">
+                <strong>
+                    <i class="fa fa-clock-o fa-5" aria-hidden="true"></i>
+                    <span>
+                        Tus compañeros de grupo estan en la respuesta final.
+                    </span>
+                </strong>
+            </div>
+            <div class="col-md-12 text-center">
+                    <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
+            </div>
+        </div>
+        <div class="col-md-12" ng-show="finishTheFirstTime && !followLeader && times_waiting != 2 && !final_response">
             <div class="col-md-12">
                 <label class="letter-color-title">Ronda {{times_waiting}}: Comentario de tus compañeros</label>
             </div>
@@ -716,25 +718,25 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div ng-show="!final_response && followLeader && waiting_partners" class="col-md-12">
+        <div ng-show="final_response && followLeader && waiting_partners" class="col-md-12">
             <div class="col-md-12">
                 <label class="letter-color-title">Qué tan de acuerdo estas con la respuesta grupal?</label>
             </div>
             <div class="col-md-12">
-                <label>
-                    <input type="radio" ng-model="lastQuestion" value="red">
-                    De acuerdo
-                </label>
-                <br/>
-                <label>
-                    <input type="radio" ng-model="lastQuestion" ng-value="specialValue">
-                    Parcialmente de acuerdo
-                </label>
-                <br/>
-                <label>
-                    <input type="radio" ng-model="lastQuestion" value="blue">
-                    Nada de acuerdo
-                </label>
+                <form name="myForm">
+                    <label>
+                        <input type="radio" ng-model="final_response_value" value="de_acuerdo">
+                        De acuerdo
+                    </label><br/>
+                    <label>
+                        <input type="radio" ng-model="final_response_value" value="parcialmente_de_acuerdo">
+                        Parcialmente de acuerdo
+                    </label><br/>
+                    <label>
+                        <input type="radio" ng-model="final_response_value" value="no_de_acuerdo">
+                        No de acuerdo
+                    </label><br/>
+                </form>
                 <br/>
             </div>
             <div class="col-md-12">

@@ -548,18 +548,10 @@ router.post("/update_team_id_for_second_iteration_group", (req, res) => {
 router.post("/insert_values_to_second_iteration", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into second_iteration_group (min_name, max_name, order_sort, sesid, value, description, user_id, team_id, semantic_differential_id)
-                select first_iteration_group.min_name, first_iteration_group.max_name, first_iteration_group.order_sort, first_iteration_group.sesid, first_iteration_group.value, first_iteration_group.description, first_iteration_group.user_id, first_iteration_group.team_id, first_iteration_group.semantic_differential_id
-                from first_iteration_group
-                inner join users on
-                users.id = first_iteration_group.user_id
-                inner join teamusers on
-                teamusers.uid = users.id
-                inner join teams on
-                teams.id = teamusers.tmid
-                where teams.leader = ${req.session.uid}
-                and teams.sesid = ${req.body}
-                group by teamusers.uid, first_iteration_group.id, teams.id`
+        sql: `insert into second_iteration_group (min_name, max_name, description, order_sort, sesid, value, user_id, semantic_differential_id)
+                select min_name, max_name, description, order_sort, first_iteration_group.sesid, value, first_iteration_group.user_id, semantic_differential_id from first_iteration_group
+                where user_id in (select leader from teams where sesid = ${req.body})
+                and sesid = ${req.body}`
     })(req,res);
 })
 
