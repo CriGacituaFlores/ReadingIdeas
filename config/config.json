@@ -2,7 +2,7 @@
   "development": {
     "username": "master",
     "password": null,
-    "database": "readingideas",
+    "database": "readingdump",
     "host": "127.0.0.1",
     "dialect": "postgres"
   },
