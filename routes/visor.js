@@ -406,26 +406,23 @@ router.post("/select-session-users", (req, res) => {
 })
 
 router.post("/select-first-iteration-group", (req, res) => {
-    console.log('PASO POR ACAAA')
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into first_iteration_group (min_name, max_name, description, order_sort, sesid, value, user_id, semantic_differential_id)
-                select min_name, max_name, description, order_sort, semantic_differential_user.sesid, value, semantic_differential_user.user_id, semantic_differential_id from semantic_differential_user
+                select min_name, max_name, description, order_sort, anonymous_semantic_differential_user.sesid, value, anonymous_semantic_differential_user.user_id, semantic_differential_id from anonymous_semantic_differential_user
                 where user_id in (select leader from teams where sesid = ${req.body})
                 and sesid = ${req.body}`
     })(req,res);
 })
 
 router.post("/select-first-iteration-personal-evaluation", (req, res) => {
-    console.log('YYY PASO POR ACAAA')
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into first_iteration_personal_evaluation (id, min_name, max_name, description, order_sort, sesid, value, user_id, created_at, updated_at, team_id)
                 select user_personal_evaluation.id, user_personal_evaluation.min_name, user_personal_evaluation.max_name, user_personal_evaluation.description,
                 user_personal_evaluation.order_sort, user_personal_evaluation.sesid, user_personal_evaluation.value, user_personal_evaluation.user_id,
                 user_personal_evaluation.created_at, user_personal_evaluation.updated_at, user_personal_evaluation.team_id from user_personal_evaluation
-                    where user_id in (select leader from teams where sesid = ${req.body})
-                    and sesid = ${req.body}`
+                    where sesid = ${req.body}`
     })(req,res);
 })
 
@@ -653,6 +650,24 @@ router.post("/select-anonymous-semantic-by-group", (req, res) => {
     })(req,res);
 })
 
+router.post("/select-prom-by-group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select min_name, max_name, avg(value)::INTEGER from anonymous_semantic_differential_user
+                inner join sessions on
+                sessions.id = anonymous_semantic_differential_user.sesid
+                inner join teams on
+                teams.sesid = sessions.id
+                where anonymous_semantic_differential_user.sesid = ${req.body.id}
+                and teams.id = (select teams.id from teamusers
+                                    inner join teams on
+                                    teamusers.tmid = teams.id
+                                    where teamusers.uid = ${req.session.uid}
+                                    and teams.sesid = ${req.body.id})
+                group by anonymous_semantic_differential_user.semantic_differential_id, anonymous_semantic_differential_user.min_name, anonymous_semantic_differential_user.max_name`
+    })(req,res);
+})
+
 router.post("/course_first_iteration", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
@@ -848,7 +863,15 @@ router.post("/select_all_by_third_iteration", (req, res) => {
 router.post("/select-all-users-group", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `select * from users inner join sesusers on users.id = sesusers.uid where sesusers.sesid = ${req.body} and users.id != ${req.session.uid} and users.role != 'P'`
+        sql: `select users.* from teams
+                inner join teamusers on
+                teamusers.tmid = teams.id
+                inner join users on
+                teamusers.uid = users.id
+                where leader = ${req.body.leader}
+                and sesid = ${req.body.ses}
+                and users.role != 'P'
+                and users.id != ${req.session.uid}`
     })(req,res);
 })
 

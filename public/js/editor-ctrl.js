@@ -10,7 +10,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     let self = $scope;
 
     self.iteration = 0;
+    self.user_information = {};
     self.myUid = -1;
+    self.quantityUsersInGroup = 0;
+    self.finalResponseFinished = 0;
     self.documents = [];
     self.selections = [];
     self.selectedDocument = 0;
@@ -34,6 +37,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.personalEvaluationByUser = null;
     self.personalEvaluationBySession = [];
     self.avgByGroup = [];
+    self.promGroup = [];
     self.waiting_partners = false;
     self.times_waiting = 0;
     self.final_response = false;
@@ -75,12 +79,11 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.finishGroupTask = (response, sesid) => {
         if(response == 'de_acuerdo') {
-            debugger;
             self.setFinalResponseByUser(sesid, response)
         } else if (response == 'parcialmente_de_acuerdo') {
-
+            self.setFinalResponseByUser(sesid, response)
         } else if (response == 'no_de_acuerdo') {
-
+            self.setFinalResponseByUser(sesid, response)
         } else {
 
         }
@@ -117,6 +120,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.setFinalResponseByUser = (ses_id, response_value) => {
+        debugger;
         $http({url: 'final_response_by_user', method: 'post', data: {ses_id: ses_id, team_id: self.currentTeam[0].id, response_value: response_value}}).success((response) => {
             self.user_is_done = true;
         })
@@ -182,11 +186,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.getUserStatus(data);
         });
     };
-
     
-
-    self.select_session_users = (ses) => {
-        $http({url: 'select-all-users-group', method: 'post', data: ses}).success((data) => {
+    self.select_session_users = (ses, leader) => {
+        $http({url: 'select-all-users-group', method: 'post', data: {ses: ses, leader: leader}}).success((data) => {
             self.iterationUsers = data.map((u,v) => ({id: u.id, name: u.name, position: v+1}))
         })
     }
@@ -206,7 +208,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.myUid = data.uid;
             self.sesName = data.name;
             self.sesId = data.id;
-            self.select_session_users(self.sesId)
             self.sesDescr = data.descr;
             self.sesSTime = (data.stime != null) ? new Date(data.stime) : null;
             self.final_response = data.final_response
@@ -228,6 +229,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             if(self.iteration >= 5){
                 self.finished = true;
             }
+            $http({url: '/get_user_information', method: 'GET'}).then((response) => {
+                self.user_information = response.data
+            })
             $http({url: "get-finished", method: "post", data: {status: self.iteration + 2}}).success((data) => {
                 if (data.finished) {
                     self.finished = true;
@@ -246,6 +250,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/get_current_leader', method: 'post', data: {session_id: self.sesId}}).then((response) => {
                 self.current_leader = response.data[0].leader
             }).then(() => {
+                self.select_session_users(self.sesId, self.current_leader)
                 $http({url: '/all_semantic_by_leader_first_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
                     self.leaderTasks = response.data
                 })
@@ -261,10 +266,15 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             })
             $http({url: '/personal_evaluations_by_ses', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationBySession = response.data;
-            })
+            });
+            $http({url: '/get_final_response_user', method: 'post', data: {id: self.sesId}}).then((response) => {
+                if (response.data.length > 0) {
+                    self.user_is_done = true;
+                }
+            });
             $http({url: '/personal_evaluations_first_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationFirstIteration = response.data
-            })
+            });
             $http({url: '/personal_evaluations_second_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationSecondIteration = response.data
             })
@@ -274,8 +284,17 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/personal_evaluations_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationByGroup = response.data
             })
+            $http({url: '/get_quantity_by_group', method: 'post', data: self.sesId}).then((response) => {
+                self.quantityUsersInGroup = parseInt(response.data.cantidad);
+            })
+            $http({url: '/get_quantity_finished_by_group', method: 'post', data: self.sesId}).then((response) => {
+                self.finalResponseFinished = parseInt(response.data.cantidad) || 0;
+            })
             $http({url: 'select-anonymous-semantic-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
-                self.avgByGroup = response.data
+                self.avgByGroup = response.data.length
+            })
+            $http({url: 'select-prom-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.promGroup = response.data
             })
             $http({url: '/select-first-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.firstIterationComment = response.data[0]
@@ -423,16 +442,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 $http({url: '/select-second-iteration-comment', method: 'post', data: sesid}).success((response) => {
 
                 })
-                $http({url: '/select-times-between-second-iterations', method: 'post', data: sesid}).success((response) => {
-            
+
+                debugger;
+                $http({url: '/insert_values_to_third_iteration', method: 'post', data: sesid}).then((response) => {
+
                 })
-                $http({url: '/update_team_id_for_second_iteration_group', method: 'post', data: sesid.ses}).then((response) => {
-                    return sesid.ses
-                }).then((response) => {
-                    $http({url: '/insert_values_to_third_iteration', method: 'post', data: response}).then((response) => {
-    
-                    })
-                })
+
             })
         } else if (result == "Respuesta final") {
             debugger;
@@ -503,7 +518,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             }
         })
         
-        $http({url: '/get_user_status_by_group', method: 'post', data: sesid.ses}).then((response) => {
+        $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam[0].id || 0}).then((response) => {
             self.userIterationStatus = response.data
             let count = 0
             response.data.map(function(usr){

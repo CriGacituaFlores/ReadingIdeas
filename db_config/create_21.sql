@@ -145,7 +145,7 @@ create table if not exists final_response_user (
   user_id integer,
   team_id integer,
   session_id integer,
-  option_value integer,
+  option_value text,
   created_at timestamp with time zone,
   updated_at timestamp with time zone,
   primary key(id),

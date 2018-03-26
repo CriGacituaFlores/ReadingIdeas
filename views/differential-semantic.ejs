@@ -36,6 +36,9 @@
 <body class="bck-reading-ideas">
 
 <div class="editor-container container bg-white box-shadow-css" ng-controller="EditorController">
+    <div class="row background-header-student">
+        <span class="pull-right">{{user_information.mail}}</span>
+    </div>
     <div class="row top-bar-mini">
         <div class="text-center margin-t-p">
             <a onclick="window.history.back()" class="btn btn-sm btn-default pull-left bg-principal">Atrás</a>
@@ -55,16 +58,18 @@
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
             <select ng-show="!followLeader && !finishTheSecondTime && finishTheFirstTime && !final_response" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
-            <select ng-show="!followLeader && finishTheSecondTime" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
-            <button ng-show="final_response && followLeader" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <select ng-show="!followLeader && finishTheSecondTime && !final_response" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <button ng-show="final_response && followLeader && !user_is_done" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
+            <button ng-show="true" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
+                    <i class="fa fa-check"></i> Finalizar</button>
         </div>
     </div>
 
     <div class="margin-t-p">
         <div class="top-bar">
             <div class="col-sm-6 col-md-6">
-                <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info fa-information-button"></i></button>
+                <!-- <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info fa-information-button"></i></button> -->
                 <strong ng-show="iteration==0" class="letter-color-title simple-margin-left">Fase Lectura</strong>
                 <strong ng-show="iteration==1" class="letter-color-title simple-margin-left">Fase Individual</strong>
                 <strong class="letter-color-title simple-margin-left">Factor detonante: </strong>
@@ -340,7 +345,7 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <label class="letter-color-title">Respuestas Personales</label>
+                <label class="letter-color-title">Respuestas Personales000</label>
             </div>
             <div ng-repeat="item in personalEvaluationFirstIteration" 
                 dnd-list-id="{{item.id}}" 
@@ -381,11 +386,48 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-12">
-                <hr>
+            <div class="col-md-12" style="margin-top: 30px;">
+                <hr class="style-seven">
             </div>
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta promedio grupal</label>
+            </div>
+            <div ng-repeat="item in promGroup" 
+                dnd-list-id="{{item.id}}" 
+                dnd-draggable="item" 
+                dnd-moved="Sorting($index)"
+                dnd-disable-if="selectedSes.status!=1"
+                dnd-effect-allowed="move"
+                dnd-selected="models.selected = item"
+                ng-class="{'selected': models.selected === item}">
+                <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
+                  <div class="row">
+                      <div class="col-md-6 col-xs-6">
+                        <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                      </div>
+                      <div class="col-md-6 col-xs-6">
+                      </div>
+                  </div>
+                  <div class="row margin-t-a-b">
+                    <div class="col-md-6 col-xs-6">
+                      <div class="col-md-12 col-xs-12">
+                        Valoración:
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferential($index)">{{ item.min_name || 'empty' }}</button>
+                      </div>
+                      <div class="col-md-8 col-xs-8">
+                          <rzslider rz-slider-model="item.avg" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, disabled: selectedSes.status!=1 ? true : false}"></rzslider>
+                      </div>
+                      <div class="col-md-2 col-xs-2">
+                        <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label class="letter-color-title">Respuestas de compañeros</label>
             </div>
             <div ng-repeat="item in avgByGroup" 
                 dnd-list-id="{{item.id}}" 
@@ -421,6 +463,7 @@
                   </div>
                 </div>
             </div>
+            <hr/>
             <div class="col-md-12">
                 <label class="letter-color-title">Respuestas Personales</label>
             </div>
@@ -443,13 +486,13 @@
                                 Valoración:
                             </div>
                             <div class="col-md-2 col-xs-2">
-                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
+                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" disabled="true" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
                             </div>
                             <div class="col-md-8 col-xs-8">
                                 <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
                             </div>
                             <div class="col-md-2 col-xs-2">
-                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
+                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" disabled="true" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">
@@ -457,7 +500,7 @@
                                 Comentario:
                             </div>
                             <div class="col-md-12 col-xs-12">
-                                <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
+                                <textarea rows="5" class="text-area-input" disabled="true" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
                             </div>
                         </div>
                     </div>
@@ -472,8 +515,7 @@
                 <strong>
                     <i class="fa fa-clock-o fa-5" aria-hidden="true"></i>
                     <span>
-                        Tus compañeros de grupo están agregando sus comentarios sobre la respuesta grupal. Una vez que todos envíen sus comentarios
-                       , podrás leerlos y cambiar la respuesta grupal si así lo estimas conveniente.
+                        Tus compañeros de grupo están agregando sus comentarios sobre la respuesta grupal. Una vez que todos envíen sus comentarios, podrás leerlos y cambiar la respuesta grupal si así lo estimas conveniente.
                     </span>
                 </strong>
             </div>
@@ -703,14 +745,13 @@
         </div>
         <div class="col-md-12" ng-show="times_waiting == 2 && !followLeader && !finishTheSecondTime">
             <div class="col-md-12">
-                <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
+                <label class="letter-color-title">Esperando comentarios de tus compañerosx </label>
             </div>
             <div class="col-md-12">
                 <strong>
                     <i class="fa fa-clock-o fa-5" aria-hidden="true"></i>
                     <span>
-                        Tus compañeros de grupo están agregando sus comentarios sobre la respuesta grupal. Una vez que todos envíen sus comentarios
-                        , podrás leerlos y cambiar la respuesta grupal si así lo estimas conveniente.
+                        Tus compañeros de grupo están agregando sus comentarios sobre la respuesta grupal. Una vez que todos envíen sus comentarios, podrás leerlos y cambiar la respuesta grupal si así lo estimas conveniente.
                     </span>
                 </strong>
             </div>
@@ -718,7 +759,23 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div ng-show="final_response && followLeader && waiting_partners" class="col-md-12">
+        <div class="col-md-12" ng-show="user_is_done">
+            <div class="col-md-12">
+                <label class="letter-color-title">Esperando a que el lider de por finalizada la actividad.</label>
+            </div>
+            <div class="col-md-12">
+                <strong>
+                    <i class="fa fa-clock-o fa-5" aria-hidden="true"></i>
+                    <span>
+                        Se debe esperar a que el lider de por finalizada la actividad.
+                    </span>
+                </strong>
+            </div>
+            <div class="col-md-12 text-center">
+                    <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
+            </div>
+        </div>
+        <div ng-show="final_response && followLeader && waiting_partners && !user_is_done" class="col-md-12">
             <div class="col-md-12">
                 <label class="letter-color-title">Qué tan de acuerdo estas con la respuesta grupal?</label>
             </div>
@@ -1013,8 +1070,8 @@
     
 
     <div class="container" ng-show="iteration==1">
-        <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('answers')" ng-class="{'label label-warning': ngShowAnswer}">Respuestas</button>
-        <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('reading')" ng-class="{'label label-warning': ngShowReading}">Lectura</button>
+        <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('answers')" ng-class="{'label-warning hover-button': ngShowAnswer}">Respuestas</button>
+        <button class="pull-right btn btn-default button-widthss" ng-click="ngShowhideFun('reading')" ng-class="{'label-warning hover-button': ngShowReading}">Lectura</button>
     </div>
 
     <div class="row" ng-show="iteration==0 || (iteration == 1 && ngShowReading)">
@@ -1129,13 +1186,13 @@
                     Valoración:
                     </div>
                     <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" disabled="true" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
                     </div>
                     <div class="col-md-8 col-xs-8">
                         <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem}"></rzslider>
                     </div>
                     <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" disabled="true" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
                     </div>
                 </div>
                 <div class="col-md-6 col-xs-6">
@@ -1148,10 +1205,6 @@
                 </div>
                 </div>
             </div>
-        </div>
-        <div class="margin-t-p">
-            <button ng-click="openNewSes()" class="btn btn-sm btn-default bg-principal"><i class="fa fa-info fa-information-button"></i></button>
-            Mi evaluación del texto
         </div>
         <button class="btn bg-principal" ng-click="createPersonalEvaluation(sesId ,myUid)" ng-disabled="evaluationPersonal.length >=1">Agregar evaluación personal</button>
         <div ng-repeat="item in evaluationPersonal" 
@@ -1219,13 +1272,13 @@
                     Valoración:
                     </div>
                     <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateAnonymousSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" disabled="true" href="" editable-text="item.min_name" onbeforesave="updateAnonymousSemanticDifferentialUser($index)">{{ item.min_name || 'empty' }}</button>
                     </div>
                     <div class="col-md-8 col-xs-8">
                         <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemAnonymous}"></rzslider>
                     </div>
                     <div class="col-md-2 col-xs-2">
-                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateAnonymousSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
+                        <button class="btn btn-default xeditable-input-change ellipsis-xeditable" disabled="true" href="" editable-text="item.max_name" onbeforesave="updateAnonymousSemanticDifferentialUser($index)">{{ item.max_name || 'empty' }}</button>
                     </div>
                 </div>
                 <div class="col-md-6 col-xs-6">

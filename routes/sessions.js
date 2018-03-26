@@ -133,6 +133,13 @@ router.post("/get_current_leader", (req, res) => {
     })(req,res);
 })
 
+router.get("/get_user_information", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from users where id = ${req.session.uid}`
+    })(req, res);
+});
+
 router.post("/all_semantic_by_leader_first_iteration", (req, res) => {
     console.log('CURRENT_LEADER: ' + req.body.leader_id)
     rpg.multiSQL({

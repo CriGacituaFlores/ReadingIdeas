@@ -7,6 +7,35 @@ html{
     height: 100%;
 }
 
+hr.style-seven {
+    overflow: visible; /* For IE */
+    height: 30px;
+    border-style: solid;
+    border-color: black;
+    border-width: 1px 0 0 0;
+    border-radius: 20px;
+    background: none;
+}
+hr.style-seven:before { /* Not really supposed to work, but does */
+    display: block;
+    content: "";
+    height: 30px;
+    margin-top: -31px;
+    border-style: solid;
+    border-color: black;
+    border-width: 0 0 1px 0;
+    border-radius: 20px;
+}
+
+.hover-button:hover {
+    background: #f0ad4e;
+}
+
+.background-header-student {
+    background-color: #424242;
+    color: white;
+}
+
 body{
     font-family: Helvetica, Verdana, sans-serif;
     padding: 0;

@@ -610,7 +610,7 @@ adpp.controller("TabsController", function ($scope, $http) {
                 {name: "anon", val: 2}, {name: "teamWork", val: 3}, {name: "discussion", val: 4}];
             self.tabOptions = ["configuration", "dashboard"];
             self.tabConfig = ["users", "groups", "rubrica"];
-            self.sesStatusses = ["configuration", "reading", "individual", "anon", "teamWork", "discussion", "finished"];
+            self.sesStatusses = ["Configuración", "Lectura", "Individual", "Anónima", "Grupal", "Discusión", "Finalizada"];
             self.shared.getRubrica();
             self.shared.getExampleReports();
             self.shared.getReports();

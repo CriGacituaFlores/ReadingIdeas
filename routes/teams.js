@@ -116,10 +116,42 @@ router.post("/update_personal_evaluations", (req, res) => {
     res.end('{"creado": "Diferencial semántico modificado"}')
 })
 
+router.post("/get_final_response_user", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from final_response_user where user_id = ${req.session.uid} and session_id = ${req.body.id}`
+    })(req, res);
+})
+
+router.post("/get_quantity_finished_by_group", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from final_response_user 
+                where session_id = ${req.body} 
+                and user_id in (select teamusers.uid from teams
+                inner join teamusers on
+                teamusers.tmid = teams.id
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body})
+                `
+    })(req, res);
+})
+
+router.post("/get_quantity_by_group", (req, res) => {
+    rpg.singleSQL({
+        dbcon: pass.dbcon,
+        sql: `select count(*)-1 as cantidad from teams
+                inner join teamusers on
+                teamusers.tmid = teams.id
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}`
+    })(req,res);
+})
+
 router.post("/final_response_by_user", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into final_response_user(user_id, team_id, session_id, option_value) values(${req.session.uid}, ${req.body.team_id}, ${req.body.ses_id}, ${req.body.response_value})`
+        sql: `insert into final_response_user(user_id, team_id, session_id, option_value) values(${req.session.uid}, ${req.body.team_id}, ${req.body.ses_id}, '${req.body.response_value}')`
     })(req,res);
 })
 
