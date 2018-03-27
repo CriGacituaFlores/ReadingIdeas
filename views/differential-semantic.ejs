@@ -61,8 +61,8 @@
             <select ng-show="!followLeader && finishTheSecondTime && !final_response" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
             <button ng-show="final_response && followLeader && !user_is_done" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
-            <button ng-show="true" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
-                    <i class="fa fa-check"></i> Finalizar</button>
+            <button ng-show="iteration==3 && quantityUsersInGroup > 0 && finalResponseFinished > 0 && (quantityUsersInGroup == finalResponseFinished)" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
+                    <i class="fa fa-check"></i> Continuar</button>
         </div>
     </div>
 
@@ -507,7 +507,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="waiting_partners && !followLeader && !finishTheFirstTime">
+        <div class="col-md-12" ng-show="waiting_partners && !followLeader && !finishTheFirstTime && !final_response">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
             </div>
@@ -523,7 +523,12 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div class="col-md-12" ng-show="final_response && !followLeader">
+        <div class="col-md-12" ng-show="final_response && !follorLeader && quantityUsersInGroup > 0 && finalResponseFinished > 0 && (quantityUsersInGroup == finalResponseFinished)">
+            <div class="col-md-12">
+                <label class="letter-color-title">Trabajo grupal finalizado (para informar como terminada presione en "Continuar") </label>
+            </div>
+        </div>
+        <div class="col-md-12" ng-show="final_response && !followLeader && !quantityUsersInGroup > 0 && !finalResponseFinished > 0 && !(quantityUsersInGroup == finalResponseFinished)">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando Respuesta final de tus compañeros </label>
             </div>

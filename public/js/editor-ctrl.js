@@ -120,9 +120,14 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.setFinalResponseByUser = (ses_id, response_value) => {
-        debugger;
         $http({url: 'final_response_by_user', method: 'post', data: {ses_id: ses_id, team_id: self.currentTeam[0].id, response_value: response_value}}).success((response) => {
             self.user_is_done = true;
+        })
+    }
+
+    self.finishGroupTaskResponse = () => {
+        $http({url: '/finish_group_task_response', method: 'post'}).then((response) => {
+            
         })
     }
 
@@ -281,14 +286,14 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/personal_evaluations_third_iteration_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.personalEvaluationThirdIteration = response.data
             })
-            $http({url: '/personal_evaluations_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
-                self.personalEvaluationByGroup = response.data
-            })
             $http({url: '/get_quantity_by_group', method: 'post', data: self.sesId}).then((response) => {
                 self.quantityUsersInGroup = parseInt(response.data.cantidad);
             })
             $http({url: '/get_quantity_finished_by_group', method: 'post', data: self.sesId}).then((response) => {
-                self.finalResponseFinished = parseInt(response.data.cantidad) || 0;
+                self.finalResponseFinished = parseInt(response.data.length) || 0;
+            })
+            $http({url: '/personal_evaluations_by_group', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.personalEvaluationByGroup = response.data
             })
             $http({url: 'select-anonymous-semantic-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.avgByGroup = response.data.length
@@ -443,16 +448,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
                 })
 
-                debugger;
                 $http({url: '/insert_values_to_third_iteration', method: 'post', data: sesid}).then((response) => {
 
                 })
 
             })
         } else if (result == "Respuesta final") {
-            debugger;
             $http({url: '/update_session_on_team_task_final_response', method: 'post', data: sesid}).then((response) => {
-                debugger;
                 $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
                     self.waiting_partners = response.waiting_partners
                     self.times_waiting = response.times_waiting
@@ -465,7 +467,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.sendFirstCommentary = (sesid) => {
-        debugger;
         $http({url: '/send_first_commentary', method: 'post', data: sesid}).then((response) => {
 
         })
@@ -516,6 +517,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                     }
                 })
             }
+        })
+
+        $http({url: '/get_quantity_by_group', method: 'post', data: self.sesId}).then((response) => {
+            self.quantityUsersInGroup = parseInt(response.data.cantidad);
+        })
+        $http({url: '/get_quantity_finished_by_group', method: 'post', data: self.sesId}).then((response) => {
+            self.finalResponseFinished = parseInt(response.data.length) || 0;
         })
         
         $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam[0].id || 0}).then((response) => {

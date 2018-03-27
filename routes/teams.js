@@ -151,7 +151,10 @@ router.post("/get_quantity_by_group", (req, res) => {
 router.post("/final_response_by_user", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
-        sql: `insert into final_response_user(user_id, team_id, session_id, option_value) values(${req.session.uid}, ${req.body.team_id}, ${req.body.ses_id}, '${req.body.response_value}')`
+        sql: `insert into final_response_user(user_id, team_id, session_id, option_value) values(${req.session.uid}, ${req.body.team_id}, ${req.body.ses_id}, '${req.body.response_value}')`,
+        onEnd: (req,res) => {
+            socket.updateUserIteration(req.body);
+        }
     })(req,res);
 })
 
