@@ -726,7 +726,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.writingReport = true;
         }
         else if(self.iteration == 5){
-            window.location.replace("rubrica");
+            //window.location.replace("rubrica");
         }
     };
 
