@@ -296,7 +296,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.personalEvaluationByGroup = response.data
             })
             $http({url: 'select-anonymous-semantic-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
-                self.avgByGroup = response.data.length
+                self.avgByGroup = response.data
             })
             $http({url: 'select-prom-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.promGroup = response.data

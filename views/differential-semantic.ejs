@@ -102,6 +102,7 @@
                 </strong>
             </div>
         </div>
+        {{waiting_partners}}
         <div ng-show="waiting_partners && followLeader && times_waiting != 2 && !final_response">
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuestaaa</label>
@@ -148,7 +149,7 @@
                 </div>
             </div>
             <div class="col-md-12">
-                <label class="letter-color-title">Respuestas personales</label>
+                <label class="letter-color-title">Respuestas personalesx</label>
             </div>
             <div class="container">
                 <div ng-repeat="item in personalEvaluationFirstIteration" 
@@ -459,6 +460,14 @@
                       <div class="col-md-2 col-xs-2">
                         <button ng-disabled="selectedSes.status!=1" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferential($index)">{{ item.max_name || 'empty' }}</button>
                       </div>
+                    </div>
+                    <div class="col-md-6 col-xs-6">
+                        <div class="col-md-12 col-xs-12">
+                            Comentario:
+                        </div>
+                        <div class="col-md-12 col-xs-12">
+                            <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
+                        </div>
                     </div>
                   </div>
                 </div>

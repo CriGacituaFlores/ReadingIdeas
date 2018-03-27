@@ -193,16 +193,18 @@ router.post("/personal_evaluations_first_iteration_by_group", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `select first_iteration_personal_evaluation.* from first_iteration_personal_evaluation
-        inner join sessions on
-        sessions.id = first_iteration_personal_evaluation.sesid
-        inner join teams on
-        teams.sesid = sessions.id
-        where first_iteration_personal_evaluation.sesid = ${req.body.id}
-        and teams.id = (select teams.id from teamusers
-                            inner join teams on
-                            teamusers.tmid = teams.id
-                            where teamusers.uid = ${req.session.uid}
-                            and teams.sesid = ${req.body.id})`
+                        inner join sessions on
+                        sessions.id = first_iteration_personal_evaluation.sesid
+                        inner join teams on
+                        teams.sesid = sessions.id
+                        where first_iteration_personal_evaluation.sesid = ${req.body.id}
+                        and first_iteration_personal_evaluation.user_id in (select uid from teamusers
+                where tmid = (select teams.id from teamusers
+                                            inner join teams on
+                                            teamusers.tmid = teams.id
+                                            where teamusers.uid = ${req.session.uid}
+                                            and teams.sesid = ${req.body.id}))
+                group by first_iteration_personal_evaluation.id`
     })(req,res);
 })
 
