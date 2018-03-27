@@ -249,11 +249,12 @@ router.post("/personal_evaluations_by_group", (req, res) => {
         inner join teams on
         teams.sesid = sessions.id
         where user_personal_evaluation.sesid = ${req.body.id}
-        and teams.id = (select teams.id from teamusers
+        and team_id = (select teams.id from teamusers
                             inner join teams on
                             teamusers.tmid = teams.id
                             where teamusers.uid = ${req.session.uid}
-                            and teams.sesid = ${req.body.id})`
+                            and teams.sesid = ${req.body.id})
+        group by user_personal_evaluation.id`
     })(req,res);
 })
 

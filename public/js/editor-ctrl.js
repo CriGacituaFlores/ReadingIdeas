@@ -253,7 +253,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.IsProcessing = false;
             })
             $http({url: '/get_current_leader', method: 'post', data: {session_id: self.sesId}}).then((response) => {
-                self.current_leader = response.data[0].leader
+                self.current_leader = response.data.length > 0 ? response.data[0].leader : false
             }).then(() => {
                 self.select_session_users(self.sesId, self.current_leader)
                 $http({url: '/all_semantic_by_leader_first_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
@@ -490,7 +490,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         $http({url: '/all_semantic_by_leader_second_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
             self.leaderTasksSecondIteration = response.data
         })
-        $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam[0].id || 0}).then((response) => {
+        $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam.length > 0 ? self.currentTeam[0].id : 0}).then((response) => {
             self.userIterationStatus = response.data
             let count = 0
             response.data.map(function(usr){
@@ -526,7 +526,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.finalResponseFinished = parseInt(response.data.length) || 0;
         })
         
-        $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam[0].id || 0}).then((response) => {
+        $http({url: '/get_user_status_by_group', method: 'post', data: self.currentTeam.length > 0 ? self.currentTeam[0].id : 0}).then((response) => {
             self.userIterationStatus = response.data
             let count = 0
             response.data.map(function(usr){
