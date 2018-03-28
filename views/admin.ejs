@@ -80,7 +80,7 @@
       <h3 class="letter-color-title">{{selectedSes.name}}</h3>
       <h4 class="letter-color-title">Estado actual</h4>
       <div class="center-block font-large">
-        <button class="btn btn-sm btn-default pull-right bg-principal" ng-click="shared.changeState()">Ir al siguiente</button>
+        <button ng-disabled="!selectedSes.grouped" class="btn btn-sm btn-default pull-right bg-principal" ng-click="shared.changeState()">Ir al siguiente</button>
         <span ng-repeat="st in sesStatusses">
           <span ng-if="selectedSes.type != 'M'" class="label label-default statuses-content" ng-class="{'label-warning': $index==selectedSes.status-1}" ng-bind="st"></span>
           <span ng-if="selectedSes.type == 'M'" class="label label-default statuses-content" ng-class="{'label-warning': st.i == selectedSes.status-2}" ng-bind="st.name"></span>

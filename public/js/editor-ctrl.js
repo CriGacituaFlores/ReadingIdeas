@@ -187,7 +187,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         });
         $socket.on("updateUserIteration", (data) => {
             console.log("SOCKET.IO", data);
-            debugger;
             self.getUserStatus(data);
         });
     };
@@ -424,12 +423,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
             })
 
-            debugger;
             $http({url: '/insert_values_to_second_iteration', method: 'post', data: sesid}).then((response) => {
 
             })
 
-            debugger;
             $http({url: '/select-second-iteration-comment', method: 'post', data: sesid}).success((response) => {
 
             })
