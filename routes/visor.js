@@ -472,7 +472,8 @@ router.post("/select-first-iteration-comment", (req, res) => {
                 teamusers.uid = users.id
                 inner join teams on
                 teams.id = teamusers.tmid
-                where teams.sesid = ${req.body}`
+                where teams.leader = ${req.session.uid}
+                and teams.sesid = ${req.body}`
     })(req,res);
 })
 
