@@ -426,10 +426,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/insert_values_to_second_iteration', method: 'post', data: sesid}).then((response) => {
 
             })
-
-            $http({url: '/select-second-iteration-comment', method: 'post', data: sesid}).success((response) => {
-
-            })
         });
     }
 

@@ -142,6 +142,7 @@ router.get("/get_user_information", (req, res) => {
 
 router.post("/all_semantic_by_leader_first_iteration", (req, res) => {
     console.log('CURRENT_LEADER: ' + req.body.leader_id)
+    console.log('SESID ISSSS: ' + req.body.id)
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `select * from first_iteration_group where sesid = ${req.body.id} and user_id = ${req.body.leader_id} limit 5`

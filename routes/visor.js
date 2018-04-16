@@ -318,7 +318,8 @@ router.post("/select_session_on_team_task", (req, res) => {
 });
 
 router.post("/send_first_commentary", (req, res) => {
-    console.log('THE BODY: ' + req.body)
+    console.log('THE BODY FIRST COMENTARY: ' + req.body)
+    console.log('THE BODY USER ID' + req.session.uid)
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `update session_iteration set first_time = true where user_id = ${req.session.uid} and session_id = ${req.body}`,
@@ -392,7 +393,7 @@ router.post("/select-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, user_id, semantic_differential_id)
-                select min_name, max_name, order_sort, semantic_differential.sesid, 0, users.id, semantic_differential.id
+                select 'indefinido', 'indefinido', order_sort, semantic_differential.sesid, 5, users.id, semantic_differential.id
                 from semantic_differential
                 inner join sessions on
                 sessions.id = semantic_differential.sesid
@@ -471,8 +472,7 @@ router.post("/select-first-iteration-comment", (req, res) => {
                 teamusers.uid = users.id
                 inner join teams on
                 teams.id = teamusers.tmid
-                where teams.leader = ${req.session.uid}
-                and teams.sesid = ${req.body}`
+                where teams.sesid = ${req.body}`
     })(req,res);
 })
 
@@ -729,6 +729,8 @@ router.post("/select-second-iteration-comment-array", (req, res) => {
 })
 
 router.post('/update_first_iteration_comment', (req, res) => {
+    console.log('PRIMER COMENTARIOO' + req.body.id)
+    console.log('PRIMER COMENTARIOO' + req.body.comment)
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `update first_iteration_comments set comment = '${req.body.comment}' where id = ${req.body.id}`
