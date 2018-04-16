@@ -65,6 +65,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.discussion_personal = [];
     self.personalIterationLast = [];
     self.user_is_done = false;
+    self.current_iteration_by_team = 0;
+    self.current_final_response_by_team = false;
+    self.current_waiting_partners_by_team = false;
 
     $scope.slider = {
         value: 50,
@@ -224,6 +227,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 });
                 self.renderAll();
             });
+            $http({url: '/status_team', method: 'post', data: self.sesId}).success((response) => {
+                if(response) {
+                    self.current_iteration_by_team = response[0].iteration
+                    self.current_final_response_by_team = response[0].final_response
+                    self.current_waiting_partners_by_team = response[0].waiting_partners
+                }
+            })
             $http({url: "data/instructions.json", method: "get"}).success((data) => {
                 self.instructions = data;
             });
@@ -426,6 +436,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/insert_values_to_second_iteration', method: 'post', data: sesid}).then((response) => {
 
             })
+
+            $http({url: '/first_iteration_on_team', method: 'post', data: sesid}).then((response) => {
+
+            })
         });
     }
 
@@ -443,6 +457,10 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
                 $http({url: '/insert_values_to_third_iteration', method: 'post', data: sesid}).then((response) => {
 
+                })
+
+                $http({url: '/second_iteration_on_team', method: 'post', data: sesid}).then((response) => {
+                
                 })
 
             })
@@ -476,6 +494,13 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             self.waiting_partners = response.waiting_partners
             self.times_waiting = response.times_waiting
             self.final_response = response.final_response
+        })
+        $http({url: '/status_team', method: 'post', data: sesid.ses}).success((response) => {
+            if(response) {
+                self.current_iteration_by_team = response[0].iteration;
+                self.current_final_response_by_team = response[0].final_response;
+                self.current_waiting_partners_by_team = response[0].waiting_partners;
+            }
         })
     }
 

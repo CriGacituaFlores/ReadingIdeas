@@ -91,7 +91,7 @@
     </div>
 
     <div class="row" ng-show="iteration==3">
-        <div class="container" ng-show="followLeader && !waiting_partners">
+        <div class="container" ng-show="followLeader && !waiting_partners && current_iteration_by_team == 0">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando la respuesta de tu compañero(a) de grupo</label>
             </div>
@@ -102,8 +102,8 @@
                 </strong>
             </div>
         </div>
-        {{waiting_partners}}
-        <div ng-show="waiting_partners && followLeader && times_waiting != 2 && !final_response">
+        {{current_iteration_by_team}} {{followLeader}} {{!waiting_partners}}
+        <div ng-show="waiting_partners && followLeader && times_waiting != 2 && !final_response && current_iteration_by_team == 1">
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuestaaa</label>
             </div>
@@ -302,7 +302,7 @@
                 <textarea rows="5" class="text-area-input" ng-model="secondIterationComment.comment" ng-change="updateSecondIterationComment(secondIterationComment.id, secondIterationComment.comment)">{{secondtIterationComment.comment}}</textarea>
             </div>
         </div>
-        <div class="container" ng-show="!followLeader && !waiting_partners">
+        <div class="container" ng-show="!followLeader && !waiting_partners && current_iteration_by_team == 0">
             <div class="col-md-12">
                 <label class="letter-color-title">Elige respuesta grupal</label>
             </div>
@@ -516,7 +516,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="waiting_partners && !followLeader && !finishTheFirstTime && !final_response">
+        <div class="col-md-12" ng-show="waiting_partners && !followLeader && !finishTheFirstTime && !final_response && current_iteration_by_team == 1">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
             </div>

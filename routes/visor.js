@@ -553,6 +553,31 @@ router.post("/insert_values_to_second_iteration", (req, res) => {
     })(req,res);
 })
 
+router.post("/first_iteration_on_team", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update teams set iteration = 1 where sesid = ${req.body} and leader = ${req.session.uid}`
+    })(req,res);
+})
+
+router.post("/second_iteration_on_team", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `update teams set iteration = 2 where sesid = ${req.body} and leader = ${req.session.uid}`
+    })(req,res);
+})
+
+router.post("/status_team", (req, res) => {
+    rpg.multiSQL({
+        dbcon: pass.dbcon,
+        sql: `select * from teams where id = (
+            select tmid from teamusers where tmid in (
+              select id as team_id from teams where sesid = ${req.body} and uid = ${req.session.uid}
+            )
+          )`
+    })(req,res);
+})
+
 router.post("/insert_values_to_third_iteration", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
