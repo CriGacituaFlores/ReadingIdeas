@@ -420,6 +420,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.sendToPartners = (sesid) => {
+        debugger;
         $http({url: '/update_session_on_team_task', method: 'post', data: sesid}).success((response) => {
             $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
                 self.waiting_partners = response.waiting_partners

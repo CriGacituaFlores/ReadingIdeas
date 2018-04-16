@@ -280,9 +280,11 @@ router.post("/change-state-session", rpg.execSQL({
 }));
 
 router.post("/update_session_on_team_task", (req, res) => {
+    console.log('WAITIIINNNG' + req.body)
+    console.log('WAITIIINNNG' + req.session.uid)
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: `update sessions set waiting_partners = true, times_waiting = times_waiting+1 where sessions.id = ${req.body}`,
+        sql: `update teams set waiting_partners = true where sesid = ${req.body} and leader = ${req.session.uid}`,
         onEnd: (req,res) => {
             socket.updateWaiting(req.body);
         }
@@ -292,7 +294,7 @@ router.post("/update_session_on_team_task", (req, res) => {
 router.post("/update_session_on_team_task_second_time", (req, res) => {
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: `update sessions set waiting_partners = true, times_waiting = times_waiting+1 where sessions.id = ${req.body}`,
+        sql: `update teams set waiting_partners = true where sesid = ${req.body} and leader = ${req.session.uid}`,
         onEnd: (req,res) => {
             socket.updateWaiting(req.body);
         }
@@ -302,7 +304,7 @@ router.post("/update_session_on_team_task_second_time", (req, res) => {
 router.post("/update_session_on_team_task_final_response", (req, res) => {
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: `update sessions set final_response = true where sessions.id = ${req.body}`,
+        sql: `update teams set final_response = true where sesid = ${req.body} and leader = ${req.session.uid}`,
         onEnd: (req,res) => {
             socket.updateWaiting(req.body);
         }

@@ -48,18 +48,18 @@
             </span>
             <button ng-hide="iteration==3" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
-            <button ng-show="iteration==3 && !followLeader && !finishTheSecondTime && !waiting_partners" ng-disabled="finishTheFirstTime" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && !followLeader && !finishTheSecondTime && !current_waiting_partners_by_team" ng-disabled="finishTheFirstTime" class="btn btn-sm btn-default pull-right" ng-click="sendToPartners(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar a compañero
             </button>
-            <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting != 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendFirstCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && followLeader && current_waiting_partners_by_team && current_iteration_by_team != 2 && !current_final_response_by_team" class="btn btn-sm btn-default pull-right" ng-click="sendFirstCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
-            <button ng-show="iteration==3 && followLeader && waiting_partners && times_waiting == 2 && !final_response" class="btn btn-sm btn-default pull-right" ng-click="sendSecondCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <button ng-show="iteration==3 && followLeader && current_waiting_partners_by_team && current_iteration_by_team == 2 && !current_final_response_by_team" class="btn btn-sm btn-default pull-right" ng-click="sendSecondCommentary(sesId)" ng-class="{'btn-success': hasFinished || finished}">
                 <i class="fa fa-check"></i> Enviar comentario
             </button>
-            <select ng-show="!followLeader && !finishTheSecondTime && finishTheFirstTime && !final_response" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
-            <select ng-show="!followLeader && finishTheSecondTime && !final_response" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
-            <button ng-show="final_response && followLeader && !user_is_done" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
+            <select ng-show="!followLeader && !finishTheSecondTime && finishTheFirstTime && !current_final_response_by_team" ng-options="x for x in option_first_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <select ng-show="!followLeader && finishTheSecondTime && !current_final_response_by_team" ng-options="x for x in option_second_time" ng-model="item" ng-change="updateThisThing(item,sesId)"></select>
+            <button ng-show="current_final_response_by_team && followLeader && !user_is_done" class="btn btn-sm btn-default pull-right" ng-click="finishGroupTask(final_response_value, sesId)" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
             <button ng-show="iteration==3 && quantityUsersInGroup > 0 && finalResponseFinished > 0 && (quantityUsersInGroup == finalResponseFinished)" class="btn btn-sm btn-default pull-right" ng-click="finishState()" ng-class="{'btn-success': hasFinished || finished}">
                     <i class="fa fa-check"></i> Continuar</button>
@@ -91,7 +91,7 @@
     </div>
 
     <div class="row" ng-show="iteration==3">
-        <div class="container" ng-show="followLeader && !waiting_partners && current_iteration_by_team == 0">
+        <div class="container" ng-show="followLeader && !current_waiting_partners_by_team && current_iteration_by_team == 0">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando la respuesta de tu compañero(a) de grupo</label>
             </div>
@@ -102,8 +102,8 @@
                 </strong>
             </div>
         </div>
-        {{current_iteration_by_team}} {{followLeader}} {{!waiting_partners}}
-        <div ng-show="waiting_partners && followLeader && times_waiting != 2 && !final_response && current_iteration_by_team == 1">
+        {{current_iteration_by_team}} {{followLeader}} {{!current_waiting_partners_by_team}}
+        <div ng-show="current_waiting_partners_by_team && followLeader && current_iteration_by_team != 2 && !current_final_response_by_team && current_iteration_by_team == 1">
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuestaaa</label>
             </div>
@@ -127,13 +127,13 @@
                                     Valoración:
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button ng-disabled="waiting_partners" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
+                                    <button ng-disabled="current_waiting_partners_by_team" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
                                 </div>
                                 <div class="col-md-8 col-xs-8">
                                     <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem, disabled: true}"></rzslider>
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button ng-disabled="waiting_partners" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
+                                    <button ng-disabled="current_waiting_partners_by_team" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -141,7 +141,7 @@
                                     Comentario:
                                 </div>
                                 <div class="col-md-12 col-xs-12">
-                                    <textarea ng-disabled="waiting_partners" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class">{{item.description}}</textarea>
+                                    <textarea ng-disabled="current_waiting_partners_by_team" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class">{{item.description}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -196,14 +196,14 @@
                 <hr>
             </div>
             <div class="col-md-12">
-                <label class="letter-color-title">Ronda {{times_waiting}}: Tu comentario</label>
+                <label class="letter-color-title">Ronda {{current_iteration_by_team}}: Tu comentario</label>
             </div>
             <div class="col-md-12">
                 {{firstIterationComment.comment}} aaa
                 <textarea rows="5" class="text-area-input" ng-model="firstIterationComment.comment" ng-change="updateFirstIterationComment(firstIterationComment.id, firstIterationComment.comment)">{{firstIterationComment.comment}}</textarea>
             </div>
         </div>
-        <div class="col-md-12" ng-show="waiting_partners && followLeader && times_waiting == 2 && !final_response">
+        <div class="col-md-12" ng-show="current_waiting_partners_by_team && followLeader && current_iteration_by_team == 2 && !current_final_response_by_team">
             <div class="col-md-12">
                 <label class="letter-color-title">Respuesta grupal propuestaaaxzxx</label>
             </div>
@@ -227,13 +227,13 @@
                                     Valoración:
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button ng-disabled="waiting_partners" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
+                                    <button ng-disabled="current_waiting_partners_by_team" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name">{{ item.min_name || 'empty' }}</button>
                                 </div>
                                 <div class="col-md-8 col-xs-8">
                                     <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItem, disabled: true}"></rzslider>
                                 </div>
                                 <div class="col-md-2 col-xs-2">
-                                    <button ng-disabled="waiting_partners" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
+                                    <button ng-disabled="current_waiting_partners_by_team" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name">{{ item.max_name || 'empty' }}</button>
                                 </div>
                             </div>
                             <div class="col-md-6 col-xs-6">
@@ -241,7 +241,7 @@
                                     Comentario:
                                 </div>
                                 <div class="col-md-12 col-xs-12">
-                                    <textarea ng-disabled="waiting_partners" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class">{{item.description}}</textarea>
+                                    <textarea ng-disabled="current_waiting_partners_by_team" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class">{{item.description}}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -296,13 +296,13 @@
                 <hr>
             </div>
             <div class="col-md-12">
-                <label class="letter-color-title">Ronda {{times_waiting}}: Tu comentariox</label>
+                <label class="letter-color-title">Ronda {{current_iteration_by_team}}: Tu comentariox</label>
             </div>
             <div class="col-md-12">
                 <textarea rows="5" class="text-area-input" ng-model="secondIterationComment.comment" ng-change="updateSecondIterationComment(secondIterationComment.id, secondIterationComment.comment)">{{secondtIterationComment.comment}}</textarea>
             </div>
         </div>
-        <div class="container" ng-show="!followLeader && !waiting_partners && current_iteration_by_team == 0">
+        <div class="container" ng-show="!followLeader && !current_waiting_partners_by_team && current_iteration_by_team == 0">
             <div class="col-md-12">
                 <label class="letter-color-title">Elige respuesta grupal</label>
             </div>
@@ -516,7 +516,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="waiting_partners && !followLeader && !finishTheFirstTime && !final_response && current_iteration_by_team == 1">
+        ee {{current_waiting_partners_by_team}}
+        <div class="col-md-12" ng-show="current_waiting_partners_by_team && !followLeader && !finishTheFirstTime && !current_final_response_by_team && current_iteration_by_team == 1">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
             </div>
@@ -532,12 +533,13 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div class="col-md-12" ng-show="final_response && !follorLeader && quantityUsersInGroup > 0 && finalResponseFinished > 0 && (quantityUsersInGroup == finalResponseFinished)">
+        qqqq {{current_final_response_by_team}} {{!followLeader}} {{quantityUsersInGroup}} {{finalResponseFinished}}
+        <div class="col-md-12" ng-show="current_final_response_by_team && !followLeader && quantityUsersInGroup > 0 && finalResponseFinished > 0 && (quantityUsersInGroup == finalResponseFinished)">
             <div class="col-md-12">
                 <label class="letter-color-title">Trabajo grupal finalizado (para informar como terminada presione en "Continuar") </label>
             </div>
         </div>
-        <div class="col-md-12" ng-show="final_response && !followLeader && !quantityUsersInGroup > 0 && !finalResponseFinished > 0 && !(quantityUsersInGroup == finalResponseFinished)">
+        <div class="col-md-12" ng-show="current_final_response_by_team && !followLeader && !quantityUsersInGroup > 0 && !finalResponseFinished > 0 && !(quantityUsersInGroup == finalResponseFinished)">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando Respuesta final de tus compañeros </label>
             </div>
@@ -553,9 +555,9 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div class="col-md-12" ng-show="finishTheFirstTime && !followLeader && times_waiting != 2 && !final_response">
+        <div class="col-md-12" ng-show="finishTheFirstTime && !followLeader && current_iteration_by_team != 2 && !current_final_response_by_team">
             <div class="col-md-12">
-                <label class="letter-color-title">Ronda {{times_waiting}}: Comentario de tus compañeros</label>
+                <label class="letter-color-title">Ronda {{current_iteration_by_team}}: Comentario de tus compañeros</label>
             </div>
             <div class="col-md-12">
                 <div ng-repeat="comment in firstIterationCommentForLeader">
@@ -655,9 +657,9 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="finishTheSecondTime && !followLeader && times_waiting == 2 && !final_response">
+        <div class="col-md-12" ng-show="finishTheSecondTime && !followLeader && current_iteration_by_team == 2 && !current_final_response_by_team">
             <div class="col-md-12">
-                <label class="letter-color-title">Ronda {{times_waiting}}: Comentario de tus compañerosxx</label>
+                <label class="letter-color-title">Ronda {{current_iteration_by_team}}: Comentario de tus compañerosxx</label>
             </div>
             <div class="col-md-12">
                 <div ng-repeat="comment in secondIterationCommentForLeader">
@@ -757,7 +759,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="times_waiting == 2 && !followLeader && !finishTheSecondTime">
+        <div class="col-md-12" ng-show="current_iteration_by_team == 2 && !followLeader && !finishTheSecondTime">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañerosx </label>
             </div>
@@ -789,7 +791,7 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div ng-show="final_response && followLeader && waiting_partners && !user_is_done" class="col-md-12">
+        <div ng-show="current_final_response_by_team && followLeader && current_waiting_partners_by_team && !user_is_done" class="col-md-12">
             <div class="col-md-12">
                 <label class="letter-color-title">Qué tan de acuerdo estas con la respuesta grupal?</label>
             </div>
