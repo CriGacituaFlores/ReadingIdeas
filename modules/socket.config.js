@@ -1,6 +1,5 @@
 module.exports.configSocket = function(io){
     module.exports.stateChange = function(sesid){
-        console.log('AAAAAACTTTMM <3')
         io.of("/").emit("stateChange", {ses: sesid});
     };
     module.exports.updateTeam = function(tmid){
@@ -19,11 +18,9 @@ module.exports.configSocket = function(io){
         io.of("/").emit("updateOverlay", {qid: qid});
     };
     module.exports.updateWaiting = function(sesid){
-        console.log('ENTROOOOO')
         io.of("/").emit("updateWaiting", {ses: sesid});
     };
     module.exports.updateUserIteration = function(sesid){
-        console.log('ENTROOOOO')
         io.of("/").emit("updateUserIteration", {ses: sesid});
     };
 };

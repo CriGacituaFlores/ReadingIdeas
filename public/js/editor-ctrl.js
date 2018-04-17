@@ -310,12 +310,6 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: 'select-prom-by-group', method: 'post', data: {id: self.sesId}}).then((response) => {
                 self.promGroup = response.data
             })
-            $http({url: '/select-first-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
-                self.firstIterationComment = response.data[0]
-            })
-            $http({url: '/select-second-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
-                self.secondIterationComment = response.data[0]
-            })
             $http({url: '/discussion_anonymous_semantic', method: 'post', data: self.sesId}).then((response) => {
                 self.anonymous_semantic_discussion = response.data
             })
@@ -325,6 +319,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
             $http({url: '/current_team', method: 'post', data: self.sesId}).then((response) => {
                 self.currentTeam = response.data
                 self.getUserStatus({ses: self.sesId})
+            })
+            $http({url: '/select-first-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.firstIterationComment = response.data[0]
+            })
+            $http({url: '/select-second-iteration-comment-array', method: 'post', data: {id: self.sesId}}).then((response) => {
+                self.secondIterationComment = response.data[0]
             })
             self.LoadEvaluationPersonal(self.sesId, self.myUid)
         });
@@ -419,8 +419,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         self.updateAnonymousSemanticDifferentialUser(sliderId)
     }
 
-    self.sendToPartners = (sesid) => {
-        debugger;
+    self.sendToPartners = (sesid) => {        
         $http({url: '/update_session_on_team_task', method: 'post', data: sesid}).success((response) => {
             $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
                 self.waiting_partners = response.waiting_partners
@@ -478,7 +477,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         }
     }
 
-    self.sendFirstCommentary = (sesid) => {
+    self.sendFirstCommentary = (sesid) => {        
         $http({url: '/send_first_commentary', method: 'post', data: sesid}).then((response) => {
 
         })
@@ -502,6 +501,12 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
                 self.current_final_response_by_team = response[0].final_response;
                 self.current_waiting_partners_by_team = response[0].waiting_partners;
             }
+        })
+        $http({url: '/select-first-iteration-comment-array', method: 'post', data: {id: sesid.ses}}).then((response) => {
+            self.firstIterationComment = response.data[0]
+        })
+        $http({url: '/select-second-iteration-comment-array', method: 'post', data: {id: sesid.ses}}).then((response) => {
+            self.secondIterationComment = response.data[0]
         })
     }
 

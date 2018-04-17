@@ -55,7 +55,7 @@ router.post("/create-personal-evaluation", (req, res) => {
 router.post("/update_semantic_differential_user", (req, res) => {
     rpg.singleSQL({
         dbcon: pass.dbcon,
-        sql: `UPDATE semantic_differential_user SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description}' where id = ${req.body.data.id}`
+        sql: `UPDATE semantic_differential_user SET min_name = '${req.body.data.min_name}', max_name = '${req.body.data.max_name}',value = ${req.body.data.value}, description = '${req.body.data.description ? req.body.data.description : ''}' where id = ${req.body.data.id}`
     })(req, res);
     res.end('{"creado": "Item modificado correctamente"}')
 })
