@@ -395,7 +395,7 @@ router.post("/select-session-users", (req, res) => {
     rpg.multiSQL({
         dbcon: pass.dbcon,
         sql: `insert into semantic_differential_user (min_name, max_name, order_sort, sesid, value, user_id, semantic_differential_id)
-                select 'indefinido', 'indefinido', order_sort, semantic_differential.sesid, 5, users.id, semantic_differential.id
+                select min_name, max_name, order_sort, semantic_differential.sesid, 5, users.id, semantic_differential.id
                 from semantic_differential
                 inner join sessions on
                 sessions.id = semantic_differential.sesid

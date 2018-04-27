@@ -178,17 +178,11 @@
             <h3 class="letter-color-title">Evaluación del texto</h3>
             <div dnd-list="Tasks">
               <div ng-repeat="item in Tasks" 
-                dnd-list-id="{{item.id}}" 
-                dnd-draggable="item" 
-                dnd-moved="Sorting($index)"
-                dnd-disable-if="selectedSes.status!=1"
-                dnd-effect-allowed="move"
-                dnd-selected="models.selected = item"
                 ng-class="{'selected': models.selected === item}">
                 <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
                   <div class="row">
                       <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-align-justify mini-m-l cursor-p" aria-hidden="true"></i>
+                        <i class="fa fa-arrow-down mini-m-l cursor-p" aria-hidden="true"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
                         <a class="pull-right" ng-click="removeSemanticIconTrash(item.id,selectedSes.id)" ng-disabled="selectedSes.status!=1">
@@ -218,6 +212,11 @@
                       <div class="col-md-12 col-xs-12">
                           <textarea ng-disabled="selectedSes.status!=1" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferential($index)">{{item.description}}</textarea>
                       </div>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 col-xs-6">
+                      <i class="fa fa-arrow-up mini-m-l cursor-p" aria-hidden="true"></i>
                     </div>
                   </div>
                 </div>
