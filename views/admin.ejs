@@ -177,12 +177,12 @@
             <hr/>
             <h3 class="letter-color-title">Evaluación del texto</h3>
             <div dnd-list="Tasks">
-              <div ng-repeat="item in Tasks" 
+              <div ng-repeat="(key, item) in Tasks" 
                 ng-class="{'selected': models.selected === item}">
                 <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
                   <div class="row">
                       <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-arrow-down mini-m-l cursor-p" aria-hidden="true"></i>
+                        <i class="fa fa-arrow-down mini-m-l cursor-p" aria-hidden="true" ng-click="goDown(key)"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
                         <a class="pull-right" ng-click="removeSemanticIconTrash(item.id,selectedSes.id)" ng-disabled="selectedSes.status!=1">
@@ -216,7 +216,7 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6 col-xs-6">
-                      <i class="fa fa-arrow-up mini-m-l cursor-p" aria-hidden="true"></i>
+                      <i class="fa fa-arrow-up mini-m-l cursor-p" aria-hidden="true" ng-click="goUp(key)"></i>
                     </div>
                   </div>
                 </div>

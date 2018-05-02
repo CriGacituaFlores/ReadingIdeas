@@ -440,6 +440,28 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
             self.selectSession(ses,sesid);
     };
 
+    self.goDown = (position) => {
+        var currentAux = self.Tasks[position]
+
+        if(position != 4) {
+            self.Tasks[position] = self.Tasks[position+1]
+            self.Tasks[position+1] = currentAux
+        }
+
+        return self.Tasks
+    }
+
+    self.goUp = (position) => {
+        var currentAuxUp = self.Tasks[position]
+
+        if(position != 0) {
+            self.Tasks[position] = self.Tasks[position-1]
+            self.Tasks[position-1] = currentAuxUp
+        }
+
+        return self.Tasks
+    }
+
     self.shared.LoadTask = (id) => {
         self.Tasks = [];
         self.IsProcessing = true;
