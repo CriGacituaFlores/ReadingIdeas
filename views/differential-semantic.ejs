@@ -323,13 +323,13 @@
                                 Valoración:
                             </div>
                             <div class="col-md-2 col-xs-2">
-                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialFirstIteration($index)">{{ item.min_name || 'empty' }}</button>
+                                <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.min_name" onbeforesave="updateSemanticDifferentialFirstIteration($index)">{{ item.min_name || 'empty' }}</button>
                             </div>
                             <div class="col-md-8 col-xs-8">
-                                <rzslider rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemFirstIteration}"></rzslider>
+                                <rzslider ng-disabled="true" rz-slider-model="item.value" rz-slider-options="{floor: 0, ceil: 10,id: $index, showTicksValues: true, onEnd: processItemFirstIteration}"></rzslider>
                             </div>
                             <div class="col-md-2 col-xs-2">
-                                <button class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialFirstIteration($index)">{{ item.max_name || 'empty' }}</button>
+                                <button ng-disabled="true" class="btn btn-default xeditable-input-change ellipsis-xeditable" href="" editable-text="item.max_name" onbeforesave="updateSemanticDifferentialFirstIteration($index)">{{ item.max_name || 'empty' }}</button>
                             </div>
                         </div>
                         <div class="col-md-6 col-xs-6">
@@ -337,14 +337,14 @@
                                 Comentario:
                             </div>
                             <div class="col-md-12 col-xs-12">
-                                <textarea rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
+                                <textarea ng-disabled="true" rows="5" class="text-area-input" ng-model="item.description" ng-model="self.class" ng-change="updateSemanticDifferentialUser($index)">{{item.description}}</textarea>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-md-12">
-                <label class="letter-color-title">Respuestas Personales000</label>
+                <label class="letter-color-title">Respuestas Personales</label>
             </div>
             <div ng-repeat="item in personalEvaluationFirstIteration" 
                 dnd-list-id="{{item.id}}" 

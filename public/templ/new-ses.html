@@ -4,16 +4,15 @@
     </div>
     <form action="add-session" method="post" class="modal-body">
         <label>Titulo:</label>
-        <input type="text" class="form-control" name="name">
+        <input type="text" class="form-control" name="name" required>
         <label>Tipo de actividad:</label>
-        <select name="type" class="form-control">
+        <select name="type" class="form-control" required>
             <option value="L">Lectura - Ideas Fuerza</option>
-            <option value="M">Lectura - Unidades Semánticas</option>
             <option value="D">Lectura - Diferencial Semántico</option>
             <option value="S">Selección Múltiple</option>
         </select>
         <label>Factor detonante:</label>
-        <textarea name="descr" class="form-control" rows="3"></textarea>
+        <textarea name="descr" class="form-control" rows="3" required></textarea>
         <hr>
         <br>
         <button class="btn btn-primary" type="submit">Agregar</button>
