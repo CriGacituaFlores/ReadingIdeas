@@ -60,7 +60,7 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     self.countEvaluationSecondIteration = 0;
     self.option_first_time = ["Enviar a compañeros", "Respuesta final"];
     self.option_second_time = ["Respuesta final"];
-    self.final_response_value = '';
+    self.final_response_value = "";
     self.anonymous_semantic_discussion = [];
     self.discussion_personal = [];
     self.personalIterationLast = [];
@@ -82,14 +82,18 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
     self.finishGroupTask = (response, sesid) => {
         if(response == 'de_acuerdo') {
-            self.setFinalResponseByUser(sesid, response)
+            self.setFinalResponseByUser(sesid, self.final_response_value)
         } else if (response == 'parcialmente_de_acuerdo') {
-            self.setFinalResponseByUser(sesid, response)
+            self.setFinalResponseByUser(sesid, self.final_response_value)
         } else if (response == 'no_de_acuerdo') {
-            self.setFinalResponseByUser(sesid, response)
+            self.setFinalResponseByUser(sesid, self.final_response_value)
         } else {
 
         }
+    }
+
+    self.changeValue = (response) => {
+        self.final_response_value = response
     }
 
     self.ngShowAnswer = true;
@@ -187,6 +191,8 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
         $socket.on("updateWaiting", (data) => {
             console.log("SOCKET.IO", data);
             self.getCurrentStatus(data);
+            //debugger;
+            //$window.location.reload();
         });
         $socket.on("updateUserIteration", (data) => {
             console.log("SOCKET.IO", data);

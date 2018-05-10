@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    <div class="row" ng-show="iteration==3">
+    <div class="row" ng-if="iteration==3">
         <div class="container" ng-show="followLeader && !current_waiting_partners_by_team && current_iteration_by_team == 0">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando la respuesta de tu compañero(a) de grupo</label>
@@ -514,7 +514,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="current_waiting_partners_by_team && !followLeader && !finishTheFirstTime && !current_final_response_by_team && current_iteration_by_team == 1">
+        <div class="col-md-12" ng-if="current_waiting_partners_by_team && !followLeader && !finishTheFirstTime && !current_final_response_by_team && current_iteration_by_team == 1">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañeros </label>
             </div>
@@ -755,7 +755,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-12" ng-show="current_iteration_by_team == 2 && !followLeader && !finishTheSecondTime">
+        <div class="col-md-12" ng-if="current_iteration_by_team == 2 && !followLeader && !finishTheSecondTime">
             <div class="col-md-12">
                 <label class="letter-color-title">Esperando comentarios de tus compañerosx </label>
             </div>
@@ -787,22 +787,22 @@
                     <img width="500" height="500" title="" alt="" src="https://media3.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy-preview.gif" />
             </div>
         </div>
-        <div ng-show="current_final_response_by_team && followLeader && current_waiting_partners_by_team && !user_is_done" class="col-md-12">
+        <div ng-if="current_final_response_by_team && followLeader && current_waiting_partners_by_team && !user_is_done" class="col-md-12">
             <div class="col-md-12">
                 <label class="letter-color-title">Qué tan de acuerdo estas con la respuesta grupal?</label>
             </div>
             <div class="col-md-12">
                 <form name="myForm">
                     <label>
-                        <input type="radio" ng-model="final_response_value" value="de_acuerdo">
+                        <input type="radio" ng-model="final_response_value" value="de_acuerdo" ng-change="changeValue('de_acuerdo')">
                         De acuerdo
                     </label><br/>
                     <label>
-                        <input type="radio" ng-model="final_response_value" value="parcialmente_de_acuerdo">
+                        <input type="radio" ng-model="final_response_value" value="parcialmente_de_acuerdo" ng-change="changeValue('parcialmente_de_acuerdo')">
                         Parcialmente de acuerdo
                     </label><br/>
                     <label>
-                        <input type="radio" ng-model="final_response_value" value="no_de_acuerdo">
+                        <input type="radio" ng-model="final_response_value" value="no_de_acuerdo" ng-change="changeValue('no_de_acuerdo')">
                         No de acuerdo
                     </label><br/>
                 </form>
