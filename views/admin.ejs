@@ -182,7 +182,7 @@
                 <div class="col-md-12 col-xs-12 pad-border margin-t-a-b">
                   <div class="row">
                       <div class="col-md-6 col-xs-6">
-                        <i class="fa fa-arrow-down mini-m-l cursor-p" aria-hidden="true" ng-click="goDown(key)"></i>
+                        <i class="fa fa-arrow-down mini-m-l cursor-p" aria-hidden="true" ng-click="goDown(key)" ng-show="Tasks.length > 1"></i>
                       </div>
                       <div class="col-md-6 col-xs-6">
                         <a class="pull-right" ng-click="removeSemanticIconTrash(item.id,selectedSes.id)" ng-disabled="selectedSes.status!=1">
@@ -216,7 +216,7 @@
                   </div>
                   <div class="row">
                     <div class="col-md-6 col-xs-6">
-                      <i class="fa fa-arrow-up mini-m-l cursor-p" aria-hidden="true" ng-click="goUp(key)"></i>
+                      <i class="fa fa-arrow-up mini-m-l cursor-p" aria-hidden="true" ng-click="goUp(key)" ng-show="Tasks.length > 1"></i>
                     </div>
                   </div>
                 </div>
@@ -388,9 +388,9 @@
               <br>
               <label>Subir lista de alumnos</label>
               <div class="input-group">
-                <input type="file" class="form-control" disabled>
+                <input type="file" class="form-control">
                 <span class="input-group-btn">
-                  <button class="btn btn-default" disabled>Agregar</button>
+                  <button class="btn btn-default">Agregar</button>
                 </span>
               </div>
             </div>

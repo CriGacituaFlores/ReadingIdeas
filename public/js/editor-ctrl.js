@@ -471,6 +471,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
 
             })
         } else if (result == "Respuesta final") {
+            $http({url: '/all_semantic_by_leader_third_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
+                self.leaderTasksThirdIteration = response.data
+            })
             $http({url: '/update_session_on_team_task_final_response', method: 'post', data: sesid}).then((response) => {
                 $http({url: '/select_session_on_team_task', method: 'post', data: sesid}).success((response) => {
                     self.waiting_partners = response.waiting_partners
@@ -496,6 +499,9 @@ app.controller("EditorController", ["$scope", "$http", "$timeout", "$socket", "N
     }
 
     self.getCurrentStatus = (sesid) => {
+        $http({url: '/all_semantic_by_leader_third_iteration', method: 'POST', data: {id: self.sesId, leader_id: self.current_leader}}).then((response) => {
+            self.leaderTasksThirdIteration = response.data
+        })
         $http({url: '/select_session_on_team_task', method: 'post', data: sesid.ses}).success((response) => {
             self.waiting_partners = response.waiting_partners
             self.times_waiting = response.times_waiting

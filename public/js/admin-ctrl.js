@@ -442,8 +442,9 @@ adpp.controller("AdminController", function ($scope, $http, $uibModal, $location
 
     self.goDown = (position) => {
         var currentAux = self.Tasks[position]
+        let lengthTasks = self.Tasks.length;
 
-        if(position != 4) {
+        if(position != (lengthTasks -1)) {
             self.Tasks[position] = self.Tasks[position+1]
             self.Tasks[position+1] = currentAux
         }
